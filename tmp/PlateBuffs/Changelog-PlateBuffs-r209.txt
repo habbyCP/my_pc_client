@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r209 | acapela | 2011-06-16 22:56:04 +0000 (Thu, 16 Jun 2011) | 1 line
+Changed paths:
+   M /trunk/frames.lua
+
+fixed cut/paste error in new ResetPlateBarPoints() method, did not propagate layout variables into new method properly.
+------------------------------------------------------------------------
+r208 | acapela | 2011-06-16 22:54:58 +0000 (Thu, 16 Jun 2011) | 1 line
+Changed paths:
+   M /trunk/options.lua
+
+increased the allowed range of "Row X/Y Offset" options, to permit more layout flexibility.
+------------------------------------------------------------------------
+r207 | acapela | 2011-06-13 22:12:30 +0000 (Mon, 13 Jun 2011) | 1 line
+Changed paths:
+   M /trunk/frames.lua
+
+enhanced to hook a handler script for the "OnSizeChanged" widget event, as part of base nameplate initialization.
+------------------------------------------------------------------------

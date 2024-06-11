@@ -1,0 +1,19 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.4",
+    "electron-reloader": "^1.2.3",
+    "nodemon": "^3.0.3"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "@layui/layui-vue": "^2.17.5",
+    "element-ui": "^2.15.14",
+    "unzipper": "^0.11.6"
+  }
+}
