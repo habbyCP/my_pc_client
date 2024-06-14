@@ -1,24 +1,27 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow ,ipcMain, dialog} from 'electron'
+const path =  require('path')
+const fs = require('fs');
+const https = require('https');
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
-
+const preload_path = path.join(process.cwd(), 'src/main/preload.js');
+console.log('-----------------',  preload_path);
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 500,
     webPreferences: {
-      webPreferences: {
-        // preload: path.join(__dirname, 'preload.js')
-      },
-
+      preload: preload_path,
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-main-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -66,6 +69,35 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+
+
+ipcMain.on('download-file', (event, url) => {
+  dialog.showSaveDialog({
+    title: 'Save file',
+    defaultPath: path.join(app.getPath('downloads'), 'downloaded-file')
+  }).then(file => {
+    if (!file.canceled) {
+      const filePath = file.filePath.toString();
+      const fileStream = fs.createWriteStream(filePath);
+
+      https.get(url, (response) => {
+        response.pipe(fileStream);
+
+        fileStream.on('finish', () => {
+          fileStream.close();
+          event.sender.send('download-complete', 'File downloaded successfully');
+        });
+      }).on('error', (err) => {
+        fs.unlink(filePath, () => {});
+        event.sender.send('download-error', err.message);
+      });
+    } else {
+      event.sender.send('download-canceled', 'File download canceled');
+    }
+  }).catch(err => {
+    event.sender.send('download-error', err.message);
+  });
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

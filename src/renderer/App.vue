@@ -4,12 +4,12 @@
     <el-container>
       <el-aside width="150px">
         <el-menu
-            default-active="{{menu_index}}"
+            default-active=1
             class="el-menu-vertical-demo"
             @select="handleOpen"
             @close="handleClose"
         >
-          <el-menu-item index="1">
+          <el-menu-item index=1>
             <span>2.43客户端</span>
           </el-menu-item>
           <el-menu-item index="2">
@@ -87,10 +87,13 @@ export default {
   },
   created() {
     this.get_addons(this.menu_index)
+    console.log("现在是"+this.menu_index)
   },
   methods: {
     down_addons(b){
-      console.log(b)
+      console.log(b.down_link)
+      console.log(window.electronAPI)
+      window.electronAPI.downloadFile(b.down_link);
     },
     async get_addons(version){
       this.main_loading = true
@@ -104,17 +107,16 @@ export default {
       this.tableData = []
       for (const key in response_content.data) {
         let one = response_content.data[key]
-        console.log(one)
         let one_data= {
             img:one.img_list[0],
             title:one.title,
             version:one.version,
+            down_link :one.down_link,
             update_time:format(new Date(one.update_time*1000), 'yyyy-MM-dd'),
         }
         this.tableData.push(one_data)
       }
       this.main_loading = false
-      console.log(this.tableData)
 
     },
     // eslint-disable-next-line no-unused-vars
