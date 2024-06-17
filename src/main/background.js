@@ -1,9 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow ,ipcMain, dialog} from 'electron'
+import { app, protocol, BrowserWindow ,ipcMain,session} from 'electron'
 const path =  require('path')
-const fs = require('fs');
-const https = require('https');
+const urlModule = require('url');
+
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 
@@ -71,33 +71,34 @@ app.on('ready', async () => {
 })
 
 
-ipcMain.on('download-file', (event, url) => {
-  dialog.showSaveDialog({
-    title: 'Save file',
-    defaultPath: path.join(app.getPath('downloads'), 'downloaded-file')
-  }).then(file => {
-    if (!file.canceled) {
-      const filePath = file.filePath.toString();
-      const fileStream = fs.createWriteStream(filePath);
+ipcMain.on('download-file', async (event, { url }) => {
+  let downloadWindow = BrowserWindow.getFocusedWindow();
+  // let win = new BrowserWindow({ show: false });
+  downloadWindow.webContents.session.on('will-download', (event, item) => {
+    item.setSavePath("./tmp/aa.zip");
 
-      https.get(url, (response) => {
-        response.pipe(fileStream);
+    item.on('updated', (event, state) => {
+      if (state === 'progressing' && !item.isPaused()) {
+        const progress = (item.getReceivedBytes() / item.getTotalBytes()) * 100;
+        downloadWindow.webContents.send('download-progress', progress.toFixed(2));
+      }
+    });
 
-        fileStream.on('finish', () => {
-          fileStream.close();
-          event.sender.send('download-complete', 'File downloaded successfully');
-        });
-      }).on('error', (err) => {
-        fs.unlink(filePath, () => {});
-        event.sender.send('download-error', err.message);
-      });
-    } else {
-      event.sender.send('download-canceled', 'File download canceled');
-    }
-  }).catch(err => {
-    event.sender.send('download-error', err.message);
+    item.on('done', (event, state) => {
+      if (state === 'completed') {
+        event.sender.send('download-complete', 'File downloaded successfully');
+      } else {
+        event.sender.send('download-error', `Download failed: ${state}`);
+      }
+      downloadWindow.close();
+      downloadWindow = null;
+    });
   });
+  downloadWindow.loadURL(url);
+
+  return { success: true };
 });
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

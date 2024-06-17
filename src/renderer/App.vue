@@ -1,6 +1,6 @@
 <template>
   <!--  <img alt="Vue logo" src="../assets/logo.png">-->
-  <div class="common-layout" v-loading="main_loading">
+  <div class="common-layout" v-loading="main_loading"     :element-loading-text="main_loading_word">
     <el-container>
       <el-aside width="150px">
         <el-menu
@@ -26,10 +26,10 @@
       </el-aside>
       <el-container>
         <el-header>
-          <HelloWorld v-if="menu_index === '1'"  msg = "2.43客户端"/>
-          <HelloWorld v-if="menu_index === '2'"  msg = "3.35客户端"/>
-          <HelloWorld v-if="menu_index === '3'"  msg = "2.43插件"/>
-          <HelloWorld v-if="menu_index === '4'"  msg = "3.35客户端"/>
+          <ClientList v-if="menu_index === '1'"  msg = "2.43客户端"/>
+          <ClientList v-if="menu_index === '2'"  msg = "3.35客户端"/>
+          <AddonsList v-if="menu_index === '3'"  msg = "2.43插件"/>
+          <AddonsList v-if="menu_index === '4'"  msg = "3.35插件"/>
         </el-header>
         <el-main>
           <el-table :data="tableData"   stripe style="width: 100%">
@@ -54,24 +54,33 @@
       </el-container>
     </el-container>
   </div>
+  <el-dialog @close="down_cancel()"  v-model="progress_dialog" >
+    <my-progress percentage = 20 />
+  </el-dialog>
 </template>
 
 <script>
 
-import HelloWorld from './components/HelloWorld.vue'
+import AddonsList from './components/addons_list.vue'
+import ClientList from './components/client_list.vue'
+import MyProgress from './components/Progress.vue'
 import axios from 'axios';
 import { format } from 'date-fns';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AddonsList,
+    ClientList,
+    MyProgress
   },
   data() {
     return {
+      main_loading_word : "",
       main_loading:false,
       isDark: false,
       menu_index: "1",
+      progress_dialog:false,
       options: [
         {
           value: 'Option1',
@@ -87,13 +96,22 @@ export default {
   },
   created() {
     this.get_addons(this.menu_index)
-    console.log("现在是"+this.menu_index)
   },
   methods: {
     down_addons(b){
+      // console.log(window.electronAPI)
       console.log(b.down_link)
-      console.log(window.electronAPI)
-      window.electronAPI.downloadFile(b.down_link);
+      this.progress_dialog = true
+      // window.electronAPI.downloadFile("https://cdn.wow-china.gg/clients/TBC_335/Full.zip");
+      // // window.electronAPI.downloadFile("https://cdn.wowlibrary.com/clients/TBC-2.4.3.8606-enGB-Repack.zip")
+      // window.electronAPI.onDownloadProgress((event, item) => {
+      //   console.log(item)
+      // });
+
+    },
+    down_cancel(){
+      alert(1)
+        window.electronAPI.cancelDownload()
     },
     async get_addons(version){
       this.main_loading = true
