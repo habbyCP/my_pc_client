@@ -1,55 +1,44 @@
 {
-  "name": "my-electron-app",
-  "version": "0.1.0",
+  "name": "electron-vite-vue3",
   "private": true,
+  "version": "0.0.0",
+  "description": "electron vite vue3 template",
+  "keywords": [
+    "electron",
+    "vite",
+    "vue3",
+    "vue",
+    "vue devtools",
+    "electron-vue",
+    "electron-vite"
+  ],
+  "main": "electron/index.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "start": "concurrently -k 'npm run dev' 'npm run electron'",
+    "release": "npm run build && electron-builder",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "wait-on tcp:3000 && cross-env NODE_ENV=development electron ."
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
-    "axios": "^1.7.2",
-    "core-js": "^3.8.3",
     "date-fns": "^3.6.0",
+    "electron-dl": "^4.0.0",
     "electron-log": "^5.1.5",
     "element-plus": "^2.7.5",
-    "vue": "^3.2.13"
+    "resolve": "^1.22.8",
+    "sqlite3": "^5.1.7",
+    "vue": "^3.2.25"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "electron": "^28.0.0",
-    "electron-devtools-installer": "^3.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "vue-cli-plugin-electron-builder": "~2.1.1"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+    "@vitejs/plugin-vue": "^2.2.0",
+    "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "electron": "^17.2.0",
+    "electron-builder": "^22.14.13",
+    "electron-reloader": "^1.2.3",
+    "sass": "^1.49.9",
+    "vite": "^2.8.0",
+    "wait-on": "^6.0.1"
+  }
 }
