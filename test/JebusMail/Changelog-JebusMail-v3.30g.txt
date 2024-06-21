@@ -1,0 +1,22 @@
+------------------------------------------------------------------------
+r80 | jebus905 | 2010-07-09 20:58:56 +0000 (Fri, 09 Jul 2010) | 2 lines
+Changed paths:
+   A /tags/v3.30g (from /trunk:79)
+
+JebusMail:
+- 
+------------------------------------------------------------------------
+r79 | jebus905 | 2010-07-09 20:58:37 +0000 (Fri, 09 Jul 2010) | 2 lines
+Changed paths:
+   M /trunk/JebusMail.toc
+
+JebusMail:
+- update version info
+------------------------------------------------------------------------
+r78 | jebus905 | 2010-07-09 20:40:17 +0000 (Fri, 09 Jul 2010) | 2 lines
+Changed paths:
+   M /trunk/JebusMail.lua
+
+JebusMail:
+- Should no longer pollute the global namespace
+------------------------------------------------------------------------

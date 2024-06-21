@@ -8,6 +8,8 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 let mainWindow;
 
 
+
+
 function createWindow () {
    mainWindow = new BrowserWindow({
     width: 800,
@@ -16,6 +18,10 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+  // 创建下载目录
+  if (!fs.existsSync('downloaded_files')) {
+    fs.mkdirSync('downloaded_files', { recursive: true });
+  }
   let url = process.env.NODE_ENV === 'development' ?
   'http://localhost:3000' :
   'file://' + path.join(__dirname, '../dist/index.html');
@@ -46,6 +52,8 @@ app.on('window-all-closed', () => {
 // ipcMain.on('download-file2',down_file)
 //文件下载相关的
 ipcMain.on('download-file',  down_file);
+
+//取消下载
 ipcMain.on('cancel-download', down_cancel);
 
 

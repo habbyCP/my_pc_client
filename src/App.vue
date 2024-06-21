@@ -9,16 +9,16 @@
             @close="handleClose"
         >
           <el-menu-item index=1>
-            <span>2.43 clients</span>
+            <span>2.43 工具</span>
           </el-menu-item>
           <el-menu-item index="2">
-            <span>3.35 clients</span>
+            <span>3.35 工具</span>
           </el-menu-item>
           <el-menu-item index="3">
-            <span>2.43 addons</span>
+            <span>2.43 插件</span>
           </el-menu-item>
           <el-menu-item index="4">
-            <span>3.35 addons</span>
+            <span>3.35 插件</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -113,17 +113,18 @@ export default {
   },
   methods: {
     // 下载插件
-    down_addons(b){
-      // console.log(b.$index)
-      // console.log(this.tableData[b.$index])
-      this.tableData[b.$index].show_p = true
-      // window.electronAPI.downloadFile(b.down_link);
-      let down_data= {}
+    down_addons(data){
+      this.tableData[data.$index].show_p = true
+      let down_data= {} 
+      let row = data.row
       down_data = {
-        url:"https://down.sandai.net/mac/thunder_5.40.2.66331.dmg?version"+b.$index,
-        index: b.$index
+        url: row.down_link,
+        index: data.$index
       }
+      console.log('下载数据1',down_data)
+      //执行下载
       window.electronAPI.downloadFile(down_data)
+      //进度反馈
       window.electronAPI.onDownloadProgress((event, item) => {
         this.tableData[item.index].show_p = true
         this.tableData[item.index].progress = item.progress
@@ -158,7 +159,7 @@ export default {
           show_p: false,
           progress: 0
         }
-        console.log(one_data["show_p"])
+        // console.log(one_data)
         this.tableData.push(one_data)
       }
       this.main_loading = false
