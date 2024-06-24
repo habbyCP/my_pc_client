@@ -3,12 +3,10 @@ const path = require('path')
 const {down_file, down_cancel} = require("./lib/down");
 const { wow_file_path } = require('./lib/db')
 const { exec } = require('child_process');
+const {mkdirSync, existsSync} = require("fs");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 
 let mainWindow;
-
-
-
 
 function createWindow () {
    mainWindow = new BrowserWindow({
@@ -18,9 +16,10 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
   // 创建下载目录
-  if (!fs.existsSync('downloaded_files')) {
-    fs.mkdirSync('downloaded_files', { recursive: true });
+  if (!existsSync('downloaded_files')) {
+    mkdirSync('downloaded_files', { recursive: true });
   }
   let url = process.env.NODE_ENV === 'development' ?
   'http://localhost:3000' :
@@ -59,7 +58,18 @@ ipcMain.on('cancel-download', down_cancel);
 
 
 //版本相关的查询
-ipcMain.handle('wow-file-path',  wow_file_path);
+ipcMain.handle('wow-file-path',  (event,down_data_info)=>{
+    console.log("测试数据",down_data_info)
+    let version_data = wow_file_path(down_data_info)
+    version_data.then((path_data)=>{
+        console.log("query get data:",path_data)
+        BrowserWindow.getFocusedWindow().webContents.send('wow-file-path', {
+            "path":path_data["path"]
+        });
+    }).catch((error)=>{
+        console.log(error)
+    })
+});
 
 ipcMain.on('start-wow', function (event,data) {
     exec('open -a /usr/local/bin/code', (error, stdout, stderr) => {

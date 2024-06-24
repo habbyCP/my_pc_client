@@ -25,12 +25,16 @@ export default {
     },
     get_version:async function () {
       try {
-        this.wow_path = await window.electronAPI.wow_file_path({"version": "3.35"})
-
+        let info = window.electronAPI.wowFilePath({"version": "3.35"})
+        info.then((data)=>{
+          console.log(data)
+        })
+        console.log('获取到的版本数据:',info)
+        this.wow_path = info
       }catch (error) {
         console.error(error);
       }
-      console.log('获取到的版本数据',this.wow_path)
+
     }
   }
 }
