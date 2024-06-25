@@ -32,9 +32,7 @@ app.whenReady().then( async () => {
   if (process.env.NODE_ENV === 'development'){
     await session.defaultSession.loadExtension(reactDevToolsPath)
   }
-
   createWindow()
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -57,18 +55,20 @@ ipcMain.on('cancel-download', down_cancel);
 
 
 
+
 //版本相关的查询
-ipcMain.handle('wow-file-path',  (event,down_data_info)=>{
+ipcMain.handle('wow-file-path', async (event,down_data_info)=>{
     console.log("测试数据",down_data_info)
-    let version_data = wow_file_path(down_data_info)
-    version_data.then((path_data)=>{
-        console.log("query get data:",path_data)
-        BrowserWindow.getFocusedWindow().webContents.send('wow-file-path', {
-            "path":path_data["path"]
-        });
-    }).catch((error)=>{
-        console.log(error)
-    })
+    return new Promise((resolve, reject) => {
+        wow_file_path(down_data_info,function (error,rows) {
+            if(error){
+                reject(error);
+            }else{
+                resolve(rows[0]);
+
+            }
+        })
+    });
 });
 
 ipcMain.on('start-wow', function (event,data) {

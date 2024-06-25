@@ -2,7 +2,7 @@
   <el-container>
     <el-header >
       <div>
-        <h1>{{ msg }}</h1>
+        <h1>{{ version_data.title }}</h1>
       </div>
     </el-header>
     <el-main v-loading="main_loading">

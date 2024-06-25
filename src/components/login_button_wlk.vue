@@ -17,24 +17,24 @@ export default {
 
   },
   created() {
+    //获取版本号
     this.get_version()
   },
   methods:{
+    //启动客户端
     start_wow:function (){
       window.electronAPI.startWow({"version": "3.35"})
     },
-    get_version:async function () {
-      try {
-        let info = window.electronAPI.wowFilePath({"version": "3.35"})
-        info.then((data)=>{
-          console.log(data)
-        })
-        console.log('获取到的版本数据:',info)
-        this.wow_path = info
-      }catch (error) {
-        console.error(error);
-      }
 
+    //获取当前版本的可执行文件地址
+    get_version:async function () {
+      let info = window.electronAPI.wowFilePath({"version": "3.35"})
+      info.then((data) => {
+        this.wow_path = data['path']
+        console.log('接些的数据', data)
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   }
 }

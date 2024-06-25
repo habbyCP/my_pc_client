@@ -21,14 +21,17 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <AddonsList v-if="menu_index === '243_tools'"  msg = "243_tools"/>
-      <AddonsList v-if="menu_index === '335_tools'"  msg = "335_tools"/>
-      <AddonsList v-if="menu_index === '243_addons'"  msg = "243_addons"/>
-      <AddonsList v-if="menu_index === '335_addons'"  msg = "335_addons"/>
+      <template  v-for="(value,key) in menu_list">
+        <AddonsList  v-if="menu_index === key" msg = "value.version"/>
+      </template>
+
+
+<!--      <AddonsList v-if="menu_index === '335_tools'"  msg = "335_tools"/>-->
+<!--      <AddonsList v-if="menu_index === '243_addons'"  msg = "243_addons"/>-->
+<!--      <AddonsList v-if="menu_index === '335_addons'"  msg = "335_addons"/>-->
     </el-container>
   </div>
 </template>
-
 <script>
 
 import AddonsList from './components/addons_list.vue'
@@ -39,9 +42,18 @@ export default {
     AddonsList,
 
   },
+  created() {
+    localStorage.setItem('version_list',JSON.stringify(this.menu_list))
+  },
   data() {
     return {
-      menu_index: "243_tools"
+      menu_index: "243_tools",
+      menu_list: {
+        "243_tools":{"version":"2.43","title":"2.43工具下载"},
+        "335_tools":{"version":"3.35","title":"3.35工具下载"},
+        "243_addons":{"version":"2.43","title":"2.43插件下载"},
+        "335_addons":{"version":"3.35","title":"3.35插件下载"},
+      }
     }
   },
   methods:{

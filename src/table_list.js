@@ -8,7 +8,7 @@ export default {
     },
     name: 'AddonsList',
     props: {
-        msg: String
+        msg: {}
     },
     data() {
         return {
@@ -18,7 +18,9 @@ export default {
             menu_index: "243_tools",
             progress_dialog:false,
             tableData: [
-            ]
+            ],
+            version_data:{},
+            title:"",
         }
     },
     created() {
@@ -27,9 +29,7 @@ export default {
 
     watch: {
         msg(val) {
-            console.log(val)
-            //当a值变化时
-            this.menu_index = val
+            console.log("is:",val)
         }
     },
 
@@ -38,7 +38,7 @@ export default {
         down_addons(data){
             this.tableData[data.$index].status = 1
             this.tableData[data.$index].progress = 0
-            this.tableData[data.index].status_word = "启动下载"
+            // this.tableData[data.index].status_word = '启动下载'
             let down_data= {}
             let row = data.row
             down_data = {
@@ -86,7 +86,8 @@ export default {
                     down_link :one.down_link,
                     update_time:format(new Date(one.update_time*1000), 'yyyy-MM-dd'),
                     status: 0,
-                    progress: 0
+                    progress: 0,
+                    status_word:'111',
                 }
                 this.tableData.push(one_data)
             }

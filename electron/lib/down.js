@@ -9,14 +9,6 @@ const {existsSync, mkdirSync} = require("fs");
 let  req_list  = new Map()
 
 
-//响应https.get的data事件回调，实现进度返回
-response_data_callback = function(chunk){
-}
-
-// 处理close事件回调
-response_close_callback = function () {
-
-}
 
 function send_msg(progress_return_data) {
     log.info("发送出去的信息:", progress_return_data)
@@ -51,10 +43,9 @@ exports.down_file =  function (event,down_data_info){
             fileStream.close();
             console.log(`Downloaded file saved to ${file_save_path}`);
             //从数据库读取目录
-            let wow_path = wow_file_path({"version":"3.35"})
-            wow_path.then((path_data)=>{
+            wow_file_path({"version":"3.35"},(error,row)=>{
                 //获取 wow.exe的目录
-                let dir_path =  path.dirname(path_data["path"])
+                let dir_path =  path.dirname(row[0]["path"])
                 //组合目录
                 let addons_path = dir_path+"/Interface/Addons2/"
                 console.log(addons_path)
@@ -72,9 +63,8 @@ exports.down_file =  function (event,down_data_info){
                 }).catch(() => {
                     console.log('解压失败')
                 })
-            }).catch((error)=>{
-                    console.log(error)
             })
+
         });
         response.pipe(fileStream);
         let file_length = parseInt(response.headers['content-length']) // 文件总长度
@@ -83,7 +73,6 @@ exports.down_file =  function (event,down_data_info){
         //下载进度
         response.on('data',(chunk)=>{
             has_down_length += chunk.length
-
             const progress = (70.0 * has_down_length / file_length).toFixed(1) // 当前进度
             //除以5，没有变化则返回
             if (~~(progress/5) === progress_now) {
