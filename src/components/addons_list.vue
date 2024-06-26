@@ -24,7 +24,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="插件" />
-        <el-table-column prop="version" label="版本号"/>
+        <el-table-column prop="addons_version" label="版本号"/>
+        <el-table-column prop="version" label="适配版本"/>
         <el-table-column prop="update_time" label="更新时间"/>
         <el-table-column label="下载" width="150">
           <template #default="scope">
@@ -50,7 +51,13 @@
       </el-table>
     </el-main>
     <el-footer>
-      <LoginButtonWlk/>
+      <div class="login_button_form">
+        <el-row>
+          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button style="max-width: 100px" size="" type="success">{{this.path}}</el-button></el-col>
+          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button  size="" type="success">3.35欧洲</el-button></el-col>
+          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button  @click="start_wow()" size="" type="primary">3.35欧洲</el-button></el-col>
+        </el-row>
+      </div>
     </el-footer>
   </el-container>
 </template>
