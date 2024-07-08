@@ -18,7 +18,7 @@ export default {
                 "3.35":{"version":"3.35","title":"3.35工具下载"}
             },
             path: "",
-            main_loading_word : "",
+            main_loading_word : "加载中",
             main_loading: false,
             isDark: false,
             version:"",
@@ -33,8 +33,6 @@ export default {
         //初始化基本信息
         //this.初始化()
         this.get_addons(this.get_version())
-        // this.get_version_list()
-        // this.get_addons()
         // this.get_wow_exe()
 
         //进度反馈
@@ -113,7 +111,6 @@ export default {
                     console.log(response)
                     this.main_loading = false
                 }else{
-                    console.log(response.data)
                     const response_content = response.data
                     this.tableData = []
                     for (const key in response_content.data) {

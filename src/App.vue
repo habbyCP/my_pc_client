@@ -3,9 +3,9 @@
     <el-container>
       <el-container class="main_container"
                     v-loading="main_loading"
-                    element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                    :element-loading-text="main_loading_word">
+                    :element-loading-text="main_loading_word"
+      >
       <el-aside width="150px">
         <el-menu
             :default-active= "version"
@@ -95,7 +95,7 @@ html, body, #app {
   color: #2c3e50;
 }
 .el-table__cell {
-  position: static !important;
+  //position: static !important;
 }
 .common-layout {
   height: 100vh;
