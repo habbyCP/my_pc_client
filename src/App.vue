@@ -1,65 +1,84 @@
 <template>
-  <div class="common-layout"      :element-loading-text="main_loading_word">
+  <div class="common-layout" >
     <el-container>
+      <el-container class="main_container"
+                    v-loading="main_loading"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)"
+                    :element-loading-text="main_loading_word">
       <el-aside width="150px">
         <el-menu
-            default-active=1
+            :default-active= "version"
             class="el-menu-vertical-demo"
             @select="handleOpen"
         >
-          <el-menu-item index="243_tools">
+          <el-menu-item index="2.43">
             <span>2.43 工具</span>
           </el-menu-item>
-          <el-menu-item index="335_tools">
+          <el-menu-item index="3.35">
             <span>3.35 工具</span>
           </el-menu-item>
-          <el-menu-item index="243_addons">
-            <span>2.43 插件</span>
-          </el-menu-item>
-          <el-menu-item index="335_addons">
-            <span>3.35 插件</span>
-          </el-menu-item>
         </el-menu>
+
       </el-aside>
-      <template  v-for="(value,key) in menu_list">
-        <AddonsList  v-if="menu_index === key" :msg ="key" />
-      </template>
+        <el-container>
+          <el-main>
+            <el-table :data="tableData" stripe style="width: 100%">
+              <el-table-column prop="" label=""  >
+                <template #default="scope">
+                  <el-image
+                      width="100%"
+                      :src="scope.row.imgList[0]"
+                      :preview-src-list="scope.row.imgList">
+                  </el-image>
+
+                </template>
+              </el-table-column>
+              <el-table-column prop="title" width="200" label="插件" />
+              <el-table-column prop="addons_version" label="版本号"/>
+              <el-table-column prop="version" label="适配版本"/>
+              <el-table-column prop="update_time" label="更新时间"/>
+              <el-table-column label="下载" width="">
+                <template #default="scope">
+                  <el-button
+                      v-show='scope.row.status  === 0'
+                      size="small"
+                      @click="down_addons(scope)">
+                    下载
+                  </el-button>
+
+                  <el-button
+                      v-show='scope.row.status  === 1'
+                      size="small">
+                    下载中...
+                  </el-button>
+                  <el-button
+                      v-show='scope.row.status  === 2'
+                      size="small">
+                    已安装
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-main>
+        </el-container>
+      </el-container>
+      <el-footer style="border-top:1px solid #e6e6e6">
+        <el-row style="height: 10vh;">
+          <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="8"><div class=""></div></el-col>
+          <el-col :span="8"><div  style = "line-height: 9vh" class="grid-content bg-purple">
+            <el-button   type="success">启动游戏</el-button></div>
+          </el-col>
+        </el-row>
+      </el-footer>
     </el-container>
   </div>
 </template>
-<script>
 
-import AddonsList from './components/addons_list.vue'
-
-export default {
-  name: 'App',
-  components: {
-    AddonsList,
-
-  },
-  created() {
-    localStorage.setItem('version_list',JSON.stringify(this.menu_list))
-  },
-  data() {
-    return {
-      menu_index: "243_tools",
-      menu_list: {
-        "243_tools":{"version":"2.43","title":"2.43工具下载"},
-        "335_tools":{"version":"3.35","title":"3.35工具下载"},
-        "243_addons":{"version":"2.43","title":"2.43插件下载"},
-        "335_addons":{"version":"3.35","title":"3.35插件下载"},
-      }
-    }
-  },
-  methods:{
-    handleOpen(key) {
-      this.menu_index = key
-    },
-  }
-
-}
-
+<script src="./table_list.js">
 </script>
+
 
 <style>
 html, body, #app {
@@ -75,16 +94,20 @@ html, body, #app {
   text-align: center;
   color: #2c3e50;
 }
-
-.common-layout .el-container {
+.el-table__cell {
+  position: static !important;
+}
+.common-layout {
   height: 100vh;
 }
-
+.main_container {
+  height: 90vh;
+}
 .el-aside .el-menu {
-  height: 100vh;
+  height: 90vh;
 }
 .el-header{
-    min-height: 15vh;
+    min-height: 5vh;
 }
 .el-main{
   margin: 0;

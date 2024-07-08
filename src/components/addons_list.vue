@@ -1,26 +1,11 @@
 <template>
   <el-container>
-    <el-header >
-      <div>
-        <h1>{{ version_data.title }}</h1>
-      </div>
-    </el-header>
-    <el-main v-loading="main_loading">
+    <el-main>
       <el-table :data="tableData"   stripe style="width: 100%">
         <el-table-column prop="" label="头像"  >
           <template #default="scope">
-            <img alt="" v-show='scope.row.status !==1 ' :src="scope.row.img" width="100" height="60"/>
-            <div class="demo-progress" style="margin-left: 25%">
-              <el-progress
-                  type="circle"
-                  width = 50
-                  v-show='scope.row.status===1'
-                  :stroke-width="8"
-                  :percentage= scope.row.progress
-              >
-                <span class="percentage-label">{{scope.row.status_word }}</span>
-              </el-progress>
-            </div>
+            <img alt=""   :src="scope.row.img" width="100" height="60"/>
+
           </template>
         </el-table-column>
         <el-table-column prop="title" label="插件" />
@@ -50,15 +35,6 @@
         </el-table-column>
       </el-table>
     </el-main>
-    <el-footer>
-      <div class="login_button_form">
-        <el-row>
-          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button style="max-width: 100px" size="" type="success">{{this.path}}</el-button></el-col>
-          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button  size="" type="success">3.35欧洲</el-button></el-col>
-          <el-col :span="8"><div class="grid-content ep-bg-purple" /><el-button  @click="start_wow()" size="" type="primary">3.35欧洲</el-button></el-col>
-        </el-row>
-      </div>
-    </el-footer>
   </el-container>
 </template>
 

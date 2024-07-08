@@ -10,7 +10,11 @@ exports.wow_file_path =  function (version_data){
             if (err) {
                 reject(err);
             } else {
-                resolve(row);
+                if (row.length === 0) {
+                    reject("没有选择路径");
+                }else{
+                    resolve(row);
+                }
             }
         });
     })
