@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session, ipcMain } = require('electron')
+const { app, BrowserWindow, session, ipcMain,screen } = require('electron')
 const path = require('path')
 const {down_file, down_cancel} = require("./lib/down");
 const { wow_file_path } = require('./lib/db')
@@ -9,13 +9,22 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 let mainWindow;
 
 function createWindow () {
-   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 500,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+    // 计算窗口的尺寸
+    let windowWidth = Math.floor(width / 2);
+    if (windowWidth < 1000) windowWidth = 1000
+
+    let windowHeight = Math.floor(height / 2);
+    if (windowHeight < 600) windowHeight = 600
+    console.log(windowWidth, height)
+    mainWindow = new BrowserWindow({
+        width: windowWidth,
+        height: windowHeight,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
+    })
 
   // 创建下载目录
   if (!existsSync('downloaded_files')) {
