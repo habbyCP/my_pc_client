@@ -13,10 +13,10 @@
             @select="handleOpen"
         >
           <el-menu-item index="2.43">
-            <span>2.43 工具</span>
+            <span>2.43 资料下载</span>
           </el-menu-item>
           <el-menu-item index="3.35">
-            <span>3.35 工具</span>
+            <span>3.35 资料下载</span>
           </el-menu-item>
         </el-menu>
 

@@ -1,7 +1,19 @@
 const resolve = require("resolve");
 const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
 
 exports.wow_file_path =  function (version_data){
+    path = './file.json'
+    return new Promise((resolve, reject) => {
+        if (!fs.existsSync(path)) {
+             resolve({
+                code: 404,
+                message: "没有配置wow.exe路径"
+            });
+        }else{
+            resolve(path);
+        }
+    })
     console.log("收到的查询语句",version_data)
     return new Promise((resolve, reject) => {
         let sql ='select path from wow_file_path where version='+version_data.version+' limit 1'

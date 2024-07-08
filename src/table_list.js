@@ -1,11 +1,10 @@
-import { format } from "date-fns";
+import {format} from "date-fns";
 import axios from 'axios';
 
-import LoginButtonWlk from "./components/login_button_wlk.vue";
-import {inject} from "vue";
+import {ElMessageBox} from 'element-plus'
 export default {
-    components:{
-        LoginButtonWlk
+    components: {
+        // LoginButtonWlk
     },
     name: 'AddonsList',
     props: {
@@ -14,19 +13,18 @@ export default {
     data() {
         return {
             menu_list: {
-                "2.43":{"version":"2.43","title":"2.43工具下载"},
-                "3.35":{"version":"3.35","title":"3.35工具下载"}
+                "2.43": {"version": "2.43", "title": "2.43工具下载"},
+                "3.35": {"version": "3.35", "title": "3.35工具下载"}
             },
             path: "",
-            main_loading_word : "加载中",
+            main_loading_word: "加载中",
             main_loading: false,
             isDark: false,
-            version:"",
-            progress_dialog:false,
-            tableData: [
-            ],
-            version_data:{},
-            title:"",
+            version: "",
+            progress_dialog: false,
+            tableData: [],
+            version_data: {},
+            title: "",
         }
     },
     created() {
@@ -37,13 +35,13 @@ export default {
 
         //进度反馈
         window.electronAPI.onDownloadProgress((event, item) => {
-            console.log("进度返回值 : ",item.data)
-            if (item.code!==200){
+            console.log("进度返回值 : ", item.data)
+            if (item.code !== 200) {
                 this.main_loading = false
                 alert("下载失败")
                 return
             }
-            if (item.data.progress ===100){
+            if (item.data.progress === 100) {
                 this.main_loading = false
                 return
             }
@@ -51,87 +49,91 @@ export default {
         });
     },
     methods: {
-        get_version(){
+        get_version() {
             this.version = localStorage.getItem("version")
-            if (this.version==null){
+            if (this.version == null) {
                 this.version = "2.43"
-                localStorage.setItem("version",this.version)
+                localStorage.setItem("version", this.version)
             }
-            console.log("版本号",this.version)
+            console.log("版本号", this.version)
             return this.version
         },
         handleOpen(key) {
             this.version = key
-            localStorage.setItem("version",key)
+            localStorage.setItem("version", key)
             this.get_addons(key)
         },
         //启动客户端
-        start_wow:function (){
+        start_wow: function () {
             window.electronAPI.startWow({"version": this.version})
         },
 
         //获取当前版本的可执行文件地址
-        get_wow_exe: function () {
-            let key;
-            key = this.menu_index+"wow_path"
-            let path;
-            path = localStorage.getItem(key);
-            //判断path为null
-            if (path === null) {
-                alert("没有找到可执行的wow.exe文件")
-                return
-            }
-            console.log(path)
+        get_wow_exe: function (data) {
+            return window.electronAPI.wowFilePath(data)
         },
         // 下载插件
-        down_addons(data){
-            this.main_loading = true
-            this.main_loading_word = '插件下载ing'
-            this.tableData[data.$index].status = 1
-            let down_data= {}
-            let row = data.row
-            down_data = {
-                url: row.down_link,
-                index: data.$index,
-                title: row.title,
-                version: this.version,
-                addons_version: row.addons_version,
-            }
-            console.log('下载数据1',down_data)
-            //执行下载
-            window.electronAPI.downloadFile(down_data)
+        down_addons(data) {
+            this.get_wow_exe({version: this.version}).then((res) => {
+                console.log(res)
+                if (res.code !== 200) {
+                    ElMessageBox.alert(res.message, '错误', {
+                        confirmButtonText: 'OK',
+                        type: 'warning',
+                        center: true,
+                    }).then(r => {
+                        alert('配置')
+                    }).catch(c => {})//cancel
+                } else {
+                    let down_data = {}
+                    let row = data.row
+                    down_data = {
+                        url: row.down_link,
+                        index: data.$index,
+                        title: row.title,
+                        version: this.version,
+                        addons_version: row.addons_version,
+                    }
+                    console.log('下载数据1', down_data)
+                    //执行下载
+                    window.electronAPI.downloadFile(down_data)
+                }
+            }).catch((error) => {
+                ElMessageBox.alert(error)
+            })
+
         },
-        get_addons(version){
-            if (version ==null){
+        get_addons(version) {
+            if (version == null) {
                 version = this.get_version()
             }
             this.main_loading = true
-            axios.get('https://mock.apipark.cn/m1/4651067-4301781-default/api/addons/list?version='+this.version+'&page').then(response=>{
-                if(response.status!==200){
+            axios.get('https://mock.apipark.cn/m1/4651067-4301781-default/api/addons/list?version=' + this.version + '&page').then(response => {
+                if (response.status !== 200) {
                     console.log(response)
                     this.main_loading = false
-                }else{
+                } else {
                     const response_content = response.data
                     this.tableData = []
                     for (const key in response_content.data) {
                         let one = response_content.data[key]
-                        let one_data= {
-                            imgList:one.img_list,
-                            title:one.title,
-                            addons_version:one.version,
-                            version:this.version,
-                            down_link :one.down_link,
-                            update_time:format(new Date(one.update_time*1000), 'yyyy-MM-dd'),
+                        let one_data = {
+                            imgList: one.img_list,
+                            title: one.title,
+                            addons_version: one.version,
+                            version: this.version,
+                            down_link: one.down_link,
+                            update_time: format(new Date(one.update_time * 1000), 'yyyy-MM-dd'),
                             status: 0,
                             progress: 0,
-                            status_word:'111',
+                            status_word: '111',
                         }
                         this.tableData.push(one_data)
                     }
                     this.main_loading = false
                 }
 
-            }).catch(err=>{
+            }).catch(err => {
                 console.log(err)
             })
         },

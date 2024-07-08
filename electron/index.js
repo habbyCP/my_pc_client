@@ -62,9 +62,6 @@ ipcMain.on('download-file',  down_file);
 //取消下载
 ipcMain.on('cancel-download', down_cancel);
 
-
-
-
 //版本相关的查询
 ipcMain.handle('wow-file-path', async (event,down_data_info)=>{
     return wow_file_path(down_data_info);
