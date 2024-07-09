@@ -1,11 +1,10 @@
 const {BrowserWindow } = require('electron')
-const log = require("electron-log");
 const path = require("path");
 const {get} = require("https");
 const fs = require('fs');
 const compressing = require('compressing');
-const {wow_file_path, addons_insert} = require("./db");
-const {existsSync, mkdirSync} = require("fs");
+const {wow_file_path} = require("./db");
+const {debug,info,error} = require("./log");
 let  req_list  = new Map()
 
 
@@ -45,23 +44,19 @@ function send_msg(code,data,msg) {
         data: data,
         msg: msg
     }
-    log.info("发送出去的信息:", send_data)
     BrowserWindow.getFocusedWindow().webContents.send('download-progress', send_data);
 }
 
 exports.down_file =  async function (event, down_data) {
 
-    log.info("收到下载需求：", down_data)
+    debug("收到下载需求：", down_data)
     try{
-        let row = await wow_file_path(down_data)
-        let  wow_path = ''
-        if (row.length > 0) {
-            wow_path = row[0].path
-        }
-        if (wow_path.length <= 0){
-            send_msg(502,down_data,down_data.version+"没有选择 wow.exe 文件")
+        let wow_path_data = await wow_file_path({version: down_data.version})
+        if (wow_path_data.code !==200){
+            send_msg(wow_path_data.code,{},wow_path_data.message)
             return
         }
+        const  wow_path = wow_path_data.data
         // 解析URL
         const parsedUrl = new URL(down_data.url);
         // 获取路径名
@@ -147,7 +142,7 @@ exports.down_file =  async function (event, down_data) {
             })
             //下载完成
             response.on('end', () => {
-                log.info("下载完成")
+                info("下载完成")
                 let progress_return_data = {
                     progress: 70,
                     index: down_data.index
@@ -157,7 +152,7 @@ exports.down_file =  async function (event, down_data) {
             })
             //下载取消
             response.on('aborted', () => {
-                log.info("下载取消")
+                info("下载取消")
                 let progress_return_data = {
                     progress: 0,
                     index: down_data.index
@@ -166,7 +161,7 @@ exports.down_file =  async function (event, down_data) {
             })
             //下载错误
             response.on('error', (err) => {
-                log.info("下载错误:", err)
+                info("下载错误:", err)
                 let progress_return_data = {
                     progress: 0,
                     index: down_data.index
@@ -174,7 +169,7 @@ exports.down_file =  async function (event, down_data) {
                 BrowserWindow.getFocusedWindow().webContents.send('download-error', progress_return_data);
             })
             response.on('close', () => {
-                log.info("下载close")
+                info("下载close")
                 let progress_return_data = {
                     progress: 100,
                     index: down_data.index

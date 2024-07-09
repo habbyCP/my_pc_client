@@ -19,10 +19,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onDownloadComplete: (callback) => ipcRenderer.on('download-complete', callback),
   onDownloadError: (callback) => ipcRenderer.on('download-error', callback),
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', callback),
-
   wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
+  selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
 
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
+  onErrorResponse: (callback) => ipcRenderer.on('response', callback),
+  // selectFile: selectFile,
 });
 
 

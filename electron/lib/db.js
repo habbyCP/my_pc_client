@@ -1,36 +1,46 @@
-const resolve = require("resolve");
+
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
+const {info} = require("./log");
+const {NONE_WOW} = require("./error_code");
+const json_path = './file.json'
 
 exports.wow_file_path =  function (version_data){
-    path = './file.json'
+    info("传参",version_data)
     return new Promise((resolve, reject) => {
-        if (!fs.existsSync(path)) {
+        if (!fs.existsSync(json_path)) {
              resolve({
-                code: 404,
+                code: NONE_WOW,
                 message: "没有配置wow.exe路径"
             });
         }else{
-            resolve(path);
+            let file_json_data= fs.readFileSync(json_path,'utf8');
+            let file_data = JSON.parse(file_json_data);
+            if (file_data.hasOwnProperty(version_data.version)){
+                resolve({
+                    code: 200,
+                    data: file_data[version_data.version],
+                    message: ''
+                });
+            }else{
+                resolve({
+                    code: NONE_WOW,
+                    message: "没有找到wow.exe路径"
+                });
+            }
         }
     })
-    console.log("收到的查询语句",version_data)
-    return new Promise((resolve, reject) => {
-        let sql ='select path from wow_file_path where version='+version_data.version+' limit 1'
-        console.log("sql:",sql)
-        db.all(sql, (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                if (row.length === 0) {
-                    reject("没有选择路径");
-                }else{
-                    resolve(row);
-                }
-            }
-        });
-    })
-
+}
+exports.set_wow_file = function (version,wow_path){
+    if (!fs.existsSync(json_path)){
+        fs.writeFileSync(json_path, JSON.stringify({[version]: wow_path}));
+    }else {
+        let file_json_data= fs.readFileSync(json_path,'utf8');
+        let file_data = JSON.parse(file_json_data);
+        file_data[version] = wow_path;
+        fs.writeFileSync(json_path, JSON.stringify(file_data));
+        console.log('保存成功',file_data)
+    }
 }
 
 exports.addons_insert = function (addon_list,data_deal){

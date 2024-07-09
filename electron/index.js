@@ -1,24 +1,26 @@
-const { app, BrowserWindow, session, ipcMain,screen } = require('electron')
+const { app, BrowserWindow, session, ipcMain,screen,dialog } = require('electron')
 const path = require('path')
-const {down_file, down_cancel} = require("./lib/down");
+const {down_file} = require("./lib/down");
 const { wow_file_path } = require('./lib/db')
 const { exec } = require('child_process');
 const {mkdirSync, existsSync} = require("fs");
+const {select_file} = require("./lib/wow");
+const {send_msg} = require("./lib/notice");
+const {ErrorCode} = require("./lib/error_code");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 
-let mainWindow;
+
 
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
     // 计算窗口的尺寸
     let windowWidth = Math.floor(width / 2);
     if (windowWidth < 1000) windowWidth = 1000
 
     let windowHeight = Math.floor(height / 2);
     if (windowHeight < 600) windowHeight = 600
-    console.log(windowWidth, height)
-    mainWindow = new BrowserWindow({
+
+    let mainWindow = new BrowserWindow({
         width: windowWidth,
         height: windowHeight,
         webPreferences: {
@@ -50,33 +52,45 @@ app.whenReady().then( async () => {
 
 })
 
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
-// ipcMain.on('download-file2',down_file)
+
+ipcMain.handle('select-file',(event,version_data)=>{
+    return select_file(event,version_data)
+})
+
 //文件下载相关的
 ipcMain.on('download-file',  down_file);
 
-//取消下载
-ipcMain.on('cancel-download', down_cancel);
 
 //版本相关的查询
 ipcMain.handle('wow-file-path', async (event,down_data_info)=>{
+
     return wow_file_path(down_data_info);
 });
 
 ipcMain.on('start-wow', function (event,data) {
-    exec('open -a /usr/local/bin/code', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error opening TextEdit: ${error.message}`);
-            return;
+    wow_file_path(data).then(res=>{
+        if(res.code===200){
+            exec('open -a '+res.data)
+        }else{
+            send_msg(res.code,{},res.message)
         }
-        if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
+    })
+
+    // exec('open -a /usr/local/bin/code', (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.error(`Error opening TextEdit: ${error.message}`);
+    //         return;
+    //     }
+    //     if (stderr) {
+    //         console.error(`stderr: ${stderr}`);
+    //         return;
+    //     }
+    //     console.log(`stdout: ${stdout}`);
+    // });
 });

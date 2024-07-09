@@ -65,10 +65,13 @@
       </el-container>
       <el-footer style="border-top:1px solid #e6e6e6">
         <el-row style="height: 10vh;">
-          <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-          <el-col :span="8"><div class=""></div></el-col>
+          <el-col :span="3"><div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="13"><div class="" style = "line-height: 9vh;font-size: 10px">
+            <span style="margin-right: 20px">{{ this.wow_path }}</span>
+            <el-button  @click="start_wow"  type="danger" size="small">清除路径</el-button>
+          </div></el-col>
           <el-col :span="8"><div  style = "line-height: 9vh" class="grid-content bg-purple">
-            <el-button   type="success">启动游戏</el-button></div>
+            <el-button  @click="start_wow"  type="success">启动游戏</el-button></div>
           </el-col>
         </el-row>
       </el-footer>
@@ -95,7 +98,7 @@ html, body, #app {
   color: #2c3e50;
 }
 .el-table__cell {
-  //position: static !important;
+  position: static !important;
 }
 .common-layout {
   height: 100vh;
