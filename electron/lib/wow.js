@@ -1,10 +1,12 @@
 const {dialog, BrowserWindow} = require("electron");
 const {basename} = require("path");
 const {set_wow_file} = require("./db");
+const {ERROR_CODE, OK_CODE, NONE_WOW} = require("./error_code");
+ 
 
 
-select_file = function(event, version_data){
-    console.log('传参',version_data)
+
+select_file = function(event, version_data){ 
     return new Promise((resolve, reject) =>{
          dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
             properties: ['openFile'],
@@ -15,11 +17,13 @@ select_file = function(event, version_data){
         }).then(res=>{
              let fileName = basename(res.filePaths[0]);
             if (fileName!=='wow.exe' && fileName!=='Wow.exe'){
-                resolve({code: 502, message: fileName+'不是有效的wow.exe文件'});
+                resolve({code: ERROR_CODE, message: fileName+'不是有效的wow.exe文件'});
             }else{
-                set_wow_file(version_data.version,res.filePaths[0])
-                resolve({code: 200, message: res.filePaths[0]});
-
+                if (set_wow_file(version_data.version,res.filePaths[0])){
+                    resolve({code: OK_CODE, data: res.filePaths[0]});
+                }else{
+                    resolve({code: ERROR_CODE, message: '保存文件路径失败'});
+                }
             }
          }).catch(err=>{
              reject({code: 400, message: err});

@@ -10,7 +10,7 @@
         <el-menu
             :default-active= "version"
             class="el-menu-vertical-demo"
-            @select="handleOpen"
+            @select="switch_version"
         >
           <el-menu-item index="2.43">
             <span>2.43 资料下载</span>
@@ -64,13 +64,31 @@
         </el-container>
       </el-container>
       <el-footer style="border-top:1px solid #e6e6e6">
-        <el-row style="height: 10vh;">
-          <el-col :span="3"><div class="grid-content bg-purple"></div></el-col>
-          <el-col :span="13"><div class="" style = "line-height: 9vh;font-size: 10px">
-            <span style="margin-right: 20px">{{ this.wow_path }}</span>
-            <el-button  @click="start_wow"  type="danger" size="small">清除路径</el-button>
-          </div></el-col>
-          <el-col :span="8"><div  style = "line-height: 9vh" class="grid-content bg-purple">
+        <el-row style="line-height: 10vh;font-size: 12px">
+          <el-col :span="14">
+              <div class="">
+              <span style="margin-right: 20px">{{ this.wow_path }}</span>
+              <el-button type="warning" size="small" @click="page_select_wow">设置wow.exe</el-button>
+            </div>
+          </el-col>
+          <el-col :span="4"></el-col>
+          <el-col :span="2">
+<!--            <div>-->
+<!--              <el-select-->
+<!--                  v-model="server"-->
+<!--                  placeholder="选择服务器"-->
+<!--                  size="small"-->
+<!--              >-->
+<!--                <el-option-->
+<!--                    v-for="item in server_list"-->
+<!--                    :key="item.server"-->
+<!--                    :label="item.title"-->
+<!--                    :value="item.server"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </div>-->
+          </el-col>
+          <el-col :span="4"><div  style = "line-height: 9vh" class="grid-content bg-purple">
             <el-button  @click="start_wow"  type="success">启动游戏</el-button></div>
           </el-col>
         </el-row>

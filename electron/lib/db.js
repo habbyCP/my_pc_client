@@ -2,11 +2,11 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const {info} = require("./log");
-const {NONE_WOW} = require("./error_code");
+const {NONE_WOW,ERROR_CODE} = require("./error_code");
 const json_path = './file.json'
 
 exports.wow_file_path =  function (version_data){
-    info("传参",version_data)
+    info("wow路径传参",version_data)
     return new Promise((resolve, reject) => {
         if (!fs.existsSync(json_path)) {
              resolve({
@@ -15,7 +15,16 @@ exports.wow_file_path =  function (version_data){
             });
         }else{
             let file_json_data= fs.readFileSync(json_path,'utf8');
-            let file_data = JSON.parse(file_json_data);
+            let file_data = {}
+            try {
+                file_data = JSON.parse(file_json_data);
+            } catch (error) {
+                resolve({
+                    code: ERROR_CODE,
+                    message: "路径配置的json文件解析出错"
+                });
+                return;
+            }
             if (file_data.hasOwnProperty(version_data.version)){
                 resolve({
                     code: 200,
@@ -32,14 +41,24 @@ exports.wow_file_path =  function (version_data){
     })
 }
 exports.set_wow_file = function (version,wow_path){
+    console.log("版本",version)
     if (!fs.existsSync(json_path)){
         fs.writeFileSync(json_path, JSON.stringify({[version]: wow_path}));
     }else {
         let file_json_data= fs.readFileSync(json_path,'utf8');
-        let file_data = JSON.parse(file_json_data);
+        let file_data
+        try {
+            file_data = JSON.parse(file_json_data);
+        } catch (error) {
+            fs.writeFileSync(json_path, JSON.stringify({[version]: wow_path}));
+            return false
+        }
+
         file_data[version] = wow_path;
         fs.writeFileSync(json_path, JSON.stringify(file_data));
         console.log('保存成功',file_data)
+        return true
+
     }
 }
 

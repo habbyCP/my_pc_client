@@ -21,6 +21,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', callback),
   wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
   selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
+  //获取realmlist文件是否正常
+  getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
+  //修复realmelist文件
+  fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
 
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
   onErrorResponse: (callback) => ipcRenderer.on('response', callback),

@@ -6,10 +6,9 @@ const { exec } = require('child_process');
 const {mkdirSync, existsSync} = require("fs");
 const {select_file} = require("./lib/wow");
 const {send_msg} = require("./lib/notice");
-const {ErrorCode} = require("./lib/error_code");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 
-
+const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -68,10 +67,15 @@ ipcMain.on('download-file',  down_file);
 
 
 //版本相关的查询
-ipcMain.handle('wow-file-path', async (event,down_data_info)=>{
-
-    return wow_file_path(down_data_info);
+ipcMain.handle('wow-file-path', function (event, version_data) {
+  return wow_file_path(version_data)
 });
+
+//获取realmlist
+ipcMain.handle('get-realmlist',get_realmlist)
+//修复relmlist
+ipcMain.handle('fix-realmlist', fix_realmlist);
+
 
 ipcMain.on('start-wow', function (event,data) {
     wow_file_path(data).then(res=>{
@@ -81,16 +85,4 @@ ipcMain.on('start-wow', function (event,data) {
             send_msg(res.code,{},res.message)
         }
     })
-
-    // exec('open -a /usr/local/bin/code', (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.error(`Error opening TextEdit: ${error.message}`);
-    //         return;
-    //     }
-    //     if (stderr) {
-    //         console.error(`stderr: ${stderr}`);
-    //         return;
-    //     }
-    //     console.log(`stdout: ${stdout}`);
-    // });
 });

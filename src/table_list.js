@@ -1,6 +1,7 @@
 import {format} from "date-fns";
 import axios from 'axios';
 import {ElMessageBox} from 'element-plus'
+import {ref} from "vue";
 export default {
     components: {
         // LoginButtonWlk
@@ -63,30 +64,129 @@ export default {
                 this.version = "2.43"
                 localStorage.setItem("version", this.version)
             }
-            console.log("版本号", this.version)
             window.electronAPI.wowFilePath({version:this.version}).then((res) => {
                 if (res.code === 200) {
                     this.wow_path = res.data
                 }
+            }).catch((err) => {
+                console.log(err)
             })
             return this.version
         },
-        handleOpen(key) {
+        switch_version(key) {
             this.version = key
             localStorage.setItem("version", key)
             this.get_addons(key)
+            this.get_wow_exe({version: key}).then((res) => {
+                console.log(res)
+                if (res.code === 200) {
+                    this.wow_path = res.data
+                }else{
+                    this.wow_path = ""
+                    if (res.code === 10404) {
+                        ElMessageBox.alert("没有配置wow.exe路径", '请选择你的'+this.version+'wow.exe路径', {
+                            confirmButtonText: '现在去配置',
+                            type: 'warning',
+                            center: true,
+                        }).then(()=>{
+                           this.select_wow_exe({version:this.version})
+
+                        })
+                    }else{
+                        alert(res.message)
+                    }
+
+                }
+            }).catch((err) => {
+
+            })
         },
         //启动客户端
         start_wow: function () {
-            window.electronAPI.startWow({"version": this.version})
+            window.electronAPI.getRealmlist({version:this.version}).then(res=>{
+                if (res.code!==200){
+                    ElMessageBox.confirm(
+                        res.data+',不是有效的指向内容，点击确认修复为亚洲服务器',
+                        'realmlist指向文件错误:',
+                        {
+                          confirmButtonText: 'OK',
+                          cancelButtonText: 'Cancel',
+                          type: 'warning',
+                        }
+                      ).then(() => {
+                        window.electronAPI.fixRealmlist({version:this.version}).then(res=>{
+                              if (res.code===200){
+                                  ElMessageBox.alert(res.message,"成功",{
+                                      confirmButtonText: 'OK',
+                                      type: 'success',
+                                      center: true,
+                                  }).then(()=>{
+                                    window.electronAPI.startWow({"version": this.version})
+                                  }).catch(err=>{
+                                      ElMessageBox.alert(err,"错误",{
+                                          confirmButtonText: 'OK',
+                                          type: 'error',
+                                          center: true,
+                                      })
+                                  })
+                                  
+                              }else{
+                                  ElMessageBox.alert(res.data,data.message,{
+                                      confirmButtonText: 'OK',
+                                      type: 'error',
+                                      center: true,
+                                  })
+                              }
+                          }).catch(err=>{
+                            console.log('报错',err)
+                              ElMessageBox.alert(err,"错误",{
+                                  confirmButtonText: 'OK',
+                                  type: 'error',
+                                  center: true,
+                              })
+                          })
+                      })
+                    
+                }else{
+                    window.electronAPI.startWow({"version": this.version})
+                }
+            }).catch(err=>{
+                ElMessageBox.alert(err,"错误",{
+                    confirmButtonText: 'OK',
+                    type: 'error',
+                    center: true,
+                })
+            })
         },
 
         //获取当前版本的可执行文件地址
         get_wow_exe: function (data) {
             return window.electronAPI.wowFilePath(data)
         },
+        page_select_wow: function () {
+            this.select_wow_exe({version:this.version})
+        },
         select_wow_exe: function (request_data) {
-             return window.electronAPI.selectFile(request_data)
+            if (Object.keys(request_data).length === 0) {
+                request_data = {"version": this.version}
+            }
+            console.log(request_data)
+              window.electronAPI.selectFile(request_data).then((res) => {
+                  if (res.code === 200) {
+                      console.log("响应:",res)
+                      this.wow_path = res.data
+                      this.main_loading = false
+                      ElMessageBox.alert("配置成功", {
+                          confirmButtonText: 'OK',
+                          type: 'success',
+                          center: true,
+                      })
+                  }
+
+              }).catch((err) => {
+                  this.main_loading = false
+                  console.log('错误',err)
+              })
         },
         // 下载插件
          down_addons:async function (data) {
@@ -94,22 +194,12 @@ export default {
              let download_return = await this.get_wow_exe({version: this.version})
              // 需要配置wow.exe路径
              if (download_return.code ===10404) {
-                 ElMessageBox.alert("没有配置wow.exe路径", '请选择你的'+this.version+'wow.exe路径', {
-                     confirmButtonText: '现在去配置',
+                 ElMessageBox.alert( '请选择你的'+this.version+'wow.exe路径',"没有配置wow.exe路径", {
+                     confirmButtonText: '去配置',
                      type: 'warning',
                      center: true,
                  }).then(()=>{
-                     this.select_wow_exe({version: this.version}).then((res) => {
-                         this.main_loading = false
-                         ElMessageBox.alert("配置成功", {
-                             confirmButtonText: 'OK',
-                             type: 'success',
-                             center: true,
-                         })
-                     }).catch((err) => {
-                         this.main_loading = false
-                        console.log('错误',err)
-                     })
+                     this.select_wow_exe({version: this.version})
                  }).catch(() => {
 
                  }).finally(()=>{
