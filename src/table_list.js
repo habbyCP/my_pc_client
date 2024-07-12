@@ -12,6 +12,10 @@ export default {
     },
     data() {
         return {
+            detail_dialog:false,
+            search_form:{},
+            detail_title:'',
+            detail_text:'',
             menu_list: {
                 "2.43": {"version": "2.43", "title": "2.43工具下载","category_id":8},
                 "3.35": {"version": "3.35", "title": "3.35工具下载","category_id":9}
@@ -29,7 +33,7 @@ export default {
     },
     created() {
         //初始化基本信息
-        this.get_addons(this.get_version())
+        this.get_addons_list(this.get_version())
         //进度反馈
         window.electronAPI.onDownloadProgress((event, item) => {
             // console.log("进度返回值 : ", item.data)
@@ -70,6 +74,11 @@ export default {
         })
     },
     methods: {
+        show_detail:function(data){
+            this.detail_title = data.title
+            this.detail_text = data.text
+            this.detail_dialog = true
+        },
         get_version() {
             this.version = localStorage.getItem("version")
             if (this.version == null) {
@@ -88,7 +97,7 @@ export default {
         switch_version(key) {
             this.version = key
             localStorage.setItem("version", key)
-            this.get_addons(key)
+            this.get_addons_list(key)
             this.get_wow_exe({version: key}).then((res) => {
                 console.log(res)
                 if (res.code === 200) {
@@ -239,7 +248,7 @@ export default {
             }
 
         },
-        get_addons: function (version) {
+        get_addons_list: function (version) {
             if (version == null) {
                 version = this.get_version()
             }
@@ -256,11 +265,13 @@ export default {
                     this.tableData = []
                     for (const key in response_content.data) {
                         let one = response_content.data[key]
+                        console.log(one)
                         let one_data = {
                             imgList: one.pic_list,
                             title: one.title,
                             addons_version: one.version,
                             version: this.version,
+                            text: one.text,
                             down_link: one.down_link,
                             update_time: format(new Date(one.modified * 1000), 'yyyy-MM-dd'),
                             status: 0,

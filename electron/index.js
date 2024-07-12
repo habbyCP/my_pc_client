@@ -24,6 +24,7 @@ function createWindow () {
     let mainWindow = new BrowserWindow({
         width: windowWidth,
         height: windowHeight,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
