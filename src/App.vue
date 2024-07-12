@@ -68,7 +68,7 @@
           <el-col :span="14">
               <div class="">
               <span style="margin-right: 20px">{{ this.wow_path }}</span>
-              <el-button type="warning" size="small" @click="page_select_wow">设置wow.exe</el-button>
+              <el-button type="warning" size="small" @click="handle_select_wow">设置wow.exe</el-button>
             </div>
           </el-col>
           <el-col :span="4"></el-col>

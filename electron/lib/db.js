@@ -1,15 +1,12 @@
 
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
-const {info} = require("./log");
 const {NONE_WOW,ERROR_CODE} = require("./error_code");
 const json_path = './file.json'
-
 exports.wow_file_path =  function (version_data){
-    info("wow路径传参",version_data)
     return new Promise((resolve, reject) => {
         if (!fs.existsSync(json_path)) {
-             resolve({
+            reject({
                 code: NONE_WOW,
                 message: "没有配置wow.exe路径"
             });
@@ -19,9 +16,9 @@ exports.wow_file_path =  function (version_data){
             try {
                 file_data = JSON.parse(file_json_data);
             } catch (error) {
-                resolve({
+                reject({
                     code: ERROR_CODE,
-                    message: "路径配置的json文件解析出错"
+                    message: "路径配置的json文件解析出错,请点击设置wow.exe路径重新设置"
                 });
                 return;
             }
@@ -32,7 +29,7 @@ exports.wow_file_path =  function (version_data){
                     message: ''
                 });
             }else{
-                resolve({
+                reject({
                     code: NONE_WOW,
                     message: "没有找到wow.exe路径"
                 });

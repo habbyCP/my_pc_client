@@ -1,7 +1,7 @@
 import {format} from "date-fns";
 import axios from 'axios';
 import {ElMessageBox} from 'element-plus'
-import {ref} from "vue";
+
 export default {
     components: {
         // LoginButtonWlk
@@ -41,7 +41,7 @@ export default {
             }
             if (item.data.progress === 100) {
                 this.main_loading = false
-                ElMessageBox.alert( '下载完成', {
+                ElMessageBox.alert('','下载完成', {
                     type: 'success',
                     center: true,
                 })
@@ -49,12 +49,24 @@ export default {
             }
             // this.main_loading_word = "12312"
         });
-        window.electronAPI.onErrorResponse((event, item) => {
+        window.electronAPI.onResponse((event, item) => {
+            console.log("服务器返回 : ", item)
             this.main_loading = false
-            ElMessageBox.alert(item.msg,item.code,  {
-                type: 'error',
+            let type
+
+            if(item.code===200){
+                type = 'success'
+            }else{
+                type = 'error'
+            }
+
+            ElMessageBox.alert(item.data, item.code + ":" + item.message, {
+                type: type,
                 center: true,
             })
+            if (item.hasOwnProperty('sub_code') && item.sub_code===20100){
+                this.wow_path = item.data
+            }
         })
     },
     methods: {
@@ -64,7 +76,7 @@ export default {
                 this.version = "2.43"
                 localStorage.setItem("version", this.version)
             }
-            window.electronAPI.wowFilePath({version:this.version}).then((res) => {
+            window.electronAPI.wowFilePath({version: this.version}).then((res) => {
                 if (res.code === 200) {
                     this.wow_path = res.data
                 }
@@ -81,18 +93,18 @@ export default {
                 console.log(res)
                 if (res.code === 200) {
                     this.wow_path = res.data
-                }else{
+                } else {
                     this.wow_path = ""
                     if (res.code === 10404) {
-                        ElMessageBox.alert("没有配置wow.exe路径", '请选择你的'+this.version+'wow.exe路径', {
+                        ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + this.version + 'wow.exe路径', {
                             confirmButtonText: '现在去配置',
                             type: 'warning',
                             center: true,
-                        }).then(()=>{
-                           this.select_wow_exe({version:this.version})
+                        }).then(() => {
+                            this.select_wow_exe({version: this.version})
 
                         })
-                    }else{
+                    } else {
                         alert(res.message)
                     }
 
@@ -102,56 +114,75 @@ export default {
             })
         },
         //启动客户端
-        start_wow: function () {
-            window.electronAPI.getRealmlist({version:this.version}).then(res=>{
-                if (res.code!==200){
+        start_wow: async function () {
+            let version_data = await this.get_wow_exe({version: this.version})
+            if (version_data.code !== 200) {
+                if (version_data.code === 10404) {
+                    ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + this.version + 'wow.exe路径', {
+                        confirmButtonText: '现在去配置',
+                        type: 'warning',
+                        center: true,
+                    }).then(() => {
+                        this.select_wow_exe({version: this.version})
+                    })
+                } else {
+                    await ElMessageBox.alert(version_data.message, "错误", {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
+                    })
+                }
+                return
+            }
+            window.electronAPI.getRealmlist({version: this.version}).then(res => {
+                if (res.code !== 200) {
                     ElMessageBox.confirm(
-                        res.data+',不是有效的指向内容，点击确认修复为亚洲服务器',
+                        res.data + ',不是有效的指向内容，点击确认修复为亚洲服务器',
                         'realmlist指向文件错误:',
                         {
-                          confirmButtonText: 'OK',
-                          cancelButtonText: 'Cancel',
-                          type: 'warning',
+                            confirmButtonText: 'OK',
+                            cancelButtonText: 'Cancel',
+                            type: 'warning',
                         }
-                      ).then(() => {
-                        window.electronAPI.fixRealmlist({version:this.version}).then(res=>{
-                              if (res.code===200){
-                                  ElMessageBox.alert(res.message,"成功",{
-                                      confirmButtonText: 'OK',
-                                      type: 'success',
-                                      center: true,
-                                  }).then(()=>{
+                    ).then(() => {
+                        window.electronAPI.fixRealmlist({version: this.version}).then(res => {
+                            if (res.code === 200) {
+                                ElMessageBox.alert(res.message, "成功", {
+                                    confirmButtonText: 'OK',
+                                    type: 'success',
+                                    center: true,
+                                }).then(() => {
                                     window.electronAPI.startWow({"version": this.version})
-                                  }).catch(err=>{
-                                      ElMessageBox.alert(err,"错误",{
-                                          confirmButtonText: 'OK',
-                                          type: 'error',
-                                          center: true,
-                                      })
-                                  })
-                                  
-                              }else{
-                                  ElMessageBox.alert(res.data,data.message,{
-                                      confirmButtonText: 'OK',
-                                      type: 'error',
-                                      center: true,
-                                  })
-                              }
-                          }).catch(err=>{
-                            console.log('报错',err)
-                              ElMessageBox.alert(err,"错误",{
-                                  confirmButtonText: 'OK',
-                                  type: 'error',
-                                  center: true,
-                              })
-                          })
-                      })
-                    
-                }else{
+                                }).catch(err => {
+                                    ElMessageBox.alert(err, "错误", {
+                                        confirmButtonText: 'OK',
+                                        type: 'error',
+                                        center: true,
+                                    })
+                                })
+
+                            } else {
+                                ElMessageBox.alert(res.data, data.message, {
+                                    confirmButtonText: 'OK',
+                                    type: 'error',
+                                    center: true,
+                                })
+                            }
+                        }).catch(err => {
+                            console.log('报错', err)
+                            ElMessageBox.alert(err, "错误", {
+                                confirmButtonText: 'OK',
+                                type: 'error',
+                                center: true,
+                            })
+                        })
+                    })
+
+                } else {
                     window.electronAPI.startWow({"version": this.version})
                 }
-            }).catch(err=>{
-                ElMessageBox.alert(err,"错误",{
+            }).catch(err => {
+                ElMessageBox.alert(err, "错误", {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
@@ -163,67 +194,52 @@ export default {
         get_wow_exe: function (data) {
             return window.electronAPI.wowFilePath(data)
         },
-        page_select_wow: function () {
-            this.select_wow_exe({version:this.version})
+        handle_select_wow: function () {
+            this.select_wow_exe({version: this.version})
         },
+        // 选择wow.exe文件
         select_wow_exe: function (request_data) {
             if (Object.keys(request_data).length === 0) {
                 request_data = {"version": this.version}
             }
-            console.log(request_data)
-              window.electronAPI.selectFile(request_data).then((res) => {
-                  if (res.code === 200) {
-                      console.log("响应:",res)
-                      this.wow_path = res.data
-                      this.main_loading = false
-                      ElMessageBox.alert("配置成功", {
-                          confirmButtonText: 'OK',
-                          type: 'success',
-                          center: true,
-                      })
-                  }
-
-              }).catch((err) => {
-                  this.main_loading = false
-                  console.log('错误',err)
-              })
+            window.electronAPI.selectFile(request_data)
         },
         // 下载插件
-         down_addons:async function (data) {
+        down_addons: async function (data) {
             this.main_loading = true
-             let download_return = await this.get_wow_exe({version: this.version})
-             // 需要配置wow.exe路径
-             if (download_return.code ===10404) {
-                 ElMessageBox.alert( '请选择你的'+this.version+'wow.exe路径',"没有配置wow.exe路径", {
-                     confirmButtonText: '去配置',
-                     type: 'warning',
-                     center: true,
-                 }).then(()=>{
-                     this.select_wow_exe({version: this.version})
-                 }).catch(() => {
+            let download_return = await this.get_wow_exe({version: this.version})
+            // 需要配置wow.exe路径
+            if (download_return.code === 10404) {
+                ElMessageBox.alert('请选择你的' + this.version + 'wow.exe路径', "没有配置wow.exe路径", {
+                    confirmButtonText: '去配置',
+                    type: 'warning',
+                    center: true,
+                }).then(() => {
+                    this.select_wow_exe({version: this.version})
+                }).catch(() => {
 
-                 }).finally(()=>{
-                     this.main_loading = false
-                 })
+                }).finally(() => {
+                    this.main_loading = false
+                })
 
-             }else if (download_return.code ===200){
-                 let down_data = {}
-                 let row = data.row
-                 down_data = {
-                     url: row.down_link,
-                     index: data.$index,
-                     title: row.title,
-                     version: this.version,
-                     addons_version: row.addons_version,
-                 }
-                 console.log('下载数据', down_data)
-                 //执行下载
-                 window.electronAPI.downloadFile(down_data)
+            } else if (download_return.code === 200) {
+                let down_data = {}
+                let row = data.row
+                down_data = {
+                    url: row.down_link,
+                    index: data.$index,
+                    title: row.title,
+                    version: this.version,
+                    addons_version: row.addons_version,
+                }
+                console.log('下载数据', down_data)
+                //执行下载
+                window.electronAPI.downloadFile(down_data)
 
-             }
+            }
 
         },
-        get_addons : function(version) {
+        get_addons: function (version) {
             if (version == null) {
                 version = this.get_version()
             }

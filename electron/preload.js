@@ -27,7 +27,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
 
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
-  onErrorResponse: (callback) => ipcRenderer.on('response', callback),
+  onResponse: (callback) => ipcRenderer.on('response', callback),
   // selectFile: selectFile,
 });
 

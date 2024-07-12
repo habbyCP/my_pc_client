@@ -4,12 +4,14 @@ const {down_file} = require("./lib/down");
 const { wow_file_path } = require('./lib/db')
 const { exec } = require('child_process');
 const {mkdirSync, existsSync} = require("fs");
-const {select_file} = require("./lib/wow");
+const {select_file, select_wow_exe} = require("./lib/wow");
 const {send_msg} = require("./lib/notice");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
-
+const {ERROR_CODE} = require("./lib/error_code");
+const {log} = require("./lib/log");
+const my_logger = require("electron-log");
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
     // 计算窗口的尺寸
@@ -58,9 +60,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-ipcMain.handle('select-file',(event,version_data)=>{
-    return select_file(event,version_data)
-})
+ipcMain.handle('select-file',select_wow_exe)
 
 //文件下载相关的
 ipcMain.on('download-file',  down_file);
@@ -70,19 +70,25 @@ ipcMain.on('download-file',  down_file);
 ipcMain.handle('wow-file-path', function (event, version_data) {
   return wow_file_path(version_data)
 });
-
 //获取realmlist
 ipcMain.handle('get-realmlist',get_realmlist)
 //修复relmlist
 ipcMain.handle('fix-realmlist', fix_realmlist);
-
-
+//启动程序
 ipcMain.on('start-wow', function (event,data) {
     wow_file_path(data).then(res=>{
         if(res.code===200){
-            exec('open -a '+res.data)
+            exec('open -a '+res.data,function(err,stdout,stderr){
+                if(err){
+                    send_msg(ERROR_CODE,err.message,"启动失败")
+                }
+            })
         }else{
+            my_logger.info("wow_file_path error ",res)
             send_msg(res.code,{},res.message)
         }
+    }).catch(err=>{
+        my_logger.info("wow_file_path catch ",err)
+        send_msg(err.code,{},err.message)
     })
 });
