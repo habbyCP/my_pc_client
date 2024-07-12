@@ -13,8 +13,8 @@ export default {
     data() {
         return {
             menu_list: {
-                "2.43": {"version": "2.43", "title": "2.43工具下载"},
-                "3.35": {"version": "3.35", "title": "3.35工具下载"}
+                "2.43": {"version": "2.43", "title": "2.43工具下载","category_id":8},
+                "3.35": {"version": "3.35", "title": "3.35工具下载","category_id":9}
             },
             wow_path: "",
             main_loading_word: "加载中",
@@ -244,22 +244,25 @@ export default {
                 version = this.get_version()
             }
             this.main_loading = true
-            axios.get('https://mock.apipark.cn/m1/4651067-4301781-default/api/addons/list?version=' + this.version + '&page').then(response => {
+            let url='https://www.9136347.com/api/addons_list?category_id=' + this.menu_list[this.version].category_id
+            console.log(url)
+            axios.get(url).then(response => {
                 if (response.status !== 200) {
                     console.log(response)
                     this.main_loading = false
                 } else {
                     const response_content = response.data
+                    console.log('下载内容',response.data)
                     this.tableData = []
                     for (const key in response_content.data) {
                         let one = response_content.data[key]
                         let one_data = {
-                            imgList: one.img_list,
+                            imgList: one.pic_list,
                             title: one.title,
                             addons_version: one.version,
                             version: this.version,
                             down_link: one.down_link,
-                            update_time: format(new Date(one.update_time * 1000), 'yyyy-MM-dd'),
+                            update_time: format(new Date(one.modified * 1000), 'yyyy-MM-dd'),
                             status: 0,
                             progress: 0,
                             status_word: '111',

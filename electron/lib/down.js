@@ -5,6 +5,8 @@ const fs = require('fs');
 const compressing = require('compressing');
 const {wow_file_path} = require("./db");
 const {debug,info,error} = require("./log");
+const {send_msg} = require("./notice");
+const {ERROR_CODE} = require("./error_code");
 let  req_list  = new Map()
 
 
@@ -37,7 +39,7 @@ function removeDir(dir) {
     fs.rmdirSync(dir)//如果文件夹是空的，就将自己删除掉
 }
 
-function send_msg(code,data,msg) {
+function send_progress(code,data,msg) {
     let send_data =
     {
         code: code,
@@ -53,7 +55,7 @@ exports.down_file =  async function (event, down_data) {
     try{
         let wow_path_data = await wow_file_path({version: down_data.version})
         if (wow_path_data.code !==200){
-            send_msg(wow_path_data.code,{},wow_path_data.message)
+            send_progress(wow_path_data.code,{},wow_path_data.message)
             return
         }
         const  wow_path = wow_path_data.data
@@ -78,7 +80,7 @@ exports.down_file =  async function (event, down_data) {
                     index: down_data.index,
                     msg: "下载完成，开始解压",
                 }
-                send_msg(200, progress_return_data, "")
+                send_progress(200, progress_return_data, "")
                 fileStream.close();
                 console.log(`Downloaded file saved to ${file_tmp_path}`);
 
@@ -96,7 +98,7 @@ exports.down_file =  async function (event, down_data) {
                         index: down_data.index,
                         msg: "解压完毕",
                     }
-                    send_msg(200, progress_return_data)
+                    send_progress(200, progress_return_data)
                     //组合目录
                     let addons_path = path.dirname(wow_path) + "/Interface/Addons2/"
                     //安装插件
@@ -105,15 +107,18 @@ exports.down_file =  async function (event, down_data) {
                         //解压完成后删除临时文件
                         fs.unlinkSync(file_tmp_path)
                         removeDir(file_unzip_path)
-                        send_msg(200, {
+                        send_progress(200, {
                             progress: 100,
                             index: down_data.index,
                             msg: "安装完成",
                         }, "插件安装完成")
                     }).catch((err)=>{
-                        send_msg(502,down_data,err)
+                        send_progress(502,down_data,err)
                     })
 
+                }).catch(err=>{
+                    console.log(err)
+                    send_msg(ERROR_CODE,err,'解压失败')
                 })
 
 
@@ -137,7 +142,7 @@ exports.down_file =  async function (event, down_data) {
                     index: down_data.index,
                     msg: "下载中",
                 }
-                send_msg(200, progress_return_data)
+                send_progress(200, progress_return_data)
 
             })
             //下载完成
@@ -178,10 +183,13 @@ exports.down_file =  async function (event, down_data) {
             })
 
         })
+        req.on('error',function (err){
+            console.log(err)
+        })
         req_list.set(down_data.index, req)
     }
     catch (e) {
-        send_msg(502,down_data,e.msg)
+        send_progress(502,down_data,e.msg)
         return
     }
 

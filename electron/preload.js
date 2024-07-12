@@ -25,8 +25,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
   //修复realmelist文件
   fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
-
+  //启动主程序
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
+  //响应主程序
   onResponse: (callback) => ipcRenderer.on('response', callback),
   // selectFile: selectFile,
 });

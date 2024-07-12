@@ -10,8 +10,8 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 const {ERROR_CODE} = require("./lib/error_code");
-const {log} = require("./lib/log");
 const my_logger = require("electron-log");
+
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
     // 计算窗口的尺寸
