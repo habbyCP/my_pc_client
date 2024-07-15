@@ -216,36 +216,40 @@ export default {
         // 下载插件
         down_addons: async function (data) {
             this.main_loading = true
-            let download_return = await this.get_wow_exe({version: this.version})
-            // 需要配置wow.exe路径
-            if (download_return.code === 10404) {
-                ElMessageBox.alert('请选择你的' + this.version + 'wow.exe路径', "没有配置wow.exe路径", {
-                    confirmButtonText: '去配置',
-                    type: 'warning',
-                    center: true,
-                }).then(() => {
-                    this.select_wow_exe({version: this.version})
-                }).catch(() => {
+            this.get_wow_exe({version: this.version}).then(download_return=>{
+                // 需要配置wow.exe路径
+                if (download_return.code === 10404) {
+                    ElMessageBox.alert('请选择你的' + this.version + 'wow.exe路径', "没有配置wow.exe路径", {
+                        confirmButtonText: '去配置',
+                        type: 'warning',
+                        center: true,
+                    }).then(() => {
+                        this.select_wow_exe({version: this.version})
+                    }).catch(() => {
 
-                }).finally(() => {
-                    this.main_loading = false
-                })
+                    }).finally(() => {
+                        this.main_loading = false
+                    })
 
-            } else if (download_return.code === 200) {
-                let down_data = {}
-                let row = data.row
-                down_data = {
-                    url: row.down_link,
-                    index: data.$index,
-                    title: row.title,
-                    version: this.version,
-                    addons_version: row.addons_version,
+                } else if (download_return.code === 200) {
+                    let down_data = {}
+                    let row = data.row
+                    down_data = {
+                        url: row.down_link,
+                        index: data.$index,
+                        title: row.title,
+                        version: this.version,
+                        addons_version: row.addons_version,
+                    }
+                    console.log('下载数据', down_data)
+                    //执行下载
+                    window.electronAPI.downloadFile(down_data)
                 }
-                console.log('下载数据', down_data)
-                //执行下载
-                window.electronAPI.downloadFile(down_data)
-
-            }
+                console.log(download_return)
+            }).catch(err=>{
+                console.log(err.msg)
+            })
+            
 
         },
         get_addons_list: function (version) {

@@ -12,7 +12,7 @@ select_wow_exe = function(event, version_data){
         properties: ['openFile'],
         title: "请选择wow.exe文件",
         filters: [
-            {name: 'wow.exe', extensions: ['wow.exe']}
+            {name: 'wow.exe', extensions: ['exe']}
         ]
     }).then(res=>{
         if (res.canceled){
