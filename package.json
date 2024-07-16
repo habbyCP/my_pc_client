@@ -14,7 +14,7 @@
   ],
   "main": "electron/index.js",
   "scripts": {
-    "start": "concurrently -k 'npm run dev' 'npm run electron'",
+    "start": "chcp 65001 && concurrently -k \"npm run dev\"  \"npm run electron\"",
     "release": "npm run build && electron-builder --win --x64",
     "dev": "vite",
     "build": "vite build",
@@ -28,6 +28,7 @@
     "electron-dl": "^4.0.0",
     "electron-log": "^5.1.5",
     "element-plus": "^2.7.5",
+    "iconv-lite": "^0.6.3",
     "resolve": "^1.22.8",
     "sqlite3": "5.1.6",
     "vue": "^3.2.25"
