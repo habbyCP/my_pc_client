@@ -14,7 +14,7 @@
   ],
   "main": "electron/index.js",
   "scripts": {
-    "start": "chcp 65001 && concurrently -k \"npm run dev\"  \"npm run electron\"",
+    "start": "concurrently -k \"npm run dev\"  \"npm run electron\"",
     "release": "npm run build && electron-builder --win --x64",
     "dev": "vite",
     "build": "vite build",

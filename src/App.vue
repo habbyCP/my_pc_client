@@ -23,13 +23,13 @@
       </el-aside>
         <el-container>
           <el-header>
-            <el-row :gutter="24">
+            <el-row :gutter="24" style="line-height: var(--el-header-height);">
               <el-col :span="10"></el-col>
-              <el-col :span="8"><el-input v-model="search_form.title" style="width: 100%" placeholder="插件名查找" /> </el-col> 
-              <el-col :span="2"><div class="grid-content ep-bg-purple" /><el-button type="primary" @click="onSubmit">搜索</el-button></el-col>
+              <el-col :span="8"><el-input v-model="search_form.title" style="width: 100%" size="small" placeholder="插件名查找" /> </el-col>
+              <el-col :span="2"><div class="grid-content ep-bg-purple" /><el-button type="primary" size="small" @click="onSubmit">搜索</el-button></el-col>
               <el-col :span="1"></el-col>
             </el-row>
-              
+
 
           </el-header>
           <el-main>
@@ -43,7 +43,7 @@
                   </el-image>
                 </template>
               </el-table-column>
-              
+
               <el-table-column  width="200" label="插件" >
                 <template #default="scope">
                   <div style="height: 100%;" @click="show_detail(scope.row)">{{ scope.row.title }}</div>
@@ -103,7 +103,7 @@
 <!--            </div>-->
           </el-col>
           <el-col :span="4"><div  style = "line-height: 9vh" class="grid-content bg-purple">
-            <el-button  @click="start_wow"  type="success">启动游戏</el-button></div>
+            <el-button  @click="start_wow" size="small"  type="success">启动游戏</el-button></div>
           </el-col>
         </el-row>
       </el-footer>
@@ -112,13 +112,13 @@
   <el-dialog
 
     v-model="detail_dialog"
-    :title=" detail_title " 
+    :title=" detail_title "
     width="80%"
   >
-  <div class="dalog_div">{{ this.detail_text }}</div> 
-    
+  <div class="dalog_div">{{ this.detail_text }}</div>
+
   </el-dialog>
-</template> 
+</template>
 <script src="./table_list.js">
 </script>
 
@@ -162,7 +162,7 @@ html, body, #app {
   white-space: pre-wrap;
   max-height: 100vh;
   max-width: 100%;
-  overflow: auto; 
+  overflow: auto;
 
 }
 
