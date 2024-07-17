@@ -6,7 +6,7 @@ const json_path = './file.json'
 exports.wow_file_path =  function (version_data){
     return new Promise((resolve, reject) => {
         if (!fs.existsSync(json_path)) {
-            reject({
+            resolve({
                 code: NONE_WOW,
                 message: "没有配置wow.exe路径"
             });
@@ -16,7 +16,7 @@ exports.wow_file_path =  function (version_data){
             try {
                 file_data = JSON.parse(file_json_data);
             } catch (error) {
-                reject({
+                resolve({
                     code: ERROR_CODE,
                     message: "路径配置的json文件解析出错,请点击设置wow.exe路径重新设置"
                 });
@@ -29,7 +29,7 @@ exports.wow_file_path =  function (version_data){
                     message: ''
                 });
             }else{
-                reject({
+                resolve({
                     code: NONE_WOW,
                     message: "没有找到wow.exe路径"
                 });

@@ -6,7 +6,10 @@ const { exec } = require('child_process');
 const {mkdirSync, existsSync} = require("fs");
 const {select_file, select_wow_exe} = require("./lib/wow");
 const {send_msg} = require("./lib/notice");
+const  {runExec} = require("./lib/runExec");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
+
+const iconv = require('iconv-lite');
 
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 const {ERROR_CODE} = require("./lib/error_code");
@@ -24,6 +27,7 @@ function createWindow () {
     let mainWindow = new BrowserWindow({
         width: windowWidth,
         height: windowHeight,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
@@ -78,11 +82,18 @@ ipcMain.handle('fix-realmlist', fix_realmlist);
 ipcMain.on('start-wow', function (event,data) {
     wow_file_path(data).then(res=>{
         if(res.code===200){
-            exec('open -a '+res.data,function(err,stdout,stderr){
-                if(err){
-                    send_msg(ERROR_CODE,err.message,"启动失败")
-                }
+            runExec(res.data).then(res=>{
+                console.log(res)
+            }).catch(err=>{
+                console.log(err)
+                send_msg(ERROR_CODE,err,"启动失败")
             })
+            // exec('open -a '+res.data,function(err,stdout,stderr){
+            //     if(err){
+            //       console.log(iconv.decode(err.message, 'cp936'))
+            //         send_msg(ERROR_CODE,iconv.decode(err.message, 'cp936'),"启动失败")
+            //     }
+            // })
         }else{
             my_logger.info("wow_file_path error ",res)
             send_msg(res.code,{},res.message)
