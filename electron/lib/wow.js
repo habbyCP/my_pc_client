@@ -5,14 +5,12 @@ const {ERROR_CODE, OK_CODE, OK_WOW_PATH} = require("./error_code");
 const {send_msg} = require("./notice");
 
 
-
-
 select_wow_exe = function(event, version_data){
     dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
         properties: ['openFile'],
         title: "请选择wow.exe文件",
         filters: [
-            {name: 'wow.exe', extensions: ['wow.exe']}
+            {name: 'wow.exe', extensions: ['.exe']}
         ]
     }).then(res=>{
         if (res.canceled){

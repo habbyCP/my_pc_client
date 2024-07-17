@@ -120,8 +120,6 @@ exports.down_file =  async function (event, down_data) {
                     console.log(err)
                     send_msg(ERROR_CODE,err,'解压失败')
                 })
-
-
             });
             response.pipe(fileStream);
             let file_length = parseInt(response.headers['content-length']) // 文件总长度
