@@ -17,8 +17,8 @@ export default {
             detail_title:'',
             detail_text:'',
             menu_list: {
-                "2.43": {"version": "2.43", "title": "2.43工具下载","category_id":8},
-                "3.35": {"version": "3.35", "title": "3.35工具下载","category_id":9}
+                "2.43": {"version": "2.43", "title": "2.43工具下载","category_id": 8,'wow_path':''},
+                "3.35": {"version": "3.35", "title": "3.35工具下载","category_id": 9,'wow_path':''},
             },
             wow_path: "",
             main_loading_word: "加载中",
@@ -69,6 +69,7 @@ export default {
                 center: true,
             })
             if (item.hasOwnProperty('sub_code') && item.sub_code===20100){
+                this.menu_list[this.version].wow_path = item.data
                 this.wow_path = item.data
             }
         })
@@ -87,62 +88,62 @@ export default {
             }
             window.electronAPI.wowFilePath({version: this.version}).then((res) => {
                 if (res.code === 200) {
+                    this.menu_list[this.version].wow_path = res.data
                     this.wow_path = res.data
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
-            return this.version
-        },
-        switch_version(key) {
-            this.version = key
-            localStorage.setItem("version", key)
-            this.get_addons_list(key)
-            this.get_wow_exe({version: key}).then((res) => {
-                console.log(res)
-                if (res.code === 200) {
-                    this.wow_path = res.data
-                } else {
-                    this.wow_path = ""
-                    if (res.code === 10404) {
-                        ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + this.version + 'wow.exe路径', {
-                            confirmButtonText: '现在去配置',
-                            type: 'warning',
-                            center: true,
-                        }).then(() => {
-                            this.select_wow_exe({version: this.version})
-
-                        })
-                    } else {
-                        alert(res.message)
-                    }
-
-                }
-            }).catch((err) => {
-
-            })
-        },
-        //启动客户端
-        start_wow: async function () {
-            let version_data = await this.get_wow_exe({version: this.version})
-            if (version_data.code !== 200) {
-                if (version_data.code === 10404) {
+                }else if (res.code === 10404) {
                     ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + this.version + 'wow.exe路径', {
                         confirmButtonText: '现在去配置',
                         type: 'warning',
                         center: true,
                     }).then(() => {
                         this.select_wow_exe({version: this.version})
+
                     })
                 } else {
-                    await ElMessageBox.alert(version_data.message, "错误", {
-                        confirmButtonText: 'OK',
-                        type: 'error',
-                        center: true,
-                    })
+                    alert(res.message)
                 }
-                return
+            }).catch((err) => {
+                console.log(err)
+            })
+            return this.version
+        },
+        check_wow_path(version) {
+            if (this.menu_list[version].wow_path === '') {
+                this.get_wow_exe({version: version}).then((res) => {
+                    if (res.code !== 200) {
+                        if (res.code === 10404) {
+                            ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + this.version + 'wow.exe路径', {
+                                confirmButtonText: '现在去配置',
+                                type: 'warning',
+                                center: true,
+                            }).then(() => {
+                                this.select_wow_exe({version: version})
+                            })
+                        } else {
+                            ElMessageBox.alert(res.message, "错误", {
+                                confirmButtonText: 'OK',
+                                type: 'error',
+                                center: true,
+                            })
+                        }
+                    }else{
+                        this.wow_path = res.data
+                    }
+                })
             }
+        },
+        //切换版本
+        switch_version(key) {
+            this.version = key
+            localStorage.setItem("version", key)
+            this.get_addons_list(key)
+            this.check_wow_path(this.version)
+            this.wow_path = this.menu_list[key].wow_path
+
+        },
+        //启动客户端
+        start_wow: async function () {
+            await this.check_wow_path(this.version)
             window.electronAPI.getRealmlist({version: this.version}).then(res => {
                 if (res.code !== 200) {
                     ElMessageBox.confirm(
@@ -203,6 +204,11 @@ export default {
         get_wow_exe: function (data) {
             return window.electronAPI.wowFilePath(data)
         },
+        //判断目录是否重复
+        is_duplicate_directory: function (data) {
+            window.electronAPI.isDuplicateDirectory(data)
+        },
+
         handle_select_wow: function () {
             this.select_wow_exe({version: this.version})
         },
@@ -213,59 +219,34 @@ export default {
             }
             window.electronAPI.selectFile(request_data)
         },
+        open_link: function (url) {
+            window.electronAPI.openLink({outLink: url})
+        },
         // 下载插件
         down_addons: async function (data) {
             this.main_loading = true
-            this.get_wow_exe({version: this.version}).then(download_return=>{
-                // 需要配置wow.exe路径
-                if (download_return.code === 10404) {
-                    ElMessageBox.alert('请选择你的' + this.version + 'wow.exe路径', "没有配置wow.exe路径", {
-                        confirmButtonText: '去配置',
-                        type: 'warning',
-                        center: true,
-                    }).then(() => {
-                        this.select_wow_exe({version: this.version})
-                    }).catch(() => {
-
-                    }).finally(() => {
-                        this.main_loading = false
-                    })
-
-                } else if (download_return.code === 200) {
-                    let down_data = {}
-                    let row = data.row
-                    down_data = {
-                        url: row.down_link,
-                        index: data.$index,
-                        title: row.title,
-                        version: this.version,
-                        addons_version: row.addons_version,
-                    }
-                    console.log('下载数据', down_data)
-                    //执行下载
-                    window.electronAPI.downloadFile(down_data)
-                }
-                console.log(download_return)
-            }).catch(err=>{
-                console.log(err.msg)
-            })
-            
-
-        },
-        get_addons_list: function (version) {
-            if (version == null) {
-                version = this.get_version()
+            this.main_loading_word = '下载ing'
+            await this.check_wow_path(this.version)
+            let row = data.row
+            let down_data = {
+                url: row.down_link,
+                index: data.$index,
+                title: row.title,
+                version: this.version,
+                addons_version: row.addons_version,
             }
+            //执行下载
+            window.electronAPI.downloadFile(down_data)
+        },
+        get_addons_list: function () {
             this.main_loading = true
             let url='https://www.9136347.com/api/addons_list?category_id=' + this.menu_list[this.version].category_id
-            console.log(url)
             axios.get(url).then(response => {
                 if (response.status !== 200) {
                     console.log(response)
                     this.main_loading = false
                 } else {
                     const response_content = response.data
-                    console.log('下载内容',response.data)
                     this.tableData = []
                     for (const key in response_content.data) {
                         let one = response_content.data[key]
@@ -280,7 +261,7 @@ export default {
                             update_time: format(new Date(one.modified * 1000), 'yyyy-MM-dd'),
                             status: 0,
                             progress: 0,
-                            status_word: '111',
+                            outLink: one.out_link
                         }
                         this.tableData.push(one_data)
                     }

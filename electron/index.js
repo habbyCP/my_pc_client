@@ -1,19 +1,18 @@
-const { app, BrowserWindow, session, ipcMain,screen,dialog } = require('electron')
+const { app, BrowserWindow, session, ipcMain,screen,shell } = require('electron')
 const path = require('path')
-const {down_file} = require("./lib/down");
-const { wow_file_path } = require('./lib/db')
-const { exec } = require('child_process');
 const {mkdirSync, existsSync} = require("fs");
-const {select_file, select_wow_exe} = require("./lib/wow");
-const {send_msg} = require("./lib/notice");
-const  {runExec} = require("./lib/runExec");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
-
-const iconv = require('iconv-lite');
 
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 const {ERROR_CODE} = require("./lib/error_code");
+const {down_addons} = require("./lib/down");
+const { wow_file_path } = require('./lib/db')
+const {select_wow_exe,is_duplicate_directory} = require("./lib/wow");
+const {send_msg} = require("./lib/notice");
+const  {runExec} = require("./lib/runExec");
+
 const my_logger = require("electron-log");
+
 
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -37,11 +36,18 @@ function createWindow () {
   if (!existsSync('downloaded_files')) {
     mkdirSync('downloaded_files', { recursive: true });
   }
-  let url = process.env.NODE_ENV === 'development' ?
-  'http://localhost:3000' :
-  'file://' + path.join(__dirname, '../dist/index.html');
-  mainWindow.webContents.openDevTools()
-  mainWindow.loadURL( url )
+
+  // 打开开发者工具
+    let url = ''
+    if (process.env.NODE_ENV === 'development') {
+        url = 'http://localhost:3000'
+        mainWindow.webContents.openDevTools()
+    }else{
+        url = 'file://' + path.join(__dirname, '../dist/index.html')
+    }
+    mainWindow.loadURL( url ).catch(err=>{
+        my_logger.error(err)
+    })
 }
 
 app.whenReady().then( async () => {
@@ -67,8 +73,14 @@ app.on('window-all-closed', () => {
 ipcMain.handle('select-file',select_wow_exe)
 
 //文件下载相关的
-ipcMain.on('download-file',  down_file);
+ipcMain.on('download-file',  down_addons);
 
+//浏览器打开链接
+ipcMain.on('open-link',function(event,data){
+    shell.openExternal(data.outLink);
+})
+//检查目录是否重复
+ipcMain.handle('is-duplicate-directory',is_duplicate_directory)
 
 //版本相关的查询
 ipcMain.handle('wow-file-path', function (event, version_data) {
@@ -76,7 +88,7 @@ ipcMain.handle('wow-file-path', function (event, version_data) {
 });
 //获取realmlist
 ipcMain.handle('get-realmlist',get_realmlist)
-//修复relmlist
+//获取realmlist
 ipcMain.handle('fix-realmlist', fix_realmlist);
 //启动程序
 ipcMain.on('start-wow', function (event,data) {
@@ -88,12 +100,6 @@ ipcMain.on('start-wow', function (event,data) {
                 console.log(err)
                 send_msg(ERROR_CODE,err,"启动失败")
             })
-            // exec('open -a '+res.data,function(err,stdout,stderr){
-            //     if(err){
-            //       console.log(iconv.decode(err.message, 'cp936'))
-            //         send_msg(ERROR_CODE,iconv.decode(err.message, 'cp936'),"启动失败")
-            //     }
-            // })
         }else{
             my_logger.info("wow_file_path error ",res)
             send_msg(res.code,{},res.message)

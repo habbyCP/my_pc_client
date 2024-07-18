@@ -44,7 +44,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column  width="200" label="插件" >
+              <el-table-column  width="200">
                 <template #default="scope">
                   <div style="height: 100%;" @click="show_detail(scope.row)">{{ scope.row.title }}</div>
                   </template>
@@ -54,22 +54,17 @@
               <el-table-column prop="update_time" label="更新时间"/>
               <el-table-column label="下载" width="">
                 <template #default="scope">
+                  <el-button v-if="scope.row.outLink.length > 0"
+                      size="small"
+                      @click="open_link(scope.row.outLink)"
+                      >
+                    打开
+                  </el-button>
                   <el-button
-                      v-show='scope.row.status  === 0'
+                      v-else
                       size="small"
                       @click="down_addons(scope)">
                     下载
-                  </el-button>
-
-                  <el-button
-                      v-show='scope.row.status  === 1'
-                      size="small">
-                    下载中...
-                  </el-button>
-                  <el-button
-                      v-show='scope.row.status  === 2'
-                      size="small">
-                    已安装
                   </el-button>
                 </template>
               </el-table-column>

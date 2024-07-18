@@ -49,9 +49,9 @@ function send_progress(code,data,msg) {
     BrowserWindow.getFocusedWindow().webContents.send('download-progress', send_data);
 }
 
-exports.down_file =  async function (event, down_data) {
+exports.down_addons =  async function (event, down_data) {
 
-    debug("收到下载需求：", down_data)
+    info("收到下载需求：", down_data)
     try{
         let wow_path_data = await wow_file_path({version: down_data.version})
         if (wow_path_data.code !==200){
@@ -92,18 +92,18 @@ exports.down_file =  async function (event, down_data) {
                 console.log("解压目录:", file_tmp_path, file_unzip_path)
                 // 先解压到一个本地的目录，
                 compressing.zip.uncompress(file_tmp_path, file_unzip_path).then(() => {
-                    console.log('解压完成')
                     let progress_return_data = {
                         progress: 80,
                         index: down_data.index,
                         msg: "解压完毕",
                     }
                     send_progress(200, progress_return_data)
+                    error("wow路径",wow_path)
                     //组合目录
-                    let addons_path = path.dirname(wow_path) + "/Interface/Addons2/"
+                    let addons_path = path.dirname(wow_path) + "/Interface/Addons/"
+                    error("插件路径",addons_path)
                     //安装插件
                      exports.addons_install(file_unzip_path, addons_path).then(() => {
-                        console.log(11111)
                         //解压完成后删除临时文件
                         fs.unlinkSync(file_tmp_path)
                         removeDir(file_unzip_path)
@@ -117,7 +117,6 @@ exports.down_file =  async function (event, down_data) {
                     })
 
                 }).catch(err=>{
-                    console.log(err)
                     send_msg(ERROR_CODE,err,'解压失败')
                 })
             });

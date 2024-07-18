@@ -30,7 +30,12 @@ select_wow_exe = function(event, version_data){
         send_msg(ERROR_CODE,err,"保存文件路径失败");
     })
 }
+is_duplicate_directory = function (event,data) {
+    return new Promise((resolve, reject)=>{
 
+    })
+}
 module.exports = {
-    select_wow_exe
+    select_wow_exe,
+    is_duplicate_directory
 }

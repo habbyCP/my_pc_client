@@ -15,10 +15,15 @@ window.addEventListener('DOMContentLoaded', () => {
 contextBridge.exposeInMainWorld('electronAPI', {
   //下载文件
   downloadFile: (down_data) => ipcRenderer.send('download-file', down_data),
+  // 取消下载
   cancelDownload: (down_data) => ipcRenderer.send('cancel-download',down_data),
-  onDownloadComplete: (callback) => ipcRenderer.on('download-complete', callback),
-  onDownloadError: (callback) => ipcRenderer.on('download-error', callback),
+  // 用浏览器打开链接
+  openLink: (url) => ipcRenderer.send('open-link', url),
+
+  isDuplicateDirectory: (data) => ipcRenderer.invoke('is-duplicate-directory', data),
+
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', callback),
+  // 获取wow.exe路径
   wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
   selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
   //获取realmlist文件是否正常
