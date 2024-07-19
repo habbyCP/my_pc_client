@@ -6,8 +6,7 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 const {ERROR_CODE} = require("./lib/error_code");
 const {down_addons} = require("./lib/down");
-const { wow_file_path } = require('./lib/db')
-const {select_wow_exe,is_duplicate_directory} = require("./lib/wow");
+const {select_wow_exe,is_duplicate_directory,wow_file_path, all_wow_file_path} = require("./lib/wow");
 const {send_msg} = require("./lib/notice");
 const  {runExec} = require("./lib/runExec");
 
@@ -85,6 +84,10 @@ ipcMain.handle('is-duplicate-directory',is_duplicate_directory)
 //版本相关的查询
 ipcMain.handle('wow-file-path', function (event, version_data) {
   return wow_file_path(version_data)
+});
+
+ipcMain.handle('all-wow-file-path', function () {
+    return all_wow_file_path()
 });
 //获取realmlist
 ipcMain.handle('get-realmlist',get_realmlist)

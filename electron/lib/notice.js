@@ -1,5 +1,5 @@
 const {BrowserWindow} = require('electron')
-const {info} = require("./log");
+const {error} = require("./log");
 
 
 exports.send_msg = function (code, data, msg,sub_code) {
@@ -10,6 +10,6 @@ exports.send_msg = function (code, data, msg,sub_code) {
             data: data,
             message: msg
         }
-    info("下发指令", send_data)
+    console.log("下发指令", send_data)
     BrowserWindow.getFocusedWindow().webContents.send('response', send_data);
 }

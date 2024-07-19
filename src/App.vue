@@ -29,8 +29,6 @@
               <el-col :span="2"><div class="grid-content ep-bg-purple" /><el-button type="primary" size="small" @click="onSubmit">搜索</el-button></el-col>
               <el-col :span="1"></el-col>
             </el-row>
-
-
           </el-header>
           <el-main>
             <el-table :data="tableData" stripe style="width: 100%">
@@ -74,31 +72,36 @@
       </el-container>
       <el-footer style="border-top:1px solid #e6e6e6">
         <el-row style="line-height: 10vh;font-size: 12px">
-          <el-col :span="14">
-              <div class="">
-              <span style="margin-right: 20px">{{ this.wow_path }}</span>
-              <el-button type="warning" size="small" @click="handle_select_wow">设置wow.exe</el-button>
-            </div>
-          </el-col>
-          <el-col :span="4"></el-col>
           <el-col :span="2">
-<!--            <div>-->
-<!--              <el-select-->
-<!--                  v-model="server"-->
-<!--                  placeholder="选择服务器"-->
-<!--                  size="small"-->
-<!--              >-->
-<!--                <el-option-->
-<!--                    v-for="item in server_list"-->
-<!--                    :key="item.server"-->
-<!--                    :label="item.title"-->
-<!--                    :value="item.server"-->
-<!--                />-->
-<!--              </el-select>-->
-<!--            </div>-->
+            <el-button type="success" size="small" @click="jump_website">荷兰服官网</el-button>
+
           </el-col>
-          <el-col :span="4"><div  style = "line-height: 9vh" class="grid-content bg-purple">
-            <el-button  @click="start_wow" size="small"  type="success">启动游戏</el-button></div>
+          <el-col :span="2">
+            <el-button type="success" size="small" @click="jump_kook">荷兰服kook</el-button>
+          </el-col>
+          <el-col :span="3">
+            <el-button type="success" size="small" @click="jump_kook">风暴助手</el-button>
+          </el-col>
+          <el-col :span="2">
+            <el-button type="warning" size="small" @click="handle_select_wow">设置wow.exe</el-button>
+          </el-col>
+          <el-col :span="9">
+            <el-tooltip
+                class="box-item"
+                effect="light"
+                :content="this.wow_path"
+                placement="top-start"
+            >
+              <el-text    style="max-width: 300px" truncated>
+                {{ this.wow_path }}
+              </el-text>
+            </el-tooltip>
+
+
+          </el-col>
+
+          <el-col :span="3"><div   class="grid-content bg-purple">
+            <el-button  @click="start_wow"  type="success">启动游戏</el-button></div>
           </el-col>
         </el-row>
       </el-footer>
@@ -159,6 +162,9 @@ html, body, #app {
   max-width: 100%;
   overflow: auto;
 
+}
+.el-footer button{
+  padding: 4px 6px;
 }
 
 </style>

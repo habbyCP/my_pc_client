@@ -3,10 +3,10 @@ const path = require("path");
 const {get} = require("https");
 const fs = require('fs');
 const compressing = require('compressing');
-const {wow_file_path} = require("./db");
 const {debug,info,error} = require("./log");
 const {send_msg} = require("./notice");
 const {ERROR_CODE} = require("./error_code");
+const {wow_path} = require("../service/wow_service");
 let  req_list  = new Map()
 
 
@@ -53,12 +53,10 @@ exports.down_addons =  async function (event, down_data) {
 
     info("收到下载需求：", down_data)
     try{
-        let wow_path_data = await wow_file_path({version: down_data.version})
-        if (wow_path_data.code !==200){
-            send_progress(wow_path_data.code,{},wow_path_data.message)
-            return
+        let the_path =  wow_path({version: down_data.version})
+        if (the_path === ""){
+            send_msg(ERROR_CODE,err,'没有定义wow.exe路径')
         }
-        const  wow_path = wow_path_data.data
         // 解析URL
         const parsedUrl = new URL(down_data.url);
         // 获取路径名
@@ -98,9 +96,9 @@ exports.down_addons =  async function (event, down_data) {
                         msg: "解压完毕",
                     }
                     send_progress(200, progress_return_data)
-                    error("wow路径",wow_path)
+                    error("wow路径",the_path)
                     //组合目录
-                    let addons_path = path.dirname(wow_path) + "/Interface/Addons/"
+                    let addons_path = path.dirname(the_path) + "/Interface/Addons/"
                     error("插件路径",addons_path)
                     //安装插件
                      exports.addons_install(file_unzip_path, addons_path).then(() => {
@@ -113,6 +111,7 @@ exports.down_addons =  async function (event, down_data) {
                             msg: "安装完成",
                         }, "插件安装完成")
                     }).catch((err)=>{
+                        error(err)
                         send_progress(502,down_data,err)
                     })
 

@@ -20,11 +20,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 用浏览器打开链接
   openLink: (url) => ipcRenderer.send('open-link', url),
 
-  isDuplicateDirectory: (data) => ipcRenderer.invoke('is-duplicate-directory', data),
+ // 判断目录是否重复
+  isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', callback),
   // 获取wow.exe路径
   wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
+  // 获取所有wow.exe路径
+  allWowFilePath: () => ipcRenderer.invoke('all-wow-file-path'),
+  // 选择wow.exe文件
   selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
   //获取realmlist文件是否正常
   getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
@@ -32,6 +36,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
   //启动主程序
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
+
   //响应主程序
   onResponse: (callback) => ipcRenderer.on('response', callback),
   // selectFile: selectFile,
