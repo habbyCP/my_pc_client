@@ -76,6 +76,7 @@ ipcMain.on('download-file',  down_addons);
 
 //浏览器打开链接
 ipcMain.on('open-link',function(event,data){
+    console.log('链接:',data.outLink)
     shell.openExternal(data.outLink);
 })
 //检查目录是否重复

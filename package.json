@@ -30,8 +30,8 @@
     "element-plus": "^2.7.5",
     "iconv-lite": "^0.6.3",
     "resolve": "^1.22.8",
-    "sqlite3": "5.1.6",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "win-version-info": "^6.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

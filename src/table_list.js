@@ -151,7 +151,6 @@ export default {
                 await this.check_wow_path(this.version)
             }else{
                 window.electronAPI.getRealmlist({version: this.version}).then(res => {
-                    console.log(res)
                     if (res.code !== 200) {
                         ElMessageBox.confirm(
                             res.message + ',不是有效的指向内容，点击确认修复为亚洲服务器',
@@ -231,10 +230,13 @@ export default {
             window.electronAPI.openLink({outLink: url})
         },
         jump_kook: function () {
-            window.electronAPI.openLink({url: "https://www.kookapp.cn/app/channels/6751610954578881/2870232716026733"})
+            window.electronAPI.openLink({outLink: "https://www.kookapp.cn/app/channels/6751610954578881/2870232716026733"})
         },
         jump_website: function () {
-            window.electronAPI.openLink({url: "https://cn.stormforge.gg/cn"})
+            window.electronAPI.openLink({outLink: "https://cn.stormforge.gg/cn"})
+        },
+        jump_my_site: function () {
+            window.electronAPI.openLink({outLink: "https://www.9136347.com"})
         },
         // 下载插件
         down_addons: async function (data) {

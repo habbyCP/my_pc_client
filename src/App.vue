@@ -80,7 +80,7 @@
             <el-button type="success" size="small" @click="jump_kook">荷兰服kook</el-button>
           </el-col>
           <el-col :span="3">
-            <el-button type="success" size="small" @click="jump_kook">风暴助手</el-button>
+            <el-button type="success" size="small" @click="jump_my_site">风暴助手</el-button>
           </el-col>
           <el-col :span="2">
             <el-button type="warning" size="small" @click="handle_select_wow">设置wow.exe</el-button>
