@@ -37,7 +37,7 @@ function createWindow () {
   }
 
   // 打开开发者工具
-    let url = ''
+    let url
     if (process.env.NODE_ENV === 'development') {
         url = 'http://localhost:3000'
         mainWindow.webContents.openDevTools()

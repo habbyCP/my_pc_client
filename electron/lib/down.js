@@ -184,7 +184,6 @@ exports.down_addons =  function (event, down_data) {
     }
     catch (e) {
         send_progress(502,down_data,e.msg)
-        return
     }
 
 

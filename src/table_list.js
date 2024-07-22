@@ -278,6 +278,7 @@ export default {
                                 //执行下载
                                 window.electronAPI.downloadFile(down_data)
                             }).catch(err=>{
+                                console.log(err)
                                 this.main_loading = false
                             })
                         }else{
