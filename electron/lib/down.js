@@ -9,7 +9,6 @@ const {ERROR_CODE} = require("./error_code");
 const {wow_path} = require("../service/wow_service");
 let  req_list  = new Map()
 
-
 //安装插件
 exports.addons_install =  function (tmp_dir,addons_dir){
     console.log(tmp_dir,addons_dir)
@@ -48,14 +47,13 @@ function send_progress(code,data,msg) {
     }
     BrowserWindow.getFocusedWindow().webContents.send('download-progress', send_data);
 }
-
-exports.down_addons =  async function (event, down_data) {
-
-    info("收到下载需求：", down_data)
+//下载插件
+exports.down_addons =  function (event, down_data) {
+    debug("收到下载需求：", down_data)
     try{
         let the_path =  wow_path({version: down_data.version})
         if (the_path === ""){
-            send_msg(ERROR_CODE,err,'没有定义wow.exe路径')
+            send_msg(ERROR_CODE,'','没有定义wow.exe路径')
         }
         // 解析URL
         const parsedUrl = new URL(down_data.url);
@@ -186,7 +184,6 @@ exports.down_addons =  async function (event, down_data) {
     }
     catch (e) {
         send_progress(502,down_data,e.msg)
-        return
     }
 
 

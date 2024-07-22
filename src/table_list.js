@@ -2,6 +2,7 @@ import {format} from "date-fns";
 import axios from 'axios';
 import {ElMessageBox} from 'element-plus'
 
+
 export default {
     components: {
         // LoginButtonWlk
@@ -22,7 +23,9 @@ export default {
     data() {
         return {
             detail_dialog:false,
-            search_form:{},
+            search_form:{
+                title:''
+            },
             detail_title:'',
             detail_text:'',
             menu_list: {
@@ -235,8 +238,8 @@ export default {
         jump_website: function () {
             window.electronAPI.openLink({outLink: "https://cn.stormforge.gg/cn"})
         },
-        jump_my_site: function () {
-            window.electronAPI.openLink({outLink: "https://www.9136347.com"})
+        jump_frost:function(){
+            window.electronAPI.openLink({outLink: "https://www.9136347.com/start-page.html"})
         },
         // 下载插件
         down_addons: async function (data) {
@@ -253,9 +256,11 @@ export default {
             }else{
                 let req = {"dir_list":[...data.row.dirList],"version":this.version}
                 window.electronAPI.isDuplicateDirectory(req).then(res=>{
+                    console.log(res)
                     if(res.code===200){
                         if (res.data.length > 0) {
-                            ElMessageBox.alert(res.data.join(',\n'), '目录会被覆盖，是否继续', {
+                            let notice_word =res.data.join(',\n').substring(0,200)
+                            ElMessageBox.alert(notice_word, '已经存在以下目录，点击继续将会覆盖', {
                                 confirmButtonText: 'OK',
                                 type: 'error',
                                 center: true,
@@ -268,9 +273,25 @@ export default {
                                     version: this.version,
                                     addons_version: row.addons_version,
                                 }
+                                console.log(down_data)
                                 //执行下载
                                 window.electronAPI.downloadFile(down_data)
+                            }).catch(err=>{
+                                console.log(err)
+                                this.main_loading = false
                             })
+                        }else{
+                            let row = data.row
+                            let down_data = {
+                                url: row.down_link,
+                                index: data.$index,
+                                title: row.title,
+                                version: this.version,
+                                addons_version: row.addons_version,
+                            }
+                            console.log(down_data)
+                            //执行下载
+                            window.electronAPI.downloadFile(down_data)
                         }
                     }else{
                         this.main_loading = false
@@ -289,7 +310,12 @@ export default {
         },
         get_addons_list: function () {
             this.main_loading = true
-            let url='https://www.9136347.com/api/addons_list?category_id=' + this.menu_list[this.version].category_id
+            let query_map = {}
+            query_map['category_id'] = this.menu_list[this.version].category_id
+            query_map['title'] = this.search_form.title
+            let queryString = new URLSearchParams(query_map).toString();
+            let url='https://www.9136347.com/api/addons_list?'+queryString
+            console.log(url)
             axios.get(url).then(response => {
                 if (response.status !== 200) {
                     console.log(response)
