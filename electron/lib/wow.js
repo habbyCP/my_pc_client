@@ -110,8 +110,6 @@ let set_wow_file = function (version,wow_path){
     }
 }
 
-
-
 is_duplicate_directory = function (event,data) {
     return new Promise((resolve, reject)=>{
         let dir_list = addons_dir_list({version:data.version})
