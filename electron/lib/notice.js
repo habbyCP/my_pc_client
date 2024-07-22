@@ -1,15 +1,19 @@
-const {BrowserWindow} = require('electron')
-const {error} = require("./log");
+const {debug} = require("./log");
 
 
-exports.send_msg = function (code, data, msg,sub_code) {
-    let send_data =
-        {
-            code: code,
-            sub_code: sub_code,
-            data: data,
-            message: msg
-        }
-    console.log("下发指令", send_data)
-    BrowserWindow.getFocusedWindow().webContents.send('response', send_data);
+function send_msg  (event,code, data, msg,sub_code) {
+        let send_data =
+            {
+                code: code,
+                sub_code: sub_code,
+                data: data,
+                message: msg
+            }
+        debug("下发指令", send_data)
+    event.sender.send('response', send_data);
 }
+
+module.exports = {
+    send_msg,
+
+};

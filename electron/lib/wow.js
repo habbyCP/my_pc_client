@@ -5,8 +5,11 @@ const {send_msg} = require("./notice");
 const {wow_path,addons_dir_list, all_wow_path} = require("../service/wow_service");
 const fs = require("fs");
 const json_path = './file.json'
-const {runExec} = require("./runExec");
 const vi = require("win-version-info");
+const version_map = {
+    "2.43":"2, 4, 3, 8606",
+    "3.35":"3, 3, 5, 12340",
+}
 wow_file_path =  function (version_data){
     return new Promise((resolve, reject) => {
         let the_path = wow_path({version: version_data.version})
@@ -53,38 +56,33 @@ select_wow_exe = function(event, version_data){
         if (res.canceled){
             return
         }
-        let version = get_wow_version(res.filePaths[0])
-        return
         let fileName = basename(res.filePaths[0]);
-        if (fileName!=='wow.exe' && fileName!=='Wow.exe'){
-            send_msg(ERROR_CODE,res.filePaths[0],"请选择有效的wow.exe文件");
+        if (fileName.toLowerCase()!=='wow.exe'){
+            send_msg(event,ERROR_CODE,res.filePaths[0],"请选择有效的wow.exe文件");
         }else{
+            let version = get_wow_version(res.filePaths[0])
+            if (version!==version_map[version_data.version]){
+                send_msg(event,ERROR_CODE,res.filePaths[0],"这个 wow.exe 不是版本: "+version_data.version);
+                return
+            }
             if (set_wow_file(version_data.version,res.filePaths[0])){
-                send_msg(OK_CODE,res.filePaths[0],"保存文件路径成功",OK_WOW_PATH);
+                send_msg(event,OK_CODE,res.filePaths[0],"保存文件路径成功",OK_WOW_PATH);
             }else{
-                send_msg(ERROR_CODE,res.filePaths[0],"保存文件路径失败");
+                send_msg(event,ERROR_CODE,res.filePaths[0],"保存文件路径失败");
             }
         }
     }).catch(err=>{
-        send_msg(ERROR_CODE,err,"保存文件路径失败");
+        send_msg(event,ERROR_CODE,err,"保存文件路径失败");
     })
 }
 
-let get_wow_version = async function (exeFilePath) {
+let get_wow_version =  function (exeFilePath) {
     let res = vi(exeFilePath)
-    console.log(res)
-// 获取 EXE 文件的版本信息（Windows 下）
-//     exec(`wmic datafile where name="${exeFilePath.replace(/\\/g, '\\\\')}" get Version`, (error, stdout, stderr) => {
-//         if (error) {
-//             console.error(`执行错误: ${error}`);
-//             return;
-//         }
-//         if (stderr) {
-//             console.error(`标准错误: ${stderr}`);
-//             return;
-//         }
-//         console.log(`EXE 文件版本信息: ${stdout}`);
-//     });
+    if (res.hasOwnProperty('FileVersion')){
+        return res.FileVersion.trim()
+    }else{
+        return ''
+    }
 
 }
 

@@ -157,7 +157,7 @@ html, body, #app {
 .dalog_div{
   text-align: start;
   white-space: pre-wrap;
-  max-height: 100vh;
+  max-height: 60vh;
   max-width: 100%;
   overflow: auto;
 

@@ -2,16 +2,19 @@ const { app, BrowserWindow, session, ipcMain,screen,shell } = require('electron'
 const path = require('path')
 const {mkdirSync, existsSync} = require("fs");
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
-
+const { webContents } = require('electron')
 const {get_realmlist,fix_realmlist} = require("./lib/realmlist");
 const {ERROR_CODE} = require("./lib/error_code");
-const {down_addons} = require("./lib/down");
+const {down_addons, start_download} = require("./lib/down");
 const {select_wow_exe,is_duplicate_directory,wow_file_path, all_wow_file_path} = require("./lib/wow");
-const {send_msg} = require("./lib/notice");
+
 const  {runExec} = require("./lib/runExec");
 
 const my_logger = require("electron-log");
+const {send_msg} = require("./lib/notice");
+const {error} = require("electron-log");
 
+let mainWindowId
 
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -30,11 +33,11 @@ function createWindow () {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-
   // 创建下载目录
   if (!existsSync('downloaded_files')) {
     mkdirSync('downloaded_files', { recursive: true });
   }
+
 
   // 打开开发者工具
     let url
@@ -72,11 +75,12 @@ app.on('window-all-closed', () => {
 ipcMain.handle('select-file',select_wow_exe)
 
 //文件下载相关的
-ipcMain.on('download-file', down_addons);
+ipcMain.on('download-file', (event,data)=>{
+    down_addons(event,data)
+});
 
 //浏览器打开链接
 ipcMain.on('open-link',function(event,data){
-    console.log('链接:',data.outLink)
     shell.openExternal(data.outLink);
 })
 //检查目录是否重复
@@ -102,14 +106,38 @@ ipcMain.on('start-wow', function (event,data) {
                 console.log(res)
             }).catch(err=>{
                 console.log(err)
-                send_msg(ERROR_CODE,err,"启动失败")
+                send_msg(event,ERROR_CODE,err,"启动失败")
             })
         }else{
             my_logger.info("wow_file_path error ",res)
-            send_msg(res.code,{},res.message)
+            send_msg(event,res.code,{},res.message)
         }
     }).catch(err=>{
         my_logger.info("wow_file_path catch ",err)
-        send_msg(err.code,{},err.message)
+        send_msg(event,err.code,{},err.message)
     })
 });
+
+
+send_progress = function (code,data,msg) {
+
+    let send_data =
+        {
+            code: code,
+            data: data,
+            msg: msg
+        }
+    if (mainWindow){
+        mainWindow.webContents.send('download-progress', send_data);
+    }else{
+        error("mainWindow 為空")
+    }
+
+}
+get_id = function (){
+    console.log(mainWindowId)
+}
+module.exports = {
+    get_id,
+    mainWindowId
+};

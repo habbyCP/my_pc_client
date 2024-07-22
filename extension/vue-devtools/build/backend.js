@@ -7428,7 +7428,7 @@ function initEnv(Vue) {
       get: () => exports.keys
     }
   });
-  if (exports.isWindows) document.body.classList.add('platform-windows');
+  if (exports.isWindows) document.body.classList.add('platform-windows.js');
   if (exports.isMac) document.body.classList.add('platform-mac');
   if (exports.isLinux) document.body.classList.add('platform-linux');
 }
