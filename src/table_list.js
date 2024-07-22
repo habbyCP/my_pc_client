@@ -22,7 +22,9 @@ export default {
     data() {
         return {
             detail_dialog:false,
-            search_form:{},
+            search_form:{
+                title:''
+            },
             detail_title:'',
             detail_text:'',
             menu_list: {
@@ -287,7 +289,12 @@ export default {
         },
         get_addons_list: function () {
             this.main_loading = true
-            let url='https://www.9136347.com/api/addons_list?category_id=' + this.menu_list[this.version].category_id
+            let query_map = {}
+            query_map['category_id'] = this.menu_list[this.version].category_id
+            query_map['title'] = this.search_form.title
+            let queryString = new URLSearchParams(query_map).toString();
+            let url='https://www.9136347.com/api/addons_list?'+queryString
+            console.log(url)
             axios.get(url).then(response => {
                 if (response.status !== 200) {
                     console.log(response)
