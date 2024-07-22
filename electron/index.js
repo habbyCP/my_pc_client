@@ -68,11 +68,11 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
+//选择文件
 ipcMain.handle('select-file',select_wow_exe)
 
 //文件下载相关的
-ipcMain.on('download-file',  down_addons);
+ipcMain.on('download-file', down_addons);
 
 //浏览器打开链接
 ipcMain.on('open-link',function(event,data){

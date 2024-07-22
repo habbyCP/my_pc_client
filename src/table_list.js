@@ -2,6 +2,7 @@ import {format} from "date-fns";
 import axios from 'axios';
 import {ElMessageBox} from 'element-plus'
 
+
 export default {
     components: {
         // LoginButtonWlk
@@ -233,10 +234,13 @@ export default {
             window.electronAPI.openLink({outLink: url})
         },
         jump_kook: function () {
-            window.electronAPI.openLink({url: "https://www.kookapp.cn/app/channels/6751610954578881/2870232716026733"})
+            window.electronAPI.openLink({outLink: "https://www.kookapp.cn/app/channels/6751610954578881/2870232716026733"})
         },
         jump_website: function () {
-            window.electronAPI.openLink({url: "https://cn.stormforge.gg/cn"})
+            window.electronAPI.openLink({outLink: "https://cn.stormforge.gg/cn"})
+        },
+        jump_frost:function(){
+            window.electronAPI.openLink({outLink: "https://www.9136347.com/start-page.html"})
         },
         // 下载插件
         down_addons: async function (data) {
@@ -253,9 +257,11 @@ export default {
             }else{
                 let req = {"dir_list":[...data.row.dirList],"version":this.version}
                 window.electronAPI.isDuplicateDirectory(req).then(res=>{
+                    console.log(res)
                     if(res.code===200){
                         if (res.data.length > 0) {
-                            ElMessageBox.alert(res.data.join(',\n'), '目录会被覆盖，是否继续', {
+                            let notice_word =res.data.join(',\n').substring(0,200)
+                            ElMessageBox.alert(notice_word, '已经存在以下目录，点击继续将会覆盖', {
                                 confirmButtonText: 'OK',
                                 type: 'error',
                                 center: true,
@@ -268,9 +274,24 @@ export default {
                                     version: this.version,
                                     addons_version: row.addons_version,
                                 }
+                                console.log(down_data)
                                 //执行下载
                                 window.electronAPI.downloadFile(down_data)
+                            }).catch(err=>{
+                                this.main_loading = false
                             })
+                        }else{
+                            let row = data.row
+                            let down_data = {
+                                url: row.down_link,
+                                index: data.$index,
+                                title: row.title,
+                                version: this.version,
+                                addons_version: row.addons_version,
+                            }
+                            console.log(down_data)
+                            //执行下载
+                            window.electronAPI.downloadFile(down_data)
                         }
                     }else{
                         this.main_loading = false

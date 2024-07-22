@@ -25,15 +25,15 @@
           <el-header>
             <el-row :gutter="24" style="line-height: var(--el-header-height);">
               <el-col :span="10"></el-col>
-              <el-col :span="8"><el-input v-model="search_form.title" style="width: 100%" size="small" placeholder="插件名查找" /> </el-col>
+              <el-col :span="8"><el-input v-model="search_form.title" style="width: 100%" size="small" @keyup.enter.native="get_addons_list()" placeholder="插件名查找" /> </el-col>
               <el-col :span="2"><div class="grid-content ep-bg-purple" /><el-button type="primary" size="small" @click="get_addons_list()">搜索</el-button></el-col>
               <el-col :span="1"></el-col>
             </el-row>
           </el-header>
           <el-main>
             <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="" label=""  >
-                <template #default="scope">
+              <el-table-column prop="" label="" >
+                <template #default="scope"   style="max-height: 50px">
                   <el-image
                       width="100%"
                       :src="scope.row.imgList[0]"
@@ -41,7 +41,6 @@
                   </el-image>
                 </template>
               </el-table-column>
-
               <el-table-column  width="200">
                 <template #default="scope">
                   <div style="height: 100%;" @click="show_detail(scope.row)">{{ scope.row.title }}</div>
@@ -80,7 +79,7 @@
             <el-button type="success" size="small" @click="jump_kook">荷兰服kook</el-button>
           </el-col>
           <el-col :span="3">
-            <el-button type="success" size="small" @click="jump_kook">风暴助手</el-button>
+            <el-button type="success" size="small" @click="jump_frost">风暴助手</el-button>
           </el-col>
           <el-col :span="2">
             <el-button type="warning" size="small" @click="handle_select_wow">设置wow.exe</el-button>
