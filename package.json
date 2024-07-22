@@ -15,7 +15,7 @@
   "main": "electron/index.js",
   "scripts": {
     "start": "concurrently -k \"npm run dev\"  \"npm run electron\"",
-    "release": "npm run build && electron-builder --win --x64",
+    "release": "npm run build && electron-builder --win",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
