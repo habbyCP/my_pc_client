@@ -1,8 +1,8 @@
 {
-  "name": "electron-vite-vue3",
+  "name": "wow-storm-helper",
   "private": true,
   "version": "1.0.0",
-  "description": "electron vite vue3 template",
+  "description": "魔兽世界插件下载风暴助手",
   "keywords": [
     "electron",
     "vite",
@@ -15,7 +15,7 @@
   "main": "electron/index.js",
   "scripts": {
     "start": "concurrently -k \"npm run dev\"  \"npm run electron\"",
-    "release": "npm run build && electron-builder --win",
+    "release": "npm run build && electron-builder --win  --x64",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -30,8 +30,7 @@
     "element-plus": "^2.7.5",
     "iconv-lite": "^0.6.3",
     "resolve": "^1.22.8",
-    "vue": "^3.2.25",
-    "win-version-info": "^6.0.1"
+    "vue": "^3.2.25"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

@@ -5,10 +5,10 @@ const {send_msg} = require("./notice");
 const {wow_path,addons_dir_list, all_wow_path} = require("../service/wow_service");
 const fs = require("fs");
 const json_path = './file.json'
-const vi = require("win-version-info");
+const {error, debug} = require("./log");
 const version_map = {
-    "2.43":"2, 4, 3, 8606",
-    "3.35":"3, 3, 5, 12340",
+    "2.43": 8078 ,
+    "3.35": 7523,
 }
 wow_file_path =  function (version_data){
     return new Promise((resolve, reject) => {
@@ -61,7 +61,9 @@ select_wow_exe = function(event, version_data){
             send_msg(event,ERROR_CODE,res.filePaths[0],"请选择有效的wow.exe文件");
         }else{
             let version = get_wow_version(res.filePaths[0])
+            //通过大小来判断，2.43的是8M多，3.35只有7M
             if (version!==version_map[version_data.version]){
+                error('获取wow.exe版本失败',version)
                 send_msg(event,ERROR_CODE,res.filePaths[0],"这个 wow.exe 不是版本: "+version_data.version);
                 return
             }
@@ -76,13 +78,17 @@ select_wow_exe = function(event, version_data){
     })
 }
 
+//通过大小来判断wow.exe的版本简单一些，在mac下也能打包
 let get_wow_version =  function (exeFilePath) {
-    let res = vi(exeFilePath)
-    if (res.hasOwnProperty('FileVersion')){
-        return res.FileVersion.trim()
-    }else{
-        return ''
+    try {
+        let stats = fs.statSync(exeFilePath);
+        debug(stats.size)
+        return Math.floor(stats.size/1024)
+    } catch (err) {
+       error('获取wow.exe版本失败',err)
+        return 0
     }
+
 
 }
 

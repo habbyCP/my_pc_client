@@ -11,5 +11,6 @@ github.com:ziyoren/electron-vite-vue
 - [x] 网站添加接口功能，封面、版本、描述、附件等能力
 - [x] 完成重复下载的提醒（路径判断）
 - [x] 日志清理，统一输出日志，级别判断
-- [ ] 实现windows打包，安装
+- [x] 实现windows打包，安装
 - [ ] 实现更新器
+- [ ] 实现选择和自行配置realmlist

@@ -1,6 +1,6 @@
 {
-    "productName": "YouAppName",
-    "appId": "YouAppID",
+    "productName": "风暴助手",
+    "appId": "storm-helper.com.9136347",
     "asar": true,
     "directories": {
         "output": "release/${buildVersion}"
@@ -11,6 +11,11 @@
     ],
     "electronDownload": {
         "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "publish": {
+        "provider": "generic",
+        "channel": "latest-win32",
+        "url": "https://download.9136347.com/d/%E9%A3%8E%E6%9A%B4%E5%8A%A9%E6%89%8B/update/"
     },
     "win": {
       "icon": "build/icons/icon.ico",
