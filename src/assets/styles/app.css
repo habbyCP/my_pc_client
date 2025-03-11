@@ -151,8 +151,14 @@ body {
   border-left: 5px solid #f57c00;
 }
 
+.category-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
 .category-item .el-icon {
-  margin-right: 10px;
+  margin-right: 8px;
   font-size: 18px;
 }
 

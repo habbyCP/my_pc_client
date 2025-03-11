@@ -47,7 +47,7 @@ export default {
                 {id: 'all', name: '全部插件', icon: 'Collection'},
                 {id: 'package', name: '整合包', icon: 'Files'}, 
                 {id: 'raid', name: '副本&团队', icon: 'User'},
-                {id: 'combat', name: '战斗', icon: 'Aim'},
+                {id: 'combat', name: '战斗', icon: '/src/assets/icons/combat.svg'},
                 {id: 'buff', name: '界面美化', icon: 'TrendCharts'},
                 {id: 'quest', name: '任务', icon: 'List'},
                 {id: 'character', name: '角色', icon: 'User'},

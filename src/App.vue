@@ -34,7 +34,10 @@
                :key="category.id"
                :class="{ active: activeCategory === category.name }"
                @click="switchCategory(category.name)">
-            <el-icon>
+            <!-- If icon path starts with '/', it's a local icon -->
+            <img v-if="category.icon.startsWith('/')" :src="category.icon" class="category-icon" alt="category icon" />
+            <!-- Otherwise use Element Plus icon -->
+            <el-icon v-else>
               <component :is="category.icon" />
             </el-icon>
             <span>{{ category.name }}</span>
