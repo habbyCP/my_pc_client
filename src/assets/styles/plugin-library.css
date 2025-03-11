@@ -1,9 +1,11 @@
 .search-bar {
   display: flex;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   gap: 10px;
-  background-color: #121212;
-  padding: 15px;
+  background-color: #121212; 
+  /* padding-left: 15px; */
+  padding-right: 15px;
+  padding-bottom: 15px;
   border-radius: 4px;
 }
 
