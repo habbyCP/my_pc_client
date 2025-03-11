@@ -1,6 +1,9 @@
 ### 参考 
 github.com:ziyoren/electron-vite-vue
 
+## 项目依赖
+nodejs：v16.20.2
+
 ## 代办事项
 - [x] 初始化wow的本地路径（当前的版本号、当前的wow路径），wow路径ipc调用写入本地文件
 - [x] 删除本地路径的，添加本地路径配置
