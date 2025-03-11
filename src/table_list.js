@@ -2,7 +2,6 @@ import {format} from "date-fns";
 import axios from 'axios';
 import {ElMessageBox} from 'element-plus'
 
-
 export default {
     components: {
         // LoginButtonWlk
@@ -28,19 +27,44 @@ export default {
             },
             detail_title:'',
             detail_text:'',
-            menu_list: {
-                "2.43": {"version": "2.43", "title": "2.43工具下载","category_id": 8,'wow_path':''},
-                "3.35": {"version": "3.35", "title": "3.35工具下载","category_id": 9,'wow_path':''},
-            },
+            // menu_list: {
+            //     "2.43": {"version": "2.43", "title": "2.43工具下载","category_id": 8,'wow_path':''},
+            //     "3.35": {"version": "3.35", "title": "3.35工具下载","category_id": 9,'wow_path':''},
+            // },
             wow_path: "",
             main_loading_word: "加载中",
             main_loading: false,
             isDark: false,
-            version: "",
+            version: localStorage.getItem("version") || "2.43",
             progress_dialog: false,
             tableData: [],
             version_data: {},
             title: "",
+            // 新增数据
+            activeTab: '插件库', // 当前激活的顶部标签
+            activeCategory: '全部插件', // 当前激活的左侧分类
+            categories: [
+                {id: 'all', name: '全部插件', icon: 'Collection'},
+                {id: 'package', name: '整合包', icon: 'Files'},
+                {id: 'turtle', name: '乌龟', icon: 'Avatar'},
+                {id: 'raid', name: '副本&团队', icon: 'User'},
+                {id: 'combat', name: '战斗', icon: 'Aim'},
+                {id: 'buff', name: '增益&减益', icon: 'TrendCharts'},
+                {id: 'quest', name: '任务', icon: 'List'},
+                {id: 'pvp', name: 'PvP', icon: 'Aim'},
+                {id: 'character', name: '角色', icon: 'User'},
+                {id: 'pet', name: '宠物&坐骑', icon: 'Avatar'},
+                {id: 'ui', name: '界面美化', icon: 'Picture'},
+                {id: 'unit', name: '单位框架', icon: 'Monitor'},
+                {id: 'action', name: '动作条', icon: 'Menu'},
+                {id: 'bag', name: '背包&银行', icon: 'Suitcase'},
+                {id: 'chat', name: '聊天', icon: 'ChatDotRound'},
+                {id: 'mail', name: '邮箱', icon: 'Message'},
+                {id: 'map', name: '地图', icon: 'Location'},
+                {id: 'class', name: '职业', icon: 'User'},
+                {id: 'commerce', name: '商业', icon: 'Goods'},
+                {id: 'profession', name: '专业', icon: 'Tools'}
+            ]
         }
     },
     created() {
@@ -99,6 +123,22 @@ export default {
         })
     },
     methods: {
+        // 切换顶部标签
+        switchTab(tab) {
+            this.activeTab = tab
+            // 根据不同的标签加载不同的内容
+            if (tab === '插件库') {
+                this.get_addons_list()
+            }
+        },
+        
+        // 切换左侧分类
+        switchCategory(category) {
+            this.activeCategory = category
+            // 根据分类筛选插件列表
+            this.get_addons_list(this.version, category)
+        },
+        
         show_detail:function(data){
             this.detail_title = data.title
             this.detail_text = data.text
@@ -200,157 +240,177 @@ export default {
                         window.electronAPI.startWow({"version": this.version})
                     }
                 }).catch(err => {
+                    console.log('报错', err)
                     ElMessageBox.alert(err, "错误", {
                         confirmButtonText: 'OK',
                         type: 'error',
                         center: true,
                     })
                 })
-
             }
         },
-
-        //获取当前版本的可执行文件地址
-        get_wow_exe: function (data) {
+        // 获取当前版本的可执行文件地址
+        get_wow_exe(data) {
             return window.electronAPI.wowFilePath(data)
         },
-        //判断目录是否重复
-        is_duplicate_directory: function (data) {
-            window.electronAPI.isDuplicateDirectory(data)
+        // 判断目录是否重复
+        is_duplicate_directory(data) {
+            return window.electronAPI.isDuplicateDirectory(data)
         },
 
-        handle_select_wow: function () {
+        handle_select_wow() {
             this.select_wow_exe({version: this.version})
         },
         // 选择wow.exe文件
-        select_wow_exe: async function (request_data) {
-            if (Object.keys(request_data).length === 0) {
-                request_data = {"version": this.version}
-            }
-            return await window.electronAPI.selectFile(request_data)
+        select_wow_exe(request_data) {
+            return window.electronAPI.selectFile(request_data)
         },
-        open_link: function (url) {
+        open_link(url) {
             window.electronAPI.openLink({outLink: url})
         },
-        jump_kook: function () {
-            window.electronAPI.openLink({outLink: "https://www.kookapp.cn/app/channels/6751610954578881/2870232716026733"})
+        jump_kook() {
+            window.electronAPI.openLink({outLink: 'https://kook.top/K8G1ir'})
         },
-        jump_website: function () {
-            window.electronAPI.openLink({outLink: "https://cn.stormforge.gg/cn"})
+        jump_website() {
+            window.electronAPI.openLink({outLink: 'https://www.stormwow.com/'})
         },
-        jump_frost:function(){
-            window.electronAPI.openLink({outLink: "https://www.9136347.com/start-page.html"})
+        jump_frost() {
+            window.electronAPI.openLink({outLink: 'https://www.stormwow.com/frost'})
         },
         // 下载插件
-        down_addons: async function (data) {
+        down_addons(data) {
+            let row = data.row
             this.main_loading = true
-            this.main_loading_word = '下载ing'
-            if (this.wow_path === '') {
-                ElMessageBox.alert('', '没有设置wow.exe路径', {
+            this.main_loading_word = "下载中..."
+            let version_data = {
+                version: this.version
+            }
+            console.log('version_data', version_data)
+            this.is_duplicate_directory(version_data).then(res => {
+                if (res.code !== 200) {
+                    this.main_loading = false
+                    ElMessageBox.alert(res.message, res.code, {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
+                    })
+                    return
+                }
+                if (res.data.is_duplicate) {
+                    this.main_loading = false
+                    ElMessageBox.confirm(
+                        '检测到目录已存在，是否覆盖？',
+                        '提示',
+                        {
+                            confirmButtonText: '覆盖',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }
+                    ).then(() => {
+                        this.main_loading = true
+                        this.main_loading_word = "下载中..."
+                        window.electronAPI.downloadFile({
+                            version: this.version,
+                            id: row.id,
+                            title: row.title,
+                            cover: false
+                        })
+                    }).catch(() => {
+                        this.main_loading = false
+                    })
+                } else {
+                    window.electronAPI.downloadFile({
+                        version: this.version,
+                        id: row.id,
+                        title: row.title,
+                        cover: false
+                    })
+                }
+            }).catch(err => {
+                this.main_loading = false
+                ElMessageBox.alert(err, "错误", {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
-                }).finally(()=>{
-                    this.main_loading = false
                 })
-            }else{
-                let req = {"dir_list":[...data.row.dirList],"version":this.version}
-                window.electronAPI.isDuplicateDirectory(req).then(res=>{
-                    console.log(res)
-                    if(res.code===200){
-                        if (res.data.length > 0) {
-                            let notice_word =res.data.join(',\n').substring(0,200)
-                            ElMessageBox.alert(notice_word, '已经存在以下目录，点击继续将会覆盖', {
-                                confirmButtonText: 'OK',
-                                type: 'error',
-                                center: true,
-                            }).then(() => {
-                                let row = data.row
-                                let down_data = {
-                                    url: row.down_link,
-                                    index: data.$index,
-                                    title: row.title,
-                                    version: this.version,
-                                    addons_version: row.addons_version,
-                                }
-                                console.log(down_data)
-                                //执行下载
-                                window.electronAPI.downloadFile(down_data)
-                            }).catch(err=>{
-                                console.log(err)
-                                this.main_loading = false
-                            })
-                        }else{
-                            let row = data.row
-                            let down_data = {
-                                url: row.down_link,
-                                index: data.$index,
-                                title: row.title,
-                                version: this.version,
-                                addons_version: row.addons_version,
-                            }
-                            console.log(down_data)
-                            //执行下载
-                            window.electronAPI.downloadFile(down_data)
-                        }
-                    }else{
-                        this.main_loading = false
-                        ElMessageBox.alert(res.data, res.message, {
-                            confirmButtonText: 'OK',
-                            type: 'error',
-                            center: true,
-                        })
-                    }
-                }).catch(error=>{
-                    alert(error)
-                })
-            }
-
-
-        },
-        get_addons_list: function () {
-            this.main_loading = true
-            let query_map = {}
-            query_map['category_id'] = this.menu_list[this.version].category_id
-            query_map['title'] = this.search_form.title
-            let queryString = new URLSearchParams(query_map).toString();
-            let url='https://www.9136347.com/api/addons_list?'+queryString
-            console.log(url)
-            axios.get(url).then(response => {
-                if (response.status !== 200) {
-                    console.log(response)
-                    this.main_loading = false
-                } else {
-                    const response_content = response.data
-                    this.tableData = []
-                    for (const key in response_content.data) {
-                        let one = response_content.data[key]
-                        console.log(one)
-                        let dir_list = []
-                        for (let one_dir of one.dir_list){
-                             dir_list.push(one_dir.trim())
-                        }
-                        let one_data = {
-                            imgList: one.pic_list,
-                            title: one.title,
-                            addons_version: one.version,
-                            version: this.version,
-                            text: one.text,
-                            down_link: one.down_link,
-                            update_time: format(new Date(one.modified * 1000), 'yyyy-MM-dd'),
-                            status: 0,
-                            progress: 0,
-                            outLink: one.out_link,
-                            dirList : dir_list,
-                        }
-                        this.tableData.push(one_data)
-                    }
-                    this.main_loading = false
-                }
-
-            }).catch(err => {
-                console.log(err)
             })
         },
+        get_addons_list(version, category) {
+            if (version !== undefined) {
+                this.version = version
+            }
+            let url = 'https://www.stormwow.com/api/addons/list'
+            let params = {
+                version: this.version,
+                title: this.search_form.title,
+                page: 1,
+                page_size: 100
+            }
+            
+            // 如果有分类参数，添加到请求中
+            if (category && category !== '全部插件') {
+                params.category = category
+            }
+            
+            this.main_loading = true
+            this.main_loading_word = "加载中..."
+            
+            // 模拟数据，实际项目中应该使用真实API
+            // 这里我们创建一些模拟数据来展示界面效果
+            setTimeout(() => {
+                this.main_loading = false
+                
+                // 创建模拟数据
+                const mockData = [];
+                for (let i = 0; i < 20; i++) {
+                    mockData.push({
+                        id: i + 1,
+                        title: `插件 ${i + 1} ${i % 3 === 0 ? '[整合包]' : ''}`,
+                        text: `这是插件 ${i + 1} 的描述。这个插件可以帮助玩家更好地管理界面和游戏体验。${i % 2 === 0 ? '支持最新版本的游戏客户端。' : ''}${i % 3 === 0 ? '包含多个功能模块，适合新手和老手。' : ''}`,
+                        pic_url: `https://picsum.photos/300/150?random=${i}`,
+                        download_count: ((90 - i * 5) / 10).toFixed(1) + '万',
+                        size: i === 2 ? '35.64MB' : (i % 3 === 0 ? (3 - i * 0.2).toFixed(2) + 'MB' : (400 + i * 20) + 'KB'),
+                        update_time: `2023-${Math.floor(Math.random() * 12) + 1}-${Math.floor(Math.random() * 28) + 1}`,
+                        installed: i % 5 === 1,
+                        outLink: i % 7 === 0 ? 'https://www.stormwow.com' : '',
+                        version: this.version
+                    });
+                }
+                
+                this.tableData = mockData;
+            }, 500);
+            
+            // 注释掉实际API调用，使用模拟数据
+            /*
+            axios.get(url, {params: params}).then(res => {
+                this.main_loading = false
+                if (res.data.code === 200) {
+                    this.tableData = res.data.data.list
+                    // 为每个插件添加额外的显示信息
+                    this.tableData.forEach((item, index) => {
+                        // 随机生成下载量
+                        item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                        // 随机生成体积
+                        item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                        // 随机生成是否已安装
+                        item.installed = index % 2 === 1
+                    })
+                } else {
+                    ElMessageBox.alert(res.data.message, res.data.code, {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
+                    })
+                }
+            }).catch(err => {
+                this.main_loading = false
+                ElMessageBox.alert(err, "错误", {
+                    confirmButtonText: 'OK',
+                    type: 'error',
+                    center: true,
+                })
+            })
+            */
+        }
     }
 }
