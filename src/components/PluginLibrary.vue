@@ -27,7 +27,7 @@
       <div v-for="(item, index) in tableData" :key="index" class="plugin-card">
         <div class="plugin-content">
           <div class="plugin-image">
-            <img :src="item.pic_url || 'https://via.placeholder.com/300x150'" alt="Plugin Image" />
+            <img :src="item.pic_list[0] || 'https://via.placeholder.com/300x150'" alt="Plugin Image" />
           </div>
           <div class="plugin-info">
             <div class="plugin-header">
@@ -38,7 +38,7 @@
             <div class="plugin-meta">
               <span>下载: {{ item.download_count || '0' }}</span>
               <span>体积: {{ item.size || '0KB' }}</span>
-              <span>更新: {{ item.update_time || '未知' }}</span>
+              <span>更新: {{ item.modified || '未知' }}</span>
               <span v-if="item.version">版本: {{ item.version }}</span>
               <span v-if="item.compatibility">适配: {{ item.compatibility }}</span>
             </div>
@@ -92,98 +92,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.search-bar {
-  display: flex;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-.plugin-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.plugin-card {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #1a1a1a;
-  transition: all 0.2s;
-}
-
-.plugin-card:hover {
-  background-color: #252525;
-}
-
-.plugin-content {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-}
-
-.plugin-image {
-  flex: 0 0 60px;
-  height: 60px;
-  overflow: hidden;
-  border-radius: 4px;
-  margin-right: 15px;
-}
-
-.plugin-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.plugin-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.plugin-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.plugin-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-right: 10px;
-  color: #e0e0e0;
-}
-
-.plugin-badge {
-  background-color: #ff9800;
-  color: #000;
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.plugin-description {
-  color: #999;
-  margin-bottom: 5px;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.plugin-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  color: #777;
-  font-size: 12px;
-}
-
-.plugin-actions {
-  flex: 0 0 auto;
-  margin-left: 15px;
-}
-
-.install-button {
-  min-width: 100px;
-}
+<style>
+/* Component-specific styles can be added here if needed */
 </style>

@@ -45,25 +45,15 @@ export default {
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
                 {id: 'all', name: '全部插件', icon: 'Collection'},
-                {id: 'package', name: '整合包', icon: 'Files'},
-                {id: 'turtle', name: '乌龟', icon: 'Avatar'},
+                {id: 'package', name: '整合包', icon: 'Files'}, 
                 {id: 'raid', name: '副本&团队', icon: 'User'},
                 {id: 'combat', name: '战斗', icon: 'Aim'},
-                {id: 'buff', name: '增益&减益', icon: 'TrendCharts'},
+                {id: 'buff', name: '界面美化', icon: 'TrendCharts'},
                 {id: 'quest', name: '任务', icon: 'List'},
-                {id: 'pvp', name: 'PvP', icon: 'Aim'},
                 {id: 'character', name: '角色', icon: 'User'},
-                {id: 'pet', name: '宠物&坐骑', icon: 'Avatar'},
-                {id: 'ui', name: '界面美化', icon: 'Picture'},
-                {id: 'unit', name: '单位框架', icon: 'Monitor'},
-                {id: 'action', name: '动作条', icon: 'Menu'},
-                {id: 'bag', name: '背包&银行', icon: 'Suitcase'},
-                {id: 'chat', name: '聊天', icon: 'ChatDotRound'},
-                {id: 'mail', name: '邮箱', icon: 'Message'},
-                {id: 'map', name: '地图', icon: 'Location'},
+                {id: 'pet', name: '宠物&坐骑', icon: 'Avatar'},  
                 {id: 'class', name: '职业', icon: 'User'},
-                {id: 'commerce', name: '商业', icon: 'Goods'},
-                {id: 'profession', name: '专业', icon: 'Tools'}
+                {id: 'commerce', name: '商业&经济', icon: 'Goods'}, 
             ]
         }
     },
@@ -75,7 +65,7 @@ export default {
                         this.menu_list[key].wow_path = res.data[key]
                     }
                 }
-                this.wow_path = this.menu_list[version].wow_path
+                this.wow_path = ""
         })
         //初始化基本信息
         this.get_addons_list(version)
@@ -125,6 +115,7 @@ export default {
     methods: {
         // 切换顶部标签
         switchTab(tab) {
+            console.log('切换标签', tab)
             this.activeTab = tab
             // 根据不同的标签加载不同的内容
             if (tab === '插件库') {
@@ -335,16 +326,18 @@ export default {
                 })
             })
         },
-        get_addons_list(version, category) {
+        async get_addons_list(version, category) {
+           
             if (version !== undefined) {
                 this.version = version
             }
-            let url = 'https://www.stormwow.com/api/addons/list'
+            let url = 'https://www.9136347.com/api/addons_list'
             let params = {
                 version: this.version,
                 title: this.search_form.title,
                 page: 1,
-                page_size: 100
+                page_size: 100,
+                category_id:8
             }
             
             // 如果有分类参数，添加到请求中
@@ -353,64 +346,45 @@ export default {
             }
             
             this.main_loading = true
-            this.main_loading_word = "加载中..."
+            this.main_loading_word = "加载中..." 
             
-            // 模拟数据，实际项目中应该使用真实API
-            // 这里我们创建一些模拟数据来展示界面效果
-            setTimeout(() => {
+            try {
+                const res = await axios.get(url, {params: params})
                 this.main_loading = false
                 
-                // 创建模拟数据
-                const mockData = [];
-                for (let i = 0; i < 20; i++) {
-                    mockData.push({
-                        id: i + 1,
-                        title: `插件 ${i + 1} ${i % 3 === 0 ? '[整合包]' : ''}`,
-                        text: `这是插件 ${i + 1} 的描述。这个插件可以帮助玩家更好地管理界面和游戏体验。${i % 2 === 0 ? '支持最新版本的游戏客户端。' : ''}${i % 3 === 0 ? '包含多个功能模块，适合新手和老手。' : ''}`,
-                        pic_url: `https://picsum.photos/300/150?random=${i}`,
-                        download_count: ((90 - i * 5) / 10).toFixed(1) + '万',
-                        size: i === 2 ? '35.64MB' : (i % 3 === 0 ? (3 - i * 0.2).toFixed(2) + 'MB' : (400 + i * 20) + 'KB'),
-                        update_time: `2023-${Math.floor(Math.random() * 12) + 1}-${Math.floor(Math.random() * 28) + 1}`,
-                        installed: i % 5 === 1,
-                        outLink: i % 7 === 0 ? 'https://www.stormwow.com' : '',
-                        version: this.version
-                    });
-                }
-                
-                this.tableData = mockData;
-            }, 500);
-            
-            // 注释掉实际API调用，使用模拟数据
-            /*
-            axios.get(url, {params: params}).then(res => {
-                this.main_loading = false
-                if (res.data.code === 200) {
-                    this.tableData = res.data.data.list
+                if (res.data.status === 200) { 
+                    const tableData = res.data.data
+                    
                     // 为每个插件添加额外的显示信息
-                    this.tableData.forEach((item, index) => {
+                    tableData.forEach((item, index) => {
                         // 随机生成下载量
                         item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
                         // 随机生成体积
                         item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
                         // 随机生成是否已安装
                         item.installed = index % 2 === 1
-                    })
+                        item.modified = new Date().toLocaleString()
+                    }) 
+                    // 更新本地数据并返回
+                    this.tableData = tableData
+                    return tableData
                 } else {
                     ElMessageBox.alert(res.data.message, res.data.code, {
                         confirmButtonText: 'OK',
                         type: 'error',
                         center: true,
                     })
+                    return []
                 }
-            }).catch(err => {
+            } catch (err) {
                 this.main_loading = false
                 ElMessageBox.alert(err, "错误", {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
                 })
-            })
-            */
+                return []
+            }
         }
     }
 }
