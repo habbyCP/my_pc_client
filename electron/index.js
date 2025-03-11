@@ -43,7 +43,7 @@ function createWindow () {
     let url
     if (process.env.NODE_ENV === 'development') {
         url = 'http://localhost:3000'
-        mainWindow.webContents.openDevTools()
+        mainWindow.webContents.openDevTools({ mode: 'detach' })
     }else{
         url = 'file://' + path.join(__dirname, '../dist/index.html')
     }

@@ -45,64 +45,16 @@
       <!-- 主内容区域 -->
       <div class="main-content" :class="{ 'full-width': activeTab !== '插件库' }">
         <!-- 插件列表 -->
-        <div v-if="activeTab === '插件库'">
-          <!-- 搜索和排序区域 -->
-          <div class="search-bar">
-            <el-input
-              v-model="search_form.title"
-              placeholder="搜索插件"
-              clearable
-              @keyup.enter="get_addons_list"
-              @clear="get_addons_list"
-            >
-              <template #prefix>
-                <el-icon><Search /></el-icon>
-              </template>
-              <template #append>
-                <el-button @click="get_addons_list">搜索</el-button>
-              </template>
-            </el-input>
-            
-            <el-select v-model="sortBy" placeholder="排序方式" style="width: 150px">
-              <el-option label="下载量" value="download"></el-option>
-              <el-option label="最新更新" value="update"></el-option>
-            </el-select>
-          </div>
-          
-          <div class="plugin-list">
-            <div v-for="(item, index) in tableData" :key="index" class="plugin-card">
-              <div class="plugin-image">
-                <img :src="item.pic_url || 'https://via.placeholder.com/300x150'" alt="Plugin Image" />
-              </div>
-              <div class="plugin-info">
-                <div class="plugin-title">{{ item.title }}</div>
-                <div class="plugin-description">{{ item.text ? (item.text.length > 100 ? item.text.substring(0, 100) + '...' : item.text) : '暂无描述' }}</div>
-                <div class="plugin-meta">
-                  <span>
-                    <el-icon><Download /></el-icon> 
-                    {{ item.download_count || '0' }}
-                  </span>
-                  <span>
-                    <el-icon><Files /></el-icon> 
-                    {{ item.size || '0KB' }}
-                  </span>
-                  <span>
-                    <el-icon><Calendar /></el-icon> 
-                    {{ item.update_time || '未知' }}
-                  </span>
-                </div>
-              </div>
-              <div class="plugin-actions">
-                <el-button 
-                  :type="item.installed ? 'success' : 'primary'" 
-                  @click="down_addons({row: item, $index: index})">
-                  {{ item.installed ? '已安装' : '安装' }}
-                </el-button>
-                <el-button v-if="item.outLink" @click="open_link(item.outLink)">链接</el-button>
-                <el-button @click="show_detail(item)">详情</el-button>
-              </div>
-            </div>
-          </div>
+        <div v-if="activeTab === '插件库'" class="tab-content">
+
+          <plugin-library 
+            :table-data="tableData" 
+            :sort-by="sortBy"
+            @get-addons-list="get_addons_list"
+            @down-addons="down_addons"
+            @open-link="open_link"
+            @show-detail="show_detail"
+          />
         </div>
         
         <!-- 其他标签页内容 -->
@@ -121,8 +73,8 @@
           <p>此功能正在开发中...</p>
         </div>
         
-        <div v-if="activeTab === '补丁工具'" class="tab-content">
-          <h2>补丁工具</h2>
+        <div v-if="activeTab === '客户端'" class="tab-content">
+          <h2>客户端</h2>
           <p>此功能正在开发中...</p>
         </div>
         
@@ -156,6 +108,7 @@
 <script>
 import AddonsList from './table_list.js'
 import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-vue'
+import PluginLibrary from './components/PluginLibrary.vue'
 
 export default {
   name: 'App',
@@ -165,12 +118,13 @@ export default {
     Download,
     Files,
     Calendar,
-    Loading
+    Loading,
+    PluginLibrary
   },
   data() {
     return {
-      tabs: ['天赋', '本地插件', '插件库', '配置分享', '补丁工具', '管理'],
-      sortBy: 'download',
+      tabs: [ '本地插件', '插件库', '配置分享', '客户端', '管理'],
+
       isDark: true, // 默认使用暗色主题
       tableData: [
         {
@@ -552,10 +506,11 @@ body {
   overflow: hidden;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
+  margin-bottom: 5px;
 }
 
 .plugin-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -570,22 +525,19 @@ body {
   object-fit: cover;
 }
 
-.plugin-info {
-  padding: 15px;
+.plugin-info { 
   flex: 1;
 }
 
 .plugin-title {
   font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-weight: bold; 
 }
 
 .plugin-description {
   font-size: 14px;
   color: #606266;
-  margin-bottom: 10px;
-  height: 60px;
+  margin-bottom: 10px; 
   overflow: hidden;
 }
 
