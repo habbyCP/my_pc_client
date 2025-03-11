@@ -23,7 +23,7 @@ function createWindow () {
     if (windowWidth < 1000) windowWidth = 1000
 
     let windowHeight = Math.floor(height / 2);
-    if (windowHeight < 600) windowHeight = 600
+    if (windowHeight < 600) windowHeight = 670
 
     let mainWindow = new BrowserWindow({
         width: windowWidth,
