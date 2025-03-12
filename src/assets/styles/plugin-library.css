@@ -1,54 +1,23 @@
+/* Plugin Library Specific Styles */
+
+/* Search Bar Styles */
 .search-bar {
   display: flex;
-  /* margin-bottom: 20px; */
   gap: 10px;
-  background-color: #121212; 
-  /* padding-left: 15px; */
+  background-color: #121212;
   padding-right: 15px;
   padding-bottom: 15px;
   border-radius: 4px;
 }
 
-.search-bar .el-input__wrapper {
-  background-color: #252525;
-  box-shadow: 0 0 0 1px #444 inset;
-}
-
-.search-bar .el-input__inner {
-  color: #e0e0e0;
-}
-
-.search-bar .el-button {
-  background-color: #252525;
-  border-color: #444;
-  color: #e0e0e0;
-}
-
-.search-bar .el-button:hover {
-  background-color: #333;
-  border-color: #555;
-  color: #fff;
-}
-
-.search-bar .el-select .el-input {
-  background-color: #252525;
-}
-
-.search-bar .el-select .el-input__wrapper {
-  background-color: #252525;
-  box-shadow: 0 0 0 1px #444 inset;
-}
-
-.search-bar .el-select .el-input__inner {
-  color: #e0e0e0;
-}
-
+/* Plugin List Styles */
 .plugin-list {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
+/* Plugin Card Styles */
 .plugin-card {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background-color: #1a1a1a;
@@ -61,7 +30,7 @@
 
 .plugin-card:hover {
   background-color: #252525;
-  transform:scale(1.01);
+  transform: scale(1.01);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -72,10 +41,12 @@
   background-color: #252525;
   border-left: 3px solid transparent;
 }
+
 .plugin-content:hover {
   background-color: #252525;
   border-left: 3px solid #f57c00;
 }
+
 .plugin-image {
   flex: 0 0 60px;
   height: 60px;

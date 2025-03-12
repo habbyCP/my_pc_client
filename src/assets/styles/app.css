@@ -116,15 +116,12 @@ body {
 
 .sidebar {
   width: 200px;
-  /* /* background-color: #f5f7fa; */
-  /* border-right: 1px solid #eaeaea; */
   overflow-y: auto;
 }
 
 .sidebar-header {
   padding: 15px;
   font-weight: bold;
-  /* border-bottom: 1px solid #eaeaea; */
 }
 
 .categories {
@@ -140,12 +137,10 @@ body {
 }
 
 .category-item:hover {
-  /* background-color: #ecf5ff; */
   border-left: 5px solid #f57c00;
 }
 
 .category-item.active {
-  /* background-color: #ecf5ff; */
   color: #409eff;
   font-weight: bold;
   border-left: 5px solid #f57c00;
@@ -183,19 +178,27 @@ body {
   color: #e0e0e0;
 }
 
-/* 插件卡片样式 */
-.plugin-card {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #1a1a1a;
-  transition: all 0.1s;
-  margin-bottom: 5px;
+/* Common Element UI Dark Theme Overrides */
+.dark-theme .el-input__wrapper {
+  background-color: #252525;
+  box-shadow: 0 0 0 1px #444 inset;
 }
 
-/* .plugin-card:hover {
-   background-color: #252525;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
-} */
+.dark-theme .el-input__inner {
+  color: #e0e0e0;
+}
+
+.dark-theme .el-button {
+  background-color: #252525;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+.dark-theme .el-button:hover {
+  background-color: #333;
+  border-color: #555;
+  color: #fff;
+}
 
 /* 进度条对话框 */
 .progress-dialog {
