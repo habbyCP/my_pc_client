@@ -56,8 +56,10 @@ function validateGamePath(gamePath) {
     if (!fs.existsSync(gamePath)) {
       return false;
     }
+    const fileName = path.basename(gamePath).toLowerCase();
+
     // 检查路径的文件名是否为wow.exe 
-    if (path.basename(gamePath) !== 'wow.exe') {
+    if (fileName !== 'wow.exe') {
       return false;
     }
     return true;
