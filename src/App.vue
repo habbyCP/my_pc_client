@@ -33,7 +33,7 @@
                v-for="category in categories" 
                :key="category.id"
                :class="{ active: activeCategory === category.name }"
-               @click="switchCategory(category.name)">
+               @click="switchCategory(category.id, category.name)">
             <!-- If icon path starts with '/', it's a local icon -->
             <img v-if="category.icon.startsWith('/')" :src="category.icon" class="category-icon" alt="category icon" />
             <!-- Otherwise use Element Plus icon -->

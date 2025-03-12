@@ -1,6 +1,6 @@
-import {format} from "date-fns";
+import { format } from "date-fns";
 import axios from 'axios';
-import {ElMessageBox} from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
 export default {
     components: {
@@ -11,22 +11,22 @@ export default {
         msg: ""
     },
     filters: {
-        ellipsis (value) {
+        ellipsis(value) {
             if (!value) return ''
             if (value.length > 8) {
-                return value.slice(0,8) + '...'
+                return value.slice(0, 8) + '...'
             }
             return value
         }
     },
     data() {
         return {
-            detail_dialog:false,
-            search_form:{
-                title:''
+            detail_dialog: false,
+            search_form: {
+                title: ''
             },
-            detail_title:'',
-            detail_text:'',
+            detail_title: '',
+            detail_text: '',
             // menu_list: {
             //     "2.43": {"version": "2.43", "title": "2.43工具下载","category_id": 8,'wow_path':''},
             //     "3.35": {"version": "3.35", "title": "3.35工具下载","category_id": 9,'wow_path':''},
@@ -44,28 +44,28 @@ export default {
             activeTab: '插件库', // 当前激活的顶部标签
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
-                {id: 'all', name: '全部插件', icon: 'Collection'},
-                {id: 'package', name: '整合包', icon: 'Files'}, 
-                {id: 'raid', name: '副本&团队', icon: 'User'},
-                {id: 'combat', name: '战斗', icon: '/src/assets/icons/combat.svg'},
-                {id: 'buff', name: '界面美化', icon: 'TrendCharts'},
-                {id: 'quest', name: '任务', icon: 'List'},
-                {id: 'character', name: '角色', icon: 'User'},
-                {id: 'pet', name: '宠物&坐骑', icon: 'Avatar'},  
-                {id: 'class', name: '职业', icon: 'User'},
-                {id: 'commerce', name: '商业&经济', icon: 'Goods'}, 
+                { id: 'all', name: '全部插件', icon: 'Collection' },
+                { id: 'package', name: '整合包', icon: 'Files' },
+                { id: 'raid', name: '副本&团队', icon: 'User' },
+                { id: 'combat', name: '战斗', icon: '/src/assets/icons/combat.svg' },
+                { id: 'buff', name: '界面美化', icon: 'TrendCharts' },
+                { id: 'quest', name: '任务', icon: 'List' },
+                { id: 'character', name: '角色', icon: 'User' },
+                { id: 'pet', name: '宠物&坐骑', icon: 'Avatar' },
+                { id: 'class', name: '职业', icon: 'User' },
+                { id: 'commerce', name: '商业&经济', icon: 'Goods' },
             ]
         }
     },
     created() {
         let version = this.get_version()
         window.electronAPI.allWowFilePath().then(res => {
-                for (const key in this.menu_list) {
-                    if (res.data.hasOwnProperty(key)) {
-                        this.menu_list[key].wow_path = res.data[key]
-                    }
+            for (const key in this.menu_list) {
+                if (res.data.hasOwnProperty(key)) {
+                    this.menu_list[key].wow_path = res.data[key]
                 }
-                this.wow_path = ""
+            }
+            this.wow_path = ""
         })
         //初始化基本信息
         this.get_addons_list(version)
@@ -122,15 +122,15 @@ export default {
                 this.get_addons_list()
             }
         },
-        
+
         // 切换左侧分类
-        switchCategory(category) {
-            this.activeCategory = category
+        switchCategory(category, name) {
+            this.activeCategory = name
             // 根据分类筛选插件列表
-            this.get_addons_list(this.version, category)
+            this.get_addons_list(category)
         },
-        
-        show_detail:function(data){
+
+        show_detail: function (data) {
             this.detail_title = data.title
             this.detail_text = data.text
             this.detail_dialog = true
@@ -145,22 +145,22 @@ export default {
         },
         async check_wow_path(version) {
             if (this.menu_list[version].wow_path === '') {
-                let path_data = await this.get_wow_exe({version: version})
+                let path_data = await this.get_wow_exe({ version: version })
                 console.log(path_data)
                 if (path_data.code === 200) {
                     this.menu_list[version].wow_path = path_data.data
-                }else if (path_data.code === 10404) {
-                   let confirm = await ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + version + 'wow.exe路径', {
+                } else if (path_data.code === 10404) {
+                    let confirm = await ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + version + 'wow.exe路径', {
                         confirmButtonText: '现在去配置',
                         type: 'warning',
                         center: true,
                     })
-                    if (confirm==='confirm'){
-                        let path_data = await this.select_wow_exe({version: version})
-                        console.log('path_data',path_data)
+                    if (confirm === 'confirm') {
+                        let path_data = await this.select_wow_exe({ version: version })
+                        console.log('path_data', path_data)
                         return ''
                     }
-                }else{
+                } else {
                     alert(path_data.message)
                 }
 
@@ -171,20 +171,20 @@ export default {
             this.version = key
             localStorage.setItem("version", key)
             this.get_addons_list(key)
-            if (this.menu_list.hasOwnProperty(key)){
+            if (this.menu_list.hasOwnProperty(key)) {
                 this.wow_path = this.menu_list[key].wow_path
-            }else{
+            } else {
                 this.wow_path = ''
             }
 
         },
         //启动客户端
         start_wow: async function () {
-            console.log('path',this.wow_path)
+            console.log('path', this.wow_path)
             if (this.wow_path === '') {
                 await this.check_wow_path(this.version)
-            }else{
-                window.electronAPI.getRealmlist({version: this.version}).then(res => {
+            } else {
+                window.electronAPI.getRealmlist({ version: this.version }).then(res => {
                     if (res.code !== 200) {
                         ElMessageBox.confirm(
                             res.message + ',不是有效的指向内容，点击确认修复为亚洲服务器',
@@ -195,14 +195,14 @@ export default {
                                 type: 'warning',
                             }
                         ).then(() => {
-                            window.electronAPI.fixRealmlist({version: this.version}).then(res => {
+                            window.electronAPI.fixRealmlist({ version: this.version }).then(res => {
                                 if (res.code === 200) {
                                     ElMessageBox.alert(res.message, "成功", {
                                         confirmButtonText: 'OK',
                                         type: 'success',
                                         center: true,
                                     }).then(() => {
-                                        window.electronAPI.startWow({"version": this.version})
+                                        window.electronAPI.startWow({ "version": this.version })
                                     }).catch(err => {
                                         ElMessageBox.alert(err, "错误", {
                                             confirmButtonText: 'OK',
@@ -228,7 +228,7 @@ export default {
                             })
                         })
                     } else {
-                        window.electronAPI.startWow({"version": this.version})
+                        window.electronAPI.startWow({ "version": this.version })
                     }
                 }).catch(err => {
                     console.log('报错', err)
@@ -250,23 +250,23 @@ export default {
         },
 
         handle_select_wow() {
-            this.select_wow_exe({version: this.version})
+            this.select_wow_exe({ version: this.version })
         },
         // 选择wow.exe文件
         select_wow_exe(request_data) {
             return window.electronAPI.selectFile(request_data)
         },
         open_link(url) {
-            window.electronAPI.openLink({outLink: url})
+            window.electronAPI.openLink({ outLink: url })
         },
         jump_kook() {
-            window.electronAPI.openLink({outLink: 'https://kook.top/K8G1ir'})
+            window.electronAPI.openLink({ outLink: 'https://kook.top/K8G1ir' })
         },
         jump_website() {
-            window.electronAPI.openLink({outLink: 'https://www.stormwow.com/'})
+            window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/' })
         },
         jump_frost() {
-            window.electronAPI.openLink({outLink: 'https://www.stormwow.com/frost'})
+            window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/frost' })
         },
         // 下载插件
         down_addons(data) {
@@ -326,45 +326,45 @@ export default {
                 })
             })
         },
-        async get_addons_list(version, category) {
-           
-            if (version !== undefined) {
-                this.version = version
-            }
+        async get_addons_list(category) {
+
+
             let url = 'https://www.9136347.com/api/addons_list'
             let params = {
-                version: this.version,
                 title: this.search_form.title,
                 page: 1,
                 page_size: 100,
-                category_id:8
+                category_id: category
             }
-            
+
             // 如果有分类参数，添加到请求中
             if (category && category !== '全部插件') {
                 params.category = category
             }
-            
+
             this.main_loading = true
-            this.main_loading_word = "加载中..." 
-            
+            this.main_loading_word = "加载中..."
+
             try {
-                const res = await axios.get(url, {params: params})
+                const res = await axios.get(url, { params: params })
                 this.main_loading = false
-                
-                if (res.data.status === 200) { 
+
+                if (res.data.status === 200) {
+
                     const tableData = res.data.data
-                    
-                    // 为每个插件添加额外的显示信息
-                    tableData.forEach((item, index) => {
-                        // 随机生成下载量
-                        item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                        // 随机生成体积
-                        item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
-                        // 随机生成是否已安装
-                        item.installed = index % 2 === 1
-                        item.modified = new Date().toLocaleString()
-                    }) 
+                    if (Array.isArray(res.data.data) && res.data.data.length > 0) {
+                        // 为每个插件添加额外的显示信息
+                        tableData.forEach((item, index) => {
+                            // 随机生成下载量
+                            item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                            // 随机生成体积
+                            item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                            // 随机生成是否已安装
+                            item.installed = index % 2 === 1
+                            item.modified = new Date().toLocaleString()
+                        })
+                    }
+
                     // 更新本地数据并返回
                     this.tableData = tableData
                     return tableData
