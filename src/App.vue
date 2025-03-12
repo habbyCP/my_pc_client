@@ -139,9 +139,9 @@ export default {
   },
   async mounted() {
     // 初始化时加载插件列表
-    const data = await this.get_addons_list(); 
+    await this.get_addons_list(); 
     console.log("data is ", data[0]["pic_list"])
-    this.tableData = data;
+    // this.tableData = data;
   },
   methods: {
     handleSaveSettings(settings) {

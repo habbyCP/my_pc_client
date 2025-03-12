@@ -1,0 +1,605 @@
+22:28:40:763 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:29:00:907 下载完成
+22:29:00:908 下载close
+22:29:01:922 wow路径 D:\wow\World of Warcraft 3.3.5.bak\Wow.exe
+22:29:01:922 插件路径 D:\wow\World of Warcraft 3.3.5.bak/Interface/Addons/
+22:29:15:621 下发指令 {
+  code: 200,
+  sub_code: 20100,
+  data: 'D:\\wow\\小黑\\Wow.exe',
+  message: '保存文件路径成功'
+}
+22:29:19:071 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:29:40:816 下载取消
+22:29:40:816 下载错误: TypeError: Cannot read properties of null (reading 'webContents')
+    at IncomingMessage.<anonymous> (D:\code\my_pc_client\electron\lib\down.js:159:49)
+    at IncomingMessage.emit (node:events:527:28)
+    at IncomingMessage._destroy (node:_http_incoming:179:10)
+    at _destroy (node:internal/streams/destroy:102:25)
+    at IncomingMessage.destroy (node:internal/streams/destroy:64:5)
+    at TLSSocket.socketCloseListener (node:_http_client:414:11)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+22:29:53:472 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:30:36:762 下载取消
+22:30:36:764 下载错误: TypeError: Cannot read properties of null (reading 'webContents')
+    at IncomingMessage.<anonymous> (D:\code\my_pc_client\electron\lib\down.js:159:49)
+    at IncomingMessage.emit (node:events:527:28)
+    at IncomingMessage._destroy (node:_http_incoming:179:10)
+    at _destroy (node:internal/streams/destroy:102:25)
+    at IncomingMessage.destroy (node:internal/streams/destroy:64:5)
+    at TLSSocket.socketCloseListener (node:_http_client:414:11)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+22:31:42:376 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:32:35:475 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:32:35:816 下载完成
+22:32:35:816 下载close
+22:32:35:848 wow路径 D:\wow\小黑\Wow.exe
+22:32:35:849 插件路径 D:\wow\小黑/Interface/Addons/
+22:32:39:368 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:32:51:550 下载取消
+22:32:51:550 下载错误: TypeError: Cannot read properties of null (reading 'webContents')
+    at IncomingMessage.<anonymous> (D:\code\my_pc_client\electron\lib\down.js:159:49)
+    at IncomingMessage.emit (node:events:527:28)
+    at IncomingMessage._destroy (node:_http_incoming:179:10)
+    at _destroy (node:internal/streams/destroy:102:25)
+    at IncomingMessage.destroy (node:internal/streams/destroy:64:5)
+    at TLSSocket.socketCloseListener (node:_http_client:414:11)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+22:33:02:544 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:33:14:762 下载完成
+22:33:14:763 下载close
+22:33:15:816 wow路径 D:\wow\小黑\Wow.exe
+22:33:15:816 插件路径 D:\wow\小黑/Interface/Addons/
+22:33:20:439 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:50:37:834 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:50:54:468 下载取消
+22:50:54:469 下载错误: Error: aborted
+    at connResetException (node:internal/errors:692:14)
+    at TLSSocket.socketCloseListener (node:_http_client:414:19)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+22:50:54:470 下载close
+22:56:47:850 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:57:55:929 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:58:27:177 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:59:31:634 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+22:59:32:059 下载完成
+22:59:32:060 下载close
+23:02:53:106 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:02:55:028 mainWindow 為空
+23:02:55:531 mainWindow 為空
+23:02:56:311 mainWindow 為空
+23:02:57:076 mainWindow 為空
+23:02:58:097 mainWindow 為空
+23:02:58:805 mainWindow 為空
+23:02:59:651 mainWindow 為空
+23:03:00:719 mainWindow 為空
+23:03:56:033 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:03:57:559 mainWindow 為空
+23:03:58:218 mainWindow 為空
+23:03:58:972 mainWindow 為空
+23:03:59:544 mainWindow 為空
+23:04:00:006 mainWindow 為空
+23:10:16:346 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:10:18:767 mainWindow 為空
+23:10:20:268 mainWindow 為空
+23:10:21:614 mainWindow 為空
+23:10:22:990 mainWindow 為空
+23:10:24:671 mainWindow 為空
+23:16:51:482 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:16:55:566 mainWindow 為空
+23:16:57:473 mainWindow 為空
+23:16:59:361 mainWindow 為空
+23:17:00:678 mainWindow 為空
+23:17:30:586 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:17:32:811 mainWindow 為空
+23:17:33:614 mainWindow 為空
+23:17:34:407 mainWindow 為空
+23:17:35:361 mainWindow 為空
+23:17:36:808 mainWindow 為空
+23:17:38:006 mainWindow 為空
+23:17:38:766 mainWindow 為空
+23:17:39:636 mainWindow 為空
+23:17:40:867 mainWindow 為空
+23:17:42:289 mainWindow 為空
+23:17:43:227 mainWindow 為空
+23:17:43:922 mainWindow 為空
+23:17:44:717 mainWindow 為空
+23:24:34:186 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:24:34:549 mainWindow 為空
+23:24:34:550 下载完成
+23:24:34:551 下载close
+23:24:34:553 mainWindow 為空
+23:24:34:582 mainWindow 為空
+23:24:34:583 wow路径 D:\wow\小黑\Wow.exe
+23:24:34:583 插件路径 D:\wow\小黑/Interface/Addons/
+23:24:34:634 mainWindow 為空
+23:26:53:250 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:26:54:673 mainWindow 為空
+23:26:55:161 mainWindow 為空
+23:26:55:747 mainWindow 為空
+23:26:56:517 mainWindow 為空
+23:26:57:211 mainWindow 為空
+23:26:57:909 mainWindow 為空
+23:28:08:099 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:28:09:114 mainWindow 為空
+23:28:09:963 mainWindow 為空
+23:28:10:549 mainWindow 為空
+23:28:11:205 mainWindow 為空
+23:28:11:764 mainWindow 為空
+23:29:42:146 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:29:43:198 mainWindow 為空
+23:29:43:889 mainWindow 為空
+23:29:44:315 mainWindow 為空
+23:29:44:988 mainWindow 為空
+23:29:45:668 mainWindow 為空
+23:29:46:355 mainWindow 為空
+23:29:47:020 mainWindow 為空
+23:29:47:605 mainWindow 為空
+23:29:48:233 mainWindow 為空
+23:29:48:893 mainWindow 為空
+23:29:49:527 mainWindow 為空
+23:29:50:204 mainWindow 為空
+23:29:50:869 mainWindow 為空
+23:29:51:441 mainWindow 為空
+23:29:51:445 下载完成
+23:29:55:224 mainWindow 為空
+23:29:56:295 mainWindow 為空
+23:29:56:296 wow路径 D:\wow\小黑\Wow.exe
+23:29:56:296 插件路径 D:\wow\小黑/Interface/Addons/
+23:31:02:106 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:31:27:282 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:31:45:117 下载完成
+23:31:45:118 下载close
+23:31:46:204 wow路径 D:\wow\小黑\Wow.exe
+23:31:46:204 插件路径 D:\wow\小黑/Interface/Addons/
+23:32:18:802 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:36:29:234 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:36:30:075 mainWindow 為空
+23:36:30:707 mainWindow 為空
+23:36:31:280 mainWindow 為空
+23:36:31:929 mainWindow 為空
+23:36:32:589 mainWindow 為空
+23:40:18:036 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:40:22:802 下载取消
+23:40:22:803 下载错误: TypeError: Cannot read properties of null (reading 'webContents')
+    at IncomingMessage.<anonymous> (D:\code\my_pc_client\electron\lib\down.js:152:49)
+    at IncomingMessage.emit (node:events:527:28)
+    at IncomingMessage._destroy (node:_http_incoming:179:10)
+    at _destroy (node:internal/streams/destroy:102:25)
+    at IncomingMessage.destroy (node:internal/streams/destroy:64:5)
+    at TLSSocket.socketCloseListener (node:_http_client:414:11)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+23:40:33:555 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:40:38:894 下载取消
+23:40:38:895 下载错误: Error: aborted
+    at connResetException (node:internal/errors:692:14)
+    at TLSSocket.socketCloseListener (node:_http_client:414:19)
+    at TLSSocket.emit (node:events:539:35)
+    at node:net:709:12
+    at TCP.done (node:_tls_wrap:582:7)
+23:40:38:895 下载close
+23:41:01:843 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+23:41:48:364 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:11:50:420 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:11:50:730 下载完成
+00:11:50:731 下载close
+00:11:54:114 wow路径 D:\wow\小黑\Wow.exe
+00:11:54:115 插件路径 D:\wow\小黑/Interface/Addons/
+00:11:54:166 TypeError: send_progress is not a function
+    at D:\code\my_pc_client\electron\lib\down.js:99:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:12:29:420 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:12:40:261 下载完成
+00:12:45:628 wow路径 D:\wow\小黑\Wow.exe
+00:12:45:629 插件路径 D:\wow\小黑/Interface/Addons/
+00:12:46:417 TypeError: send_progress is not a function
+    at D:\code\my_pc_client\electron\lib\down.js:99:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:13:19:819 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:13:20:420 下载close
+00:13:20:448 wow路径 D:\wow\小黑\Wow.exe
+00:13:20:448 插件路径 D:\wow\小黑/Interface/Addons/
+00:13:20:498 TypeError: send_progress is not a function
+    at D:\code\my_pc_client\electron\lib\down.js:99:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:15:22:371 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:15:22:780 下载close
+00:15:22:810 wow路径 D:\wow\小黑\Wow.exe
+00:15:22:810 插件路径 D:\wow\小黑/Interface/Addons/
+00:15:22:861 mainWindow 为空
+00:15:22:861 TypeError: send_progress is not a function
+    at D:\code\my_pc_client\electron\lib\down.js:100:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:16:09:500 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:16:09:729 下载close
+00:16:09:758 wow路径 D:\wow\小黑\Wow.exe
+00:16:09:759 插件路径 D:\wow\小黑/Interface/Addons/
+00:16:09:801 mainWindow 为空
+00:19:26:308 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:19:26:599 下载close
+00:19:26:627 wow路径 D:\wow\小黑\Wow.exe
+00:19:26:628 插件路径 D:\wow\小黑/Interface/Addons/
+00:19:26:670 ReferenceError: mainWindow is not defined
+    at send_msg (D:\code\my_pc_client\electron\lib\notice.js:7:5)
+    at D:\code\my_pc_client\electron\lib\down.js:99:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:20:27:052 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:20:27:407 下载close
+00:20:27:435 wow路径 D:\wow\小黑\Wow.exe
+00:20:27:435 插件路径 D:\wow\小黑/Interface/Addons/
+00:20:27:477 ReferenceError: mainWindow is not defined
+    at send_msg (D:\code\my_pc_client\electron\lib\notice.js:7:5)
+    at D:\code\my_pc_client\electron\lib\down.js:99:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:22:29:540 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:22:29:820 下载close
+00:22:29:846 wow路径 D:\wow\小黑\Wow.exe
+00:22:29:846 插件路径 D:\wow\小黑/Interface/Addons/
+00:22:29:887 ReferenceError: mainWindow is not defined
+    at send_msg (D:\code\my_pc_client\electron\lib\notice.js:7:5)
+    at D:\code\my_pc_client\electron\lib\down.js:100:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:23:25:038 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:23:25:370 下载close
+00:23:25:398 wow路径 D:\wow\小黑\Wow.exe
+00:23:25:399 插件路径 D:\wow\小黑/Interface/Addons/
+00:23:25:441 ReferenceError: mainWindow is not defined
+    at send_msg (D:\code\my_pc_client\electron\lib\notice.js:7:5)
+    at D:\code\my_pc_client\electron\lib\down.js:100:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+00:32:47:590 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:32:47:894 下载close
+00:32:47:920 wow路径 D:\wow\小黑\Wow.exe
+00:32:47:921 插件路径 D:\wow\小黑/Interface/Addons/
+00:32:47:962 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:33:07:126 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:33:07:426 下载close
+00:33:07:454 wow路径 D:\wow\小黑\Wow.exe
+00:33:07:455 插件路径 D:\wow\小黑/Interface/Addons/
+00:33:07:498 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:45:42:999 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:45:43:305 下载close
+00:45:43:332 wow路径 D:\wow\小黑\Wow.exe
+00:45:43:333 插件路径 D:\wow\小黑/Interface/Addons/
+00:45:43:375 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:45:50:677 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/AddOns%E5%A4%87%E4%BB%BD.zip?sign=L7beMIAtcmAfn0qeHHPAVqDBeoW7TZi_lguqzgCRvIU=:0',
+  index: 1,
+  title: '荷兰服335客户端自带插件备份(修复报错)',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:45:50:936 下载close
+00:45:50:955 wow路径 D:\wow\小黑\Wow.exe
+00:45:50:956 插件路径 D:\wow\小黑/Interface/Addons/
+00:45:50:994 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:49:28:951 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:49:39:207 下载close
+00:49:47:571 wow路径 D:\wow\小黑\Wow.exe
+00:49:47:572 插件路径 D:\wow\小黑/Interface/Addons/
+00:49:49:234 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:50:05:252 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:51:38:415 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:51:50:169 wow路径 D:\wow\小黑\Wow.exe
+00:51:50:170 插件路径 D:\wow\小黑/Interface/Addons/
+00:51:50:906 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:52:02:108 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Questie/Questie!.zip?sign=6lM1A4uwo_gVOmBV5pxQj5NWJ1Qm5p0F7xZvjdrbMd8=:0',
+  index: 0,
+  title: 'questie插件 -兼容335',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:52:12:624 wow路径 D:\wow\小黑\Wow.exe
+00:52:12:624 插件路径 D:\wow\小黑/Interface/Addons/
+00:52:13:348 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:52:34:799 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Auctionator/Auctionator.zip?sign=nce_N3ckceKc5L4c993PPf1Rgya9xCJQAcWvxuJt4lc=:0',
+  index: 2,
+  title: 'Auctionator拍卖行助手插件汉化版',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:52:35:432 wow路径 D:\wow\小黑\Wow.exe
+00:52:35:432 插件路径 D:\wow\小黑/Interface/Addons/
+00:52:35:500 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:52:38:070 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/dbm/DBM_v1.0.zip?sign=YSkoHqDXstW1FZsN19jplTe0zQ2T2G9UVs_eK5DGiz0=:0',
+  index: 3,
+  title: '荷兰服3.35版本可用dbm',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:52:46:559 wow路径 D:\wow\小黑\Wow.exe
+00:52:46:559 插件路径 D:\wow\小黑/Interface/Addons/
+00:52:48:221 下发指令 { code: 200, data: '下载完成', message: '成功' }
+00:52:51:512 收到下载需求： {
+  url: 'https://download.9136347.com/d/335/Puggle/Puggle_v1.0.zip?sign=mAKAzkFttUIV55W3bXn8tlvQAcZ9vvHIk9iZEaGoJYQ=:0',
+  index: 4,
+  title: 'Puggle集合石插件',
+  version: '3.35',
+  addons_version: 'v1.0'
+}
+00:52:52:032 wow路径 D:\wow\小黑\Wow.exe
+00:52:52:033 插件路径 D:\wow\小黑/Interface/Addons/
+00:52:52:094 下发指令 { code: 200, data: '下载完成', message: '成功' }

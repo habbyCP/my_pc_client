@@ -58,6 +58,7 @@ export default {
         }
     },
     created() {
+        return
         let version = this.get_version()
         window.electronAPI.allWowFilePath().then(res => {
             for (const key in this.menu_list) {
@@ -167,17 +168,17 @@ export default {
             }
         },
         //切换版本
-        async switch_version(key) {
-            this.version = key
-            localStorage.setItem("version", key)
-            this.get_addons_list(key)
-            if (this.menu_list.hasOwnProperty(key)) {
-                this.wow_path = this.menu_list[key].wow_path
-            } else {
-                this.wow_path = ''
-            }
+        // async switch_version(key) {
+        //     this.version = key
+        //     localStorage.setItem("version", key)
+        //     this.get_addons_list(key)
+        //     if (this.menu_list.hasOwnProperty(key)) {
+        //         this.wow_path = this.menu_list[key].wow_path
+        //     } else {
+        //         this.wow_path = ''
+        //     }
 
-        },
+        // },
         //启动客户端
         start_wow: async function () {
             console.log('path', this.wow_path)
@@ -326,9 +327,8 @@ export default {
                 })
             })
         },
-        async get_addons_list(category) {
-
-
+        async get_addons_list(category) { 
+            
             let url = 'https://www.9136347.com/api/addons_list'
             let params = {
                 title: this.search_form.title,
@@ -342,17 +342,16 @@ export default {
                 params.category = category
             }
 
-            this.main_loading = true
-            this.main_loading_word = "加载中..."
-
-            try {
-                const res = await axios.get(url, { params: params })
-                this.main_loading = false
-
+            // this.main_loading = true
+            // this.main_loading_word = "加载中..."
+            try { 
+                const res = await axios.get(url, { params: params }) 
+                // this.main_loading = false
+                
                 if (res.data.status === 200) {
-
                     const tableData = res.data.data
                     if (Array.isArray(res.data.data) && res.data.data.length > 0) {
+                        
                         // 为每个插件添加额外的显示信息
                         tableData.forEach((item, index) => {
                             // 随机生成下载量
@@ -364,19 +363,19 @@ export default {
                             item.modified = new Date().toLocaleString()
                         })
                     }
-
+  
                     // 更新本地数据并返回
                     this.tableData = tableData
-                    return tableData
+                    // return tableData
                 } else {
-                    ElMessageBox.alert(res.data.message, res.data.code, {
-                        confirmButtonText: 'OK',
-                        type: 'error',
-                        center: true,
-                    })
-                    return []
+                    // ElMessageBox.alert(res.data.message, res.data.code, {
+                    //     confirmButtonText: 'OK',
+                    //     type: 'error',
+                    //     center: true,
+                    // })
+                    // return []
                 }
-            } catch (err) {
+            } catch (err) { 
                 this.main_loading = false
                 ElMessageBox.alert(err, "错误", {
                     confirmButtonText: 'OK',
