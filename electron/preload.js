@@ -40,6 +40,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   //响应主程序
   onResponse: (callback) => ipcRenderer.on('response', callback),
   // selectFile: selectFile,
+  
+  // 设置相关API
+  // 选择目录
+  selectDirectory: (options) => ipcRenderer.invoke('select-directory', options),
+  // 验证游戏路径
+  validateGamePath: (path) => ipcRenderer.invoke('validate-game-path', path),
+  // 获取设置
+  getSettings: () => ipcRenderer.invoke('get-settings'),
+  // 保存设置
+  saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
 });
-
-

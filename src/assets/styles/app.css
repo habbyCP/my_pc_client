@@ -22,35 +22,35 @@ body {
 
 /* 暗色主题 */
 .dark-theme {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
+  background-color: #1e1a18;
+  color: #e0d6cc;
 }
 
 .dark-theme .header {
-  background-color: #252525;
-  border-bottom: 1px solid #333;
+  background-color: #252220;
+  border-bottom: 1px solid #332e2a;
 }
 
 .dark-theme .sidebar {
-  background-color: #252525;
-  border-right: 1px solid #333;
+  background-color: #252220;
+  border-right: 1px solid #332e2a;
 }
 
 .dark-theme .tab {
-  color: #e0e0e0;
+  color: #e0d6cc;
 }
 
 .dark-theme .tab.active {
-  background-color: #333;
+  background-color: #332e2a;
 }
 
 .dark-theme .category-item {
-  color: #e0e0e0;
+  color: #e0d6cc;
 }
 
 .dark-theme .category-item:hover,
 .dark-theme .category-item.active {
-  background-color: #333;
+  background-color: #332e2a;
 }
 
 /* 顶部标签栏 */
@@ -93,12 +93,12 @@ body {
 }
 
 .tab:hover {
-  background-color: #333;
+  background-color: #332e2a;
 }
 
 .tab.active {
-  color: #409eff;
-  border-bottom: 2px solid #409eff;
+  color: #c28540;
+  border-bottom: 2px solid #c28540;
   font-weight: bold;
 }
 
@@ -137,13 +137,13 @@ body {
 }
 
 .category-item:hover {
-  border-left: 5px solid #f57c00;
+  border-left: 5px solid #c28540;
 }
 
 .category-item.active {
-  color: #409eff;
+  color: #c28540;
   font-weight: bold;
-  border-left: 5px solid #f57c00;
+  border-left: 5px solid #c28540;
 }
 
 .category-icon {
@@ -161,7 +161,7 @@ body {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background-color: #121212;
+  background-color: #121110;
 }
 
 .main-content.full-width {
@@ -175,28 +175,28 @@ body {
 .tab-content h2 {
   margin-bottom: 20px;
   font-size: 24px;
-  color: #e0e0e0;
+  color: #e0d6cc;
 }
 
 /* Common Element UI Dark Theme Overrides */
 .dark-theme .el-input__wrapper {
-  background-color: #252525;
-  box-shadow: 0 0 0 1px #444 inset;
+  background-color: #252220;
+  box-shadow: 0 0 0 1px #443e3a inset;
 }
 
 .dark-theme .el-input__inner {
-  color: #e0e0e0;
+  color: #e0d6cc;
 }
 
 .dark-theme .el-button {
-  background-color: #252525;
-  border-color: #444;
-  color: #e0e0e0;
+  background-color: #252220;
+  border-color: #443e3a;
+  color: #e0d6cc;
 }
 
 .dark-theme .el-button:hover {
-  background-color: #333;
-  border-color: #555;
+  background-color: #332e2a;
+  border-color: #554e4a;
   color: #fff;
 }
 
@@ -209,12 +209,35 @@ body {
   margin-top: 20px;
 }
 
+/* 自定义启动游戏按钮样式 */
+.start-button.el-button--primary {
+  background-color: #d9963f !important;
+  border-color: #c28540 !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.start-button.el-button--primary:hover {
+  background-color: #e6a84c !important;
+  border-color: #d9963f !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.start-button.el-button--primary:active {
+  background-color: #c28540 !important;
+  border-color: #b07535 !important;
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 /* 响应式布局 */
 @media screen and (max-width: 768px) {
   .sidebar {
     display: none;
   }
-  
+
   .tab {
     padding: 0 10px;
   }

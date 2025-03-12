@@ -332,7 +332,7 @@ export default {
             let url = 'https://www.9136347.com/api/addons_list'
             let params = {
                 title: this.search_form.title,
-                page: 1,
+                page: 0,
                 page_size: 100,
                 category_id: category
             }

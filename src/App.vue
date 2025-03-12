@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="header-actions">
-        <el-button type="primary" class="start-button" @click="start_wow">启动游戏</el-button>
+        <el-button type="primary" size="medium" class="start-button" @click="start_wow">启动游戏</el-button>
         <!-- <el-switch
           v-model="isDark"
           inline-prompt
@@ -81,9 +81,11 @@
           <p>此功能正在开发中...</p>
         </div>
         
-        <div v-if="activeTab === '管理'" class="tab-content">
-          <h2>账号管理</h2>
-          <p>此功能正在开发中...</p>
+        <div v-if="activeTab === '设置'" class="tab-content">
+          <h2>设置</h2>
+          <settings 
+            @save-settings="handleSaveSettings"
+          />
         </div>
       </div>
     </div>
@@ -112,6 +114,7 @@
 import AddonsList from './table_list.js'
 import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-vue'
 import PluginLibrary from './components/PluginLibrary.vue'
+import Settings from './components/Settings.vue'
 
 export default {
   name: 'App',
@@ -122,11 +125,12 @@ export default {
     Files,
     Calendar,
     Loading,
-    PluginLibrary
+    PluginLibrary,
+    Settings
   },
   data() {
     return {
-      tabs: [ '本地插件', '插件库', '配置分享', '客户端', '管理'],
+      tabs: [ '本地插件', '插件库', '配置分享', '客户端', '设置'],
 
       isDark: true, // 默认使用暗色主题
       tableData: [],
@@ -138,6 +142,12 @@ export default {
     const data = await this.get_addons_list(); 
     console.log("data is ", data[0]["pic_list"])
     this.tableData = data;
+  },
+  methods: {
+    handleSaveSettings(settings) {
+      console.log('Settings saved:', settings);
+      // 这里可以处理设置保存后的逻辑
+    }
   }
 }
 </script>
