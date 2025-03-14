@@ -270,59 +270,74 @@ export default {
         },
         // 下载插件
         down_addons(data) {
-            let row = data.row
-            this.main_loading = true
-            this.main_loading_word = "下载中..."
-            let version_data = {
-                version: this.version
-            }
-            console.log('version_data', version_data)
-            this.is_duplicate_directory(version_data).then(res => {
-                if (res.code !== 200) {
-                    this.main_loading = false
-                    ElMessageBox.alert(res.message, res.code, {
-                        confirmButtonText: 'OK',
-                        type: 'error',
-                        center: true,
+            // 检查是否已经选择wow.exe路径
+            window.electronAPI.getSettings().then(settings => {
+                if (!settings || !settings.gamePath) {
+                    // 如果没有选择wow.exe路径，跳转到设置页面
+                    this.activeTab = '设置'
+                    this.$message({
+                        message: '请先选择WoW.exe路径',
+                        type: 'warning'
                     })
                     return
                 }
-                if (res.data.is_duplicate) {
-                    this.main_loading = false
-                    ElMessageBox.confirm(
-                        '检测到目录已存在，是否覆盖？',
-                        '提示',
-                        {
-                            confirmButtonText: '覆盖',
-                            cancelButtonText: '取消',
-                            type: 'warning',
-                        }
-                    ).then(() => {
-                        this.main_loading = true
-                        this.main_loading_word = "下载中..."
+                
+                // 继续下载插件的逻辑
+                let row = data.row
+                this.main_loading = true
+                this.main_loading_word = "下载中..."
+                let version_data = {
+                    version: this.version
+                }
+                console.log('version_data', version_data)
+                
+                this.is_duplicate_directory(version_data).then(res => {
+                    if (res.code !== 200) {
+                        this.main_loading = false
+                        ElMessageBox.alert(res.message, res.code, {
+                            confirmButtonText: 'OK',
+                            type: 'error',
+                            center: true,
+                        })
+                        return
+                    }
+                    if (res.data.is_duplicate) {
+                        this.main_loading = false
+                        ElMessageBox.confirm(
+                            '检测到目录已存在，是否覆盖？',
+                            '提示',
+                            {
+                                confirmButtonText: '覆盖',
+                                cancelButtonText: '取消',
+                                type: 'warning',
+                            }
+                        ).then(() => {
+                            this.main_loading = true
+                            this.main_loading_word = "下载中..."
+                            window.electronAPI.downloadFile({
+                                version: this.version,
+                                id: row.id,
+                                title: row.title,
+                                cover: false
+                            })
+                        }).catch(() => {
+                            this.main_loading = false
+                        })
+                    } else {
                         window.electronAPI.downloadFile({
                             version: this.version,
                             id: row.id,
                             title: row.title,
                             cover: false
                         })
-                    }).catch(() => {
-                        this.main_loading = false
+                    }
+                }).catch(err => {
+                    this.main_loading = false
+                    ElMessageBox.alert(err, "错误", {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
                     })
-                } else {
-                    window.electronAPI.downloadFile({
-                        version: this.version,
-                        id: row.id,
-                        title: row.title,
-                        cover: false
-                    })
-                }
-            }).catch(err => {
-                this.main_loading = false
-                ElMessageBox.alert(err, "错误", {
-                    confirmButtonText: 'OK',
-                    type: 'error',
-                    center: true,
                 })
             })
         },
