@@ -1,5 +1,6 @@
 /* Import all CSS files here */
 @import './app.css';
 @import './plugin-library.css';
+@import './message-box.css';
 
 /* Add any global styles here */

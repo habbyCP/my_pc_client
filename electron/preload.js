@@ -23,7 +23,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
  // 判断目录是否重复
   isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
-  onDownloadProgress: (callback) => ipcRenderer.on('download-progress', callback),
+  onDownloadProgress: (callback) => ipcRenderer.on('download-progress', (_, data) => callback(data)),
   // 获取wow.exe路径
   wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
   // 获取所有wow.exe路径

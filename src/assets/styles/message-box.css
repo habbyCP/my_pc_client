@@ -1,0 +1,64 @@
+/* Custom styling for ElMessageBox to match the brownish theme */
+.custom-message-box .el-message-box {
+  background-color: #252220;
+  border: 1px solid #332e2a;
+  border-radius: 4px;
+}
+
+.custom-message-box .el-message-box__title {
+  color: #473d34;
+}
+
+.custom-message-box .el-message-box__content {
+  color: #473d34;
+}
+
+.custom-message-box .el-message-box__headerbtn .el-message-box__close {
+  color: #473d34;
+}
+
+.custom-message-box .el-button--default {
+  background-color: #332e2a;
+  border-color: #4a433d;
+  color: #473d34;
+
+.custom-message-box .el-button--default:hover,
+.custom-message-box .el-button--default:focus {
+  background-color: #4a433d;
+  border-color: #5a5248;
+  color: #e0d6cc;
+}
+}
+
+.custom-message-box .el-button--primary {
+  background-color: #8b5a2b;
+  border-color: #a06c33;
+  color: #e0d6cc;
+}
+
+.custom-message-box .el-button--primary:hover,
+.custom-message-box .el-button--primary:focus {
+  background-color: #a06c33;
+  border-color: #b57b3b;
+  color: #e0d6cc;
+}
+
+/* Warning icon color */
+.custom-message-box .el-message-box__status.el-icon-warning {
+  color: #e6a23c;
+}
+
+/* Error icon color */
+.custom-message-box .el-message-box__status.el-icon-error {
+  color: #f56c6c;
+}
+
+/* Success icon color */
+.custom-message-box .el-message-box__status.el-icon-success {
+  color: #67c23a;
+}
+
+/* Info icon color */
+.custom-message-box .el-message-box__status.el-icon-info {
+  color: #909399;
+}

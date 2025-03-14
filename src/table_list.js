@@ -34,6 +34,7 @@ export default {
             wow_path: "",
             main_loading_word: "加载中",
             main_loading: false,
+            download_progress: 0,
             isDark: false,
             version: localStorage.getItem("version") || "2.43",
             progress_dialog: false,
@@ -57,6 +58,18 @@ export default {
             ]
         }
     },
+    mounted() {
+        // 监听下载进度
+        window.electronAPI.onDownloadProgress((data) => {
+            if (data && data.data) {
+                this.download_progress = data.data.progress;
+                this.main_loading_word = data.data.msg || "下载中...";
+                console.log("下载进度:", this.download_progress + "%", this.main_loading_word);
+                 
+                
+            }
+        });
+    },
     created() {
         return
         let version = this.get_version()
@@ -76,8 +89,10 @@ export default {
             if (item.code !== 200) {
                 this.main_loading = false
                 ElMessageBox.alert(item.data, item.code + ":" + item.message, {
+                    confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
+                    customClass: 'custom-message-box'
                 })
                 console.log(item)
                 return
@@ -85,8 +100,10 @@ export default {
             if (item.data.progress === 100) {
                 this.main_loading = false
                 ElMessageBox.alert('', '下载完成', {
+                    confirmButtonText: 'OK',
                     type: 'success',
                     center: true,
+                    customClass: 'custom-message-box'
                 })
 
             }
@@ -106,6 +123,7 @@ export default {
             ElMessageBox.alert(item.data, item.code + ":" + item.message, {
                 type: type,
                 center: true,
+                customClass: 'custom-message-box'
             })
             if (item.hasOwnProperty('sub_code') && item.sub_code === 20100) {
                 this.menu_list[this.version].wow_path = item.data
@@ -155,6 +173,7 @@ export default {
                         confirmButtonText: '现在去配置',
                         type: 'warning',
                         center: true,
+                        customClass: 'custom-message-box'
                     })
                     if (confirm === 'confirm') {
                         let path_data = await this.select_wow_exe({ version: version })
@@ -162,7 +181,12 @@ export default {
                         return ''
                     }
                 } else {
-                    alert(path_data.message)
+                    ElMessageBox.alert(path_data.message, path_data.code, {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
+                        customClass: 'custom-message-box'
+                    })
                 }
 
             }
@@ -194,6 +218,9 @@ export default {
                                 confirmButtonText: 'OK',
                                 cancelButtonText: 'Cancel',
                                 type: 'warning',
+                                customClass: 'custom-message-box',
+                                distinguishCancelAndClose: true,
+                                center: true
                             }
                         ).then(() => {
                             window.electronAPI.fixRealmlist({ version: this.version }).then(res => {
@@ -202,6 +229,7 @@ export default {
                                         confirmButtonText: 'OK',
                                         type: 'success',
                                         center: true,
+                                        customClass: 'custom-message-box'
                                     }).then(() => {
                                         window.electronAPI.startWow({ "version": this.version })
                                     }).catch(err => {
@@ -209,14 +237,16 @@ export default {
                                             confirmButtonText: 'OK',
                                             type: 'error',
                                             center: true,
+                                            customClass: 'custom-message-box'
                                         })
                                     })
 
                                 } else {
-                                    ElMessageBox.alert(res.data, data.message, {
+                                    ElMessageBox.alert(res.data, res.message, {
                                         confirmButtonText: 'OK',
                                         type: 'error',
                                         center: true,
+                                        customClass: 'custom-message-box'
                                     })
                                 }
                             }).catch(err => {
@@ -225,6 +255,7 @@ export default {
                                     confirmButtonText: 'OK',
                                     type: 'error',
                                     center: true,
+                                    customClass: 'custom-message-box'
                                 })
                             })
                         })
@@ -237,6 +268,7 @@ export default {
                         confirmButtonText: 'OK',
                         type: 'error',
                         center: true,
+                        customClass: 'custom-message-box'
                     })
                 })
             }
@@ -274,11 +306,23 @@ export default {
             // 检查是否已经选择wow.exe路径
             window.electronAPI.getSettings().then(settings => {
                 if (!settings || !settings.gamePath) {
-                    // 如果没有选择wow.exe路径，跳转到设置页面
-                    this.activeTab = '设置'
-                    this.$message({
-                        message: '请先选择WoW.exe路径',
-                        type: 'warning'
+                    // 如果没有选择wow.exe路径，显示确认对话框
+                    ElMessageBox.confirm(
+                        '您还没有设置WoW路径,是否前往设置',
+                        '提示',
+                        {
+                            confirmButtonText: '前往设置',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            customClass: 'custom-message-box',
+                            distinguishCancelAndClose: true,
+                            center: true
+                        }
+                    ).then(() => {
+                        // 用户点击确认后跳转到设置页面
+                        this.activeTab = '设置'
+                    }).catch(() => {
+                        // 用户取消，不做任何操作
                     })
                     return
                 }
@@ -286,60 +330,68 @@ export default {
                 // 继续下载插件的逻辑
                 let row = data.row
                 this.main_loading = true
-                this.main_loading_word = "下载中..."
-                let version_data = {
-                    version: this.version
-                }
-                console.log('version_data', version_data)
+                this.main_loading_word = "准备下载..."
+                this.download_progress = 0
                 
-                this.is_duplicate_directory(version_data).then(res => {
-                    if (res.code !== 200) {
-                        this.main_loading = false
-                        ElMessageBox.alert(res.message, res.code, {
-                            confirmButtonText: 'OK',
-                            type: 'error',
-                            center: true,
-                        })
-                        return
-                    }
-                    if (res.data.is_duplicate) {
-                        this.main_loading = false
-                        ElMessageBox.confirm(
-                            '检测到目录已存在，是否覆盖？',
-                            '提示',
-                            {
-                                confirmButtonText: '覆盖',
-                                cancelButtonText: '取消',
-                                type: 'warning',
-                            }
-                        ).then(() => {
-                            this.main_loading = true
-                            this.main_loading_word = "下载中..."
-                            window.electronAPI.downloadFile({
-                                version: this.version,
-                                id: row.id,
-                                title: row.title,
-                                cover: false
-                            })
-                        }).catch(() => {
-                            this.main_loading = false
-                        })
-                    } else {
-                        window.electronAPI.downloadFile({
-                            version: this.version,
-                            id: row.id,
-                            title: row.title,
-                            cover: false
-                        })
-                    }
-                }).catch(err => {
-                    this.main_loading = false
-                    ElMessageBox.alert(err, "错误", {
-                        confirmButtonText: 'OK',
-                        type: 'error',
-                        center: true,
+                // 准备下载参数
+                const downloadParams = {
+                    version: this.version,
+                    id: row.id,
+                    title: row.title,
+                    cover: false,
+                    url: row.down_link
+                }
+                console.log(downloadParams)
+                
+                // 使用await获取返回值
+                window.electronAPI.downloadFile(downloadParams)
+                    .then(result => {
+                        console.log('下载结果:', result);
+                        
+                        if (result.code === 200) {
+                            // 下载成功
+                            this.main_loading = false;
+                            this.download_progress = 100;
+                            ElMessageBox.alert(
+                                result.message || '插件下载成功',
+                                '成功',
+                                {
+                                    confirmButtonText: 'OK',
+                                    type: 'success',
+                                    center: true,
+                                    customClass: 'custom-message-box'
+                                }
+                            );
+                        } else {
+                            // 下载失败
+                            this.main_loading = false;
+                            ElMessageBox.alert(
+                                result.message || '插件下载失败',
+                                '错误',
+                                {
+                                    confirmButtonText: 'OK',
+                                    type: 'error',
+                                    center: true,
+                                    customClass: 'custom-message-box'
+                                }
+                            );
+                        }
                     })
-                })
+                    .catch(error => {
+                        // 处理错误
+                        this.main_loading = false;
+                        console.error('下载出错:', error);
+                        ElMessageBox.alert(
+                            error.message || '插件下载过程中出现错误',
+                            '错误',
+                            {
+                                confirmButtonText: 'OK',
+                                type: 'error',
+                                center: true,
+                                customClass: 'custom-message-box'
+                            }
+                        );
+                    });
             })
         },
         async get_addons_list(category) { 
@@ -387,6 +439,7 @@ export default {
                     //     confirmButtonText: 'OK',
                     //     type: 'error',
                     //     center: true,
+                    //     customClass: 'custom-message-box'
                     // })
                     // return []
                 }
@@ -396,6 +449,7 @@ export default {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
+                    customClass: 'custom-message-box'
                 })
                 return []
             }

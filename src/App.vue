@@ -93,8 +93,20 @@
     <!-- 加载中遮罩 -->
     <div class="loading-mask" v-if="main_loading">
       <div class="loading-content">
-        <el-icon class="loading-icon"><Loading /></el-icon>
+        <el-icon v-if="download_progress < 100" class="loading-icon"><Loading /></el-icon>
         <span>{{ main_loading_word }}</span>
+        <div v-if="download_progress > 0" class="progress-bar-container">
+          <div class="progress-bar" :style="{ width: download_progress + '%' }"></div>
+          <span class="progress-text">{{ download_progress }}%</span>
+        </div>
+        <el-button 
+          v-if="download_progress >= 100" 
+          type="success" 
+          class="confirm-button" 
+          @click="main_loading = false"
+        >
+          确认
+        </el-button>
       </div>
     </div>
 
@@ -134,13 +146,15 @@ export default {
 
       isDark: true, // 默认使用暗色主题
       tableData: [],
-      sortBy: 'download'
+      sortBy: 'download',
+      main_loading: false,
+      main_loading_word: '',
+      download_progress: 0
     }
   },
   async mounted() {
     // 初始化时加载插件列表
-    await this.get_addons_list(); 
-    console.log("data is ", data[0]["pic_list"])
+    await this.get_addons_list();
     // this.tableData = data;
   },
   methods: {
@@ -154,4 +168,76 @@ export default {
 
 <style>
 @import './assets/styles/index.css';
+
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+}
+
+.loading-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  animation: rotate 1.5s linear infinite;
+}
+
+.progress-bar-container {
+  width: 300px;
+  height: 20px;
+  background-color: #444;
+  border-radius: 10px;
+  margin-top: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #67c23a;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.confirm-button {
+  margin-top: 20px;
+  min-width: 100px;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style>

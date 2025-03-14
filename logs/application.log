@@ -603,3 +603,130 @@
 00:52:52:032 wow路径 D:\wow\小黑\Wow.exe
 00:52:52:033 插件路径 D:\wow\小黑/Interface/Addons/
 00:52:52:094 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:09:36:826 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:09:36:829 下发指令 { code: 10500, data: '', message: '没有定义wow.exe路径' }
+18:15:50:585 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:15:50:589 下发指令 { code: 10500, data: '', message: '没有定义wow.exe路径' }
+18:16:33:337 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:16:33:340 下发指令 { code: 10500, data: '', message: '没有定义wow.exe路径' }
+18:17:44:505 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:17:44:508 下发指令 { code: 10500, data: '', message: '没有定义wow.exe路径' }
+18:18:35:673 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:19:25:417 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:21:28:216 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:21:52:501 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:22:09:264 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:22:35:472 下发指令 {
+  code: 10500,
+  data: 'ReferenceError: the_path is not defined\n' +
+    '    at /home/habby/code/my_pc_client/electron/lib/down.js:115:35',
+  message: '解压失败'
+}
+18:28:11:392 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:28:37:477 wow路径 /home/habby/Downloads/Interface/AddOns
+18:28:37:478 插件路径 /home/habby/Downloads/Interface/AddOns
+18:28:44:187 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:31:05:398 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:31:40:160 wow路径 /home/habby/Downloads/Interface/AddOns
+18:31:40:161 插件路径 /home/habby/Downloads/Interface/AddOns
+18:31:47:379 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:34:51:228 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:35:21:972 wow路径 /home/habby/Downloads/Interface/AddOns
+18:35:21:976 插件路径 /home/habby/Downloads/Interface/AddOns
+18:35:35:812 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:39:35:426 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:40:03:274 wow路径 /home/habby/Downloads/Interface/AddOns
+18:40:03:275 插件路径 /home/habby/Downloads/Interface/AddOns
+18:40:10:351 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:41:26:353 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:41:54:396 wow路径 /home/habby/Downloads/Interface/AddOns
+18:41:54:398 插件路径 /home/habby/Downloads/Interface/AddOns
+18:42:01:504 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:43:32:280 收到下载需求： {
+  version: '2.43',
+  title: '2.43大脚整合包',
+  cover: false,
+  url: 'https://download.9136347.com/d/243/%E5%A4%A7%E8%84%9A/%E5%A4%A7%E8%84%9Av1.0.zip?sign=q223lHN91S7Z8tPlsC9COc8ql8StBv3Wq0fo-UEVEVM=:0',
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+18:44:01:863 wow路径 /home/habby/Downloads/Interface/AddOns
+18:44:01:865 插件路径 /home/habby/Downloads/Interface/AddOns
+18:44:09:126 下发指令 { code: 200, data: '下载完成', message: '成功' }

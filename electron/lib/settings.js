@@ -29,6 +29,7 @@ function getSettings() {
   }
 }
 
+
 /**
  * 保存设置
  * @param {Object} settings 设置对象
