@@ -21,15 +21,16 @@ function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   // 计算窗口的尺寸
   let windowWidth = Math.floor(width / 2);
-  if (windowWidth < 1000) windowWidth = 1000
+  if (windowWidth < 1000) windowWidth = 1200
 
   let windowHeight = Math.floor(height / 2);
-  if (windowHeight < 600) windowHeight = 670
+  if (windowHeight < 600) windowHeight = 750
 
   let mainWindow = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
     autoHideMenuBar: true,
+    frame: false,
     resizable: false,
     icon: path.join(__dirname, '../build/icons/icon.ico'),
     webPreferences: {
@@ -68,6 +69,32 @@ app.whenReady().then(async () => {
 
 })
 
+// 添加窗口控制事件处理
+ipcMain.on('window-controls', (event, action) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (!win) return;
+
+  switch (action) {
+    case 'minimize':
+      win.minimize();
+      break;
+    case 'maximize':
+      if (win.isMaximized()) {
+        win.restore();
+      } else {
+        win.maximize();
+      }
+      break;
+    case 'restore':
+      if (win.isMaximized()) {
+        win.restore();
+      }
+      break;
+    case 'close':
+      win.close();
+      break;
+  }
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

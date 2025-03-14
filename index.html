@@ -5,9 +5,32 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>龟龟助手</title>
+    <link rel="stylesheet" href="/src/assets/titlebar.css">
   </head>
   <body>
+    <div id="titleBar">
+      <div class="titleSection">
+        <img src="/favicon.ico" alt="Logo" class="titleLogo">
+        <div class="title">龟龟助手</div>
+      </div>
+      <div id="windowControls">
+        <button class="windowButton" id="minimizeButton">─</button>
+        <button class="windowButton" id="closeButton">✕</button>
+      </div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      const minimizeButton = document.getElementById('minimizeButton');
+      const closeButton = document.getElementById('closeButton');
+      
+      minimizeButton.addEventListener('click', () => {
+        window.electronAPI.windowControls.minimize();
+      });
+      
+      closeButton.addEventListener('click', () => {
+        window.electronAPI.windowControls.close();
+      });
+    </script>
   </body>
 </html>

@@ -20,7 +20,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 用浏览器打开链接
   openLink: (url) => ipcRenderer.send('open-link', url),
 
- // 判断目录是否重复
+  // 窗口控制
+  windowControls: {
+    minimize: () => ipcRenderer.send('window-controls', 'minimize'),
+    maximize: () => ipcRenderer.send('window-controls', 'maximize'),
+    restore: () => ipcRenderer.send('window-controls', 'restore'),
+    close: () => ipcRenderer.send('window-controls', 'close'),
+  },
+
+  // 判断目录是否重复
   isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', (_, data) => callback(data)),
@@ -32,14 +40,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
   //获取realmlist文件是否正常
   getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
-  //修复realmelist文件
+  //修复realmlist文件
   fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
   //启动主程序
   startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
 
   //响应主程序
   onResponse: (callback) => ipcRenderer.on('response', callback),
-  // selectFile: selectFile,
   
   // 设置相关API
   // 选择目录
