@@ -340,9 +340,7 @@ export default {
                     title: row.title,
                     cover: false,
                     url: row.down_link
-                }
-                console.log(downloadParams)
-                
+                } 
                 // 使用await获取返回值
                 window.electronAPI.downloadFile(downloadParams)
                     .then(result => {

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 contextBridge.exposeInMainWorld('electronAPI', {
   //下载文件
-  downloadFile: (down_data) => ipcRenderer.send('download-file', down_data),
+  downloadFile: (down_data) => ipcRenderer.invoke('download-file', down_data),
   // 取消下载
   cancelDownload: (down_data) => ipcRenderer.send('cancel-download',down_data),
   // 用浏览器打开链接
