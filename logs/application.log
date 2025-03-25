@@ -750,3 +750,113 @@
 17:58:10:457 wow路径 /home/habby/Downloads/Interface/AddOns
 17:58:10:458 插件路径 /home/habby/Downloads/Interface/AddOns
 17:58:16:909 下发指令 { code: 200, data: '下载完成', message: '成功' }
+20:34:10:949 收到下载需求： {
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:34:12:933 收到下载需求： {
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:34:17:226 收到下载需求： {
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:34:19:717 收到下载需求： {
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:35:01:724 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:36:30:114 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:36:32:634 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:36:46:982 收到下载需求： {
+  version: '2.43',
+  id: 2,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:36:59:372 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:37:03:115 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:37:20:195 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:37:23:856 收到下载需求： {
+  version: '2.43',
+  id: 2,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:37:48:644 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:39:19:910 收到下载需求： {
+  version: '2.43',
+  id: 2,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:39:21:661 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:40:12:116 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:40:15:055 收到下载需求： {
+  version: '2.43',
+  id: 4,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:40:31:876 收到下载需求： {
+  version: '2.43',
+  id: 2,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}
+20:40:34:240 收到下载需求： {
+  version: '2.43',
+  id: 4,
+  cover: false,
+  addonsPath: '/home/habby/Downloads/Interface/AddOns'
+}

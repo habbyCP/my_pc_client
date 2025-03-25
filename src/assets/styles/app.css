@@ -159,9 +159,28 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 20px; 
+  background-color: #121110; 
   overflow-y: auto;
-  background-color: #121110;
+}
+
+/* Custom Scrollbar for main-content */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #1a1815;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #c28540;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #d9a05c;
 }
 
 .main-content.full-width {
@@ -211,7 +230,7 @@ body {
 
 /* 自定义启动游戏按钮样式 */
 .start-button.el-button--primary {
-  background-color: #d9963f !important;
+  background-color: #F57F1B !important;
   border-color: #c28540 !important;
   color: #fff !important;
   font-weight: bold;

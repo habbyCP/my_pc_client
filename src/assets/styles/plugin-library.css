@@ -14,7 +14,7 @@
 .plugin-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 2px; 
 }
 
 /* Plugin Card Styles */
@@ -29,8 +29,8 @@
 }
 
 .plugin-card:hover {
-  background-color: #252220;
-  transform: scale(1.01);
+  /* background-color: #252220;  */
+  /* transform: scale(1.01); */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -85,6 +85,7 @@
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
+  margin-right: 5px;
 }
 
 .plugin-description {

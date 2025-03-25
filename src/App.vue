@@ -124,6 +124,7 @@
 
 <script>
 import AddonsList from './table_list.js'
+import WowAddons from './wow_addons.js'
 import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-vue'
 import PluginLibrary from './components/PluginLibrary.vue'
 import Settings from './components/Settings.vue'
@@ -149,11 +150,13 @@ export default {
       sortBy: 'download',
       main_loading: false,
       main_loading_word: '',
-      download_progress: 0
+      download_progress: 0,
+      category: 0
     }
   },
   async mounted() {
     // 初始化时加载插件列表
+    await this.get_categories()
     await this.get_addons_list();
     // this.tableData = data;
   },
@@ -161,6 +164,9 @@ export default {
     handleSaveSettings(settings) {
       console.log('Settings saved:', settings);
       // 这里可以处理设置保存后的逻辑
+    },
+    down_addons(addon) {
+      WowAddons.down_addons(addon, this);
     }
   }
 }

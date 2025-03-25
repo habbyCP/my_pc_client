@@ -45,16 +45,7 @@ export default {
             activeTab: '插件库', // 当前激活的顶部标签
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
-                { id: 'all', name: '全部插件', icon: 'Collection' },
-                { id: 'package', name: '整合包', icon: 'Files' },
-                { id: 'raid', name: '副本&团队', icon: 'User' },
-                { id: 'combat', name: '战斗', icon: '/src/assets/icons/combat.svg' },
-                { id: 'buff', name: '界面美化', icon: 'TrendCharts' },
-                { id: 'quest', name: '任务', icon: 'List' },
-                { id: 'character', name: '角色', icon: 'User' },
-                { id: 'pet', name: '宠物&坐骑', icon: 'Avatar' },
-                { id: 'class', name: '职业', icon: 'User' },
-                { id: 'commerce', name: '商业&经济', icon: 'Goods' },
+                { id: '0', name: '全部插件', icon: 'Collection' },
             ]
         }
     },
@@ -133,11 +124,11 @@ export default {
     },
     methods: {
         // 切换顶部标签
-        switchTab(tab) {
-            console.log('切换标签', tab)
+        switchTab(tab) { 
             this.activeTab = tab
             // 根据不同的标签加载不同的内容
-            if (tab === '插件库') {
+            if (tab === '插件库') { 
+                this.get_categories()
                 this.get_addons_list()
             }
         },
@@ -204,8 +195,7 @@ export default {
 
         // },
         //启动客户端
-        start_wow: async function () {
-            console.log('path', this.wow_path)
+        start_wow: async function () { 
             if (this.wow_path === '') {
                 await this.check_wow_path(this.version)
             } else {
@@ -301,100 +291,28 @@ export default {
         jump_frost() {
             window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/frost' })
         },
-        // 下载插件
-        down_addons(data) {
-            // 检查是否已经选择wow.exe路径
-            window.electronAPI.getSettings().then(settings => {
-                if (!settings || !settings.gamePath) {
-                    // 如果没有选择wow.exe路径，显示确认对话框
-                    ElMessageBox.confirm(
-                        '您还没有设置WoW路径,是否前往设置',
-                        '提示',
-                        {
-                            confirmButtonText: '前往设置',
-                            cancelButtonText: '取消',
-                            type: 'warning',
-                            customClass: 'custom-message-box',
-                            distinguishCancelAndClose: true,
-                            center: true
-                        }
-                    ).then(() => {
-                        // 用户点击确认后跳转到设置页面
-                        this.activeTab = '设置'
-                    }).catch(() => {
-                        // 用户取消，不做任何操作
-                    })
-                    return
+        async get_categories() {
+            let url = `${import.meta.env.VITE_API_BASE_URL}/categories/list`
+            try {
+                const response = await axios.get(url)
+                if (response.data.code === 200) { 
+                    this.categories = response.data.data
+                    // this.categories.unshift({ id: '0', name: '全部插件', icon: 'Collection' })
                 }
-                
-                // 继续下载插件的逻辑
-                let row = data.row
-                this.main_loading = true
-                this.main_loading_word = "准备下载..."
-                this.download_progress = 0
-                
-                // 准备下载参数
-                const downloadParams = {
-                    version: this.version,
-                    id: row.id,
-                    title: row.title,
-                    cover: false,
-                    url: row.down_link
-                } 
-                // 使用await获取返回值
-                window.electronAPI.downloadFile(downloadParams)
-                    .then(result => {
-                        console.log('下载结果:', result);
-                        
-                        if (result.code === 200) {
-                            // 下载成功
-                            this.main_loading = false;
-                            this.download_progress = 100;
-                            ElMessageBox.alert(
-                                result.message || '插件下载成功',
-                                '成功',
-                                {
-                                    confirmButtonText: 'OK',
-                                    type: 'success',
-                                    center: true,
-                                    customClass: 'custom-message-box'
-                                }
-                            );
-                        } else {
-                            // 下载失败
-                            this.main_loading = false;
-                            ElMessageBox.alert(
-                                result.message || '插件下载失败',
-                                '错误',
-                                {
-                                    confirmButtonText: 'OK',
-                                    type: 'error',
-                                    center: true,
-                                    customClass: 'custom-message-box'
-                                }
-                            );
-                        }
-                    })
-                    .catch(error => {
-                        // 处理错误
-                        this.main_loading = false;
-                        console.error('下载出错:', error);
-                        ElMessageBox.alert(
-                            error.message || '插件下载过程中出现错误',
-                            '错误',
-                            {
-                                confirmButtonText: 'OK',
-                                type: 'error',
-                                center: true,
-                                customClass: 'custom-message-box'
-                            }
-                        );
-                    });
-            })
+            } catch (error) {
+                console.error('获取分类失败:', error)
+            }
         },
         async get_addons_list(category) { 
+            if (category === undefined || category === null) {
+                category = this.category
+            }else{
+                this.category = category
+            }
             
-            let url = 'https://www.9136347.com/api/addons_list'
+            console.log('获取插件列表', category)
+            
+            let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
             let params = {
                 title: this.search_form.title,
                 page: 0,
@@ -402,10 +320,6 @@ export default {
                 category_id: category
             }
 
-            // 如果有分类参数，添加到请求中
-            if (category && category !== '全部插件') {
-                params.category = category
-            }
 
             // this.main_loading = true
             // this.main_loading_word = "加载中..."
@@ -413,7 +327,8 @@ export default {
                 const res = await axios.get(url, { params: params }) 
                 // this.main_loading = false
                 
-                if (res.data.status === 200) {
+                if (res.data.code === 200) {
+                    console.log('获取插件列表成功', res.data)
                     const tableData = res.data.data
                     if (Array.isArray(res.data.data) && res.data.data.length > 0) {
                         
