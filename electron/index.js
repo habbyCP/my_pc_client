@@ -5,7 +5,7 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
 const { get_realmlist, fix_realmlist } = require("./lib/realmlist");
 const { ERROR_CODE } = require("./lib/error_code");
-const { down_addons, start_download } = require("./lib/down");
+const { down_addons } = require("./lib/down");
 const { select_wow_exe, is_duplicate_directory, wow_file_path, all_wow_file_path } = require("./lib/wow");
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 
@@ -23,7 +23,7 @@ function createWindow() {
   let windowWidth = Math.floor(width / 2);
   if (windowWidth < 1000) windowWidth = 1200
 
-  let windowHeight = Math.floor(height / 2);
+  let windowHeight = Math.floor(height / 1.75);
   if (windowHeight < 600) windowHeight = 750
 
   let mainWindow = new BrowserWindow({
@@ -179,6 +179,90 @@ ipcMain.handle('get-settings', async () => {
 // 保存设置
 ipcMain.handle('save-settings', async (event, settings) => {
   return saveSettings(settings);
+});
+
+// 启动游戏
+ipcMain.handle('start-game', async (event, gamePath) => {
+  try {
+    const { spawn, exec } = require('child_process');
+    const path = require('path');
+    const fs = require('fs');
+    
+    my_logger.info('启动游戏:', gamePath);
+    
+    // 检查文件是否存在
+    if (!fs.existsSync(gamePath)) {
+      throw new Error('游戏文件不存在');
+    }
+    
+    // 获取exe文件的目录作为工作目录
+    const workingDir = path.dirname(gamePath);
+    const fileName = path.basename(gamePath);
+    
+    my_logger.info('工作目录:', workingDir);
+    my_logger.info('执行文件:', fileName);
+    
+    return new Promise((resolve, reject) => {
+      // 在Windows环境下使用spawn启动exe文件
+      const gameProcess = spawn(gamePath, [], {
+        cwd: workingDir,
+        detached: true,
+        stdio: ['ignore', 'ignore', 'ignore'],
+        windowsHide: false // 在Windows下显示窗口
+      });
+      
+      // 处理启动成功
+      gameProcess.on('spawn', () => {
+        my_logger.info('游戏进程启动成功, PID:', gameProcess.pid);
+        
+        // 让子进程脱离父进程独立运行
+        gameProcess.unref();
+        
+        resolve({ 
+          success: true, 
+          message: '游戏启动成功',
+          pid: gameProcess.pid 
+        });
+      });
+      
+      // 处理启动错误
+      gameProcess.on('error', (error) => {
+        my_logger.error('启动游戏进程失败:', error);
+        resolve({ 
+          success: false, 
+          error: `启动失败: ${error.message}` 
+        });
+      });
+      
+      // 如果进程立即退出，可能是启动失败
+      gameProcess.on('exit', (code, signal) => {
+        if (code !== null && code !== 0) {
+          my_logger.error('游戏进程异常退出, 退出码:', code);
+          resolve({ 
+            success: false, 
+            error: `游戏进程异常退出，退出码: ${code}` 
+          });
+        }
+      });
+      
+      // 设置超时，防止长时间等待
+      setTimeout(() => {
+        if (!gameProcess.pid) {
+          resolve({ 
+            success: false, 
+            error: '启动超时，请检查游戏文件是否损坏' 
+          });
+        }
+      }, 5000);
+    });
+    
+  } catch (error) {
+    my_logger.error('启动游戏失败:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
 });
 
 send_progress = function (code, data, msg) {

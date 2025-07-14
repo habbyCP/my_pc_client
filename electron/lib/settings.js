@@ -14,17 +14,29 @@ function getSettings() {
   try {
     if (fs.existsSync(settingsPath)) {
       const settingsData = fs.readFileSync(settingsPath, 'utf8');
-      return JSON.parse(settingsData);
+      const settings = JSON.parse(settingsData);
+      // 确保所有字段都有默认值
+      const result = {
+        gamePath: settings.gamePath || '',
+        autoCheckUpdate: settings.autoCheckUpdate !== undefined ? settings.autoCheckUpdate : true,
+        useMockData: settings.useMockData !== undefined ? settings.useMockData : false
+      };
+      console.log('读取设置文件:', settingsPath);
+      console.log('原始设置:', settings);
+      console.log('处理后设置:', result);
+      return result;
     }
     return {
       gamePath: '',
-      autoCheckUpdate: true
+      autoCheckUpdate: true,
+      useMockData: false
     };
   } catch (error) {
     logger.error('读取设置文件失败:', error);
     return {
       gamePath: '',
-      autoCheckUpdate: true
+      autoCheckUpdate: true,
+      useMockData: false
     };
   }
 }
@@ -37,8 +49,10 @@ function getSettings() {
  */
 function saveSettings(settings) {
   try {
+    console.log('正在保存设置:', settings);
     const settingsData = JSON.stringify(settings, null, 2);
     fs.writeFileSync(settingsPath, settingsData, 'utf8');
+    console.log('设置保存成功，路径:', settingsPath);
     return true;
   } catch (error) {
     logger.error('保存设置文件失败:', error);

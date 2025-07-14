@@ -4,7 +4,7 @@
       <el-table :data="tableData"   stripe style="width: 100%">
         <el-table-column prop="" label="头像"  >
           <template #default="scope">
-            <img alt=""   :src="scope.row.img" width="100" height="60"/>
+            <img alt="" :src="scope.row.img" class="addon-thumbnail"/>
 
           </template>
         </el-table-column>
@@ -39,3 +39,12 @@
 </template>
 
 <script src="../table_list.js"/>
+
+<style scoped>
+.addon-thumbnail {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+</style>

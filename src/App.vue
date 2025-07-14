@@ -77,8 +77,10 @@
         </div>
         
         <div v-if="activeTab === '客户端'" class="tab-content">
-          <h2>客户端</h2>
-          <p>此功能正在开发中...</p>
+          <client-list 
+            ref="clientList"
+            @load-clients="handleLoadClients"
+          />
         </div>
         
         <div v-if="activeTab === '设置'" class="tab-content">
@@ -110,15 +112,7 @@
       </div>
     </div>
 
-    <!-- 插件详情弹窗 -->
-    <el-dialog
-      v-model="detail_dialog"
-      :title="detail_title"
-      width="70%"
-      center
-    >
-      <div v-html="detail_text"></div>
-    </el-dialog>
+ 
   </div>
 </template>
 
@@ -128,6 +122,7 @@ import WowAddons from './wow_addons.js'
 import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-vue'
 import PluginLibrary from './components/PluginLibrary.vue'
 import Settings from './components/Settings.vue'
+import ClientList from './components/ClientList.vue'
 
 export default {
   name: 'App',
@@ -139,11 +134,12 @@ export default {
     Calendar,
     Loading,
     PluginLibrary,
-    Settings
+    Settings,
+    ClientList
   },
   data() {
     return {
-      tabs: [ '本地插件', '插件库', '配置分享', '客户端', '设置'],
+      tabs: [  '插件库',  '客户端', '设置'],
 
       isDark: true, // 默认使用暗色主题
       tableData: [],
@@ -155,15 +151,26 @@ export default {
     }
   },
   async mounted() {
-    // 初始化时加载插件列表
-    await this.get_categories()
-    await this.get_addons_list();
-    // this.tableData = data;
+    // 等待一小段时间确保设置已加载，然后初始化插件列表
+    setTimeout(async () => {
+      await this.get_categories()
+      await this.get_addons_list();
+    }, 100);
   },
   methods: {
     handleSaveSettings(settings) {
       console.log('Settings saved:', settings);
       // 这里可以处理设置保存后的逻辑
+    },
+    async handleLoadClients() {
+      try {
+        const clients = await this.get_clients_list()
+        if (this.$refs.clientList) {
+          this.$refs.clientList.updateClients(clients)
+        }
+      } catch (error) {
+        console.error('加载客户端列表失败:', error)
+      }
     },
     down_addons(addon) {
       WowAddons.down_addons(addon, this);

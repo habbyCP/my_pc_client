@@ -57,4 +57,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getSettings: () => ipcRenderer.invoke('get-settings'),
   // 保存设置
   saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
+  // 启动游戏
+  startGame: (gamePath) => ipcRenderer.invoke('start-game', gamePath),
 });

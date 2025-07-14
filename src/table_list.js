@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import axios from 'axios';
 import { ElMessageBox } from 'element-plus'
+import { mockApiService, shouldUseMock } from './mock/mockService.js'
 
 export default {
     components: {
@@ -130,6 +131,13 @@ export default {
             if (tab === '插件库') { 
                 this.get_categories()
                 this.get_addons_list()
+            } else if (tab === '客户端') {
+                // 切换到客户端标签时加载客户端列表
+                setTimeout(() => {
+                    if (this.$refs.clientList) {
+                        this.handleLoadClients()
+                    }
+                }, 100)
             }
         },
 
@@ -196,71 +204,59 @@ export default {
         // },
         //启动客户端
         start_wow: async function () { 
-            if (this.wow_path === '') {
-                await this.check_wow_path(this.version)
-            } else {
-                window.electronAPI.getRealmlist({ version: this.version }).then(res => {
-                    if (res.code !== 200) {
-                        ElMessageBox.confirm(
-                            res.message + ',不是有效的指向内容，点击确认修复为亚洲服务器',
-                            'realmlist指向文件错误:',
-                            {
-                                confirmButtonText: 'OK',
-                                cancelButtonText: 'Cancel',
-                                type: 'warning',
-                                customClass: 'custom-message-box',
-                                distinguishCancelAndClose: true,
-                                center: true
-                            }
-                        ).then(() => {
-                            window.electronAPI.fixRealmlist({ version: this.version }).then(res => {
-                                if (res.code === 200) {
-                                    ElMessageBox.alert(res.message, "成功", {
-                                        confirmButtonText: 'OK',
-                                        type: 'success',
-                                        center: true,
-                                        customClass: 'custom-message-box'
-                                    }).then(() => {
-                                        window.electronAPI.startWow({ "version": this.version })
-                                    }).catch(err => {
-                                        ElMessageBox.alert(err, "错误", {
-                                            confirmButtonText: 'OK',
-                                            type: 'error',
-                                            center: true,
-                                            customClass: 'custom-message-box'
-                                        })
-                                    })
-
-                                } else {
-                                    ElMessageBox.alert(res.data, res.message, {
-                                        confirmButtonText: 'OK',
-                                        type: 'error',
-                                        center: true,
-                                        customClass: 'custom-message-box'
-                                    })
-                                }
-                            }).catch(err => {
-                                console.log('报错', err)
-                                ElMessageBox.alert(err, "错误", {
-                                    confirmButtonText: 'OK',
-                                    type: 'error',
-                                    center: true,
-                                    customClass: 'custom-message-box'
-                                })
-                            })
-                        })
-                    } else {
-                        window.electronAPI.startWow({ "version": this.version })
-                    }
-                }).catch(err => {
-                    console.log('报错', err)
-                    ElMessageBox.alert(err, "错误", {
+            try {
+                // 获取设置中的游戏路径
+                const settings = await window.electronAPI.getSettings();
+                
+                if (!settings.gamePath) {
+                    ElMessageBox.alert('请先在设置中配置游戏路径', '游戏路径未配置', {
+                        confirmButtonText: 'OK',
+                        type: 'warning',
+                        center: true,
+                        customClass: 'custom-message-box'
+                    });
+                    return;
+                }
+                
+                // 验证路径是否有效
+                const isValid = await window.electronAPI.validateGamePath(settings.gamePath);
+                if (!isValid) {
+                    ElMessageBox.alert('游戏路径无效，请检查设置', '路径验证失败', {
                         confirmButtonText: 'OK',
                         type: 'error',
                         center: true,
                         customClass: 'custom-message-box'
-                    })
-                })
+                    });
+                    return;
+                }
+                
+                console.log('启动游戏:', settings.gamePath);
+                
+                // 启动游戏
+                const result = await window.electronAPI.startGame(settings.gamePath);
+                if (result.success) {
+                    ElMessageBox.alert('游戏启动成功！', '成功', {
+                        confirmButtonText: 'OK',
+                        type: 'success',
+                        center: true,
+                        customClass: 'custom-message-box'
+                    });
+                } else {
+                    ElMessageBox.alert(result.error || '启动失败', '启动游戏失败', {
+                        confirmButtonText: 'OK',
+                        type: 'error',
+                        center: true,
+                        customClass: 'custom-message-box'
+                    });
+                }
+            } catch (err) {
+                console.error('启动游戏失败:', err);
+                ElMessageBox.alert(err.message || '启动游戏时发生错误', '错误', {
+                    confirmButtonText: 'OK',
+                    type: 'error',
+                    center: true,
+                    customClass: 'custom-message-box'
+                });
             }
         },
         // 获取当前版本的可执行文件地址
@@ -292,12 +288,22 @@ export default {
             window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/frost' })
         },
         async get_categories() {
-            let url = `${import.meta.env.VITE_API_BASE_URL}/categories/list`
             try {
-                const response = await axios.get(url)
-                if (response.data.code === 200) { 
-                    this.categories = response.data.data
-                    // this.categories.unshift({ id: '0', name: '全部插件', icon: 'Collection' })
+                // 检查是否使用Mock模式
+                const useMock = await shouldUseMock()
+                if (useMock) {
+                    console.log('使用Mock数据获取分类列表')
+                    const response = await mockApiService.getCategories()
+                    if (response.code === 200) {
+                        this.categories = response.data
+                    }
+                } else {
+                    console.log('使用真实API获取分类列表')
+                    let url = `${import.meta.env.VITE_API_BASE_URL}/categories/list`
+                    const response = await axios.get(url)
+                    if (response.data.code === 200) { 
+                        this.categories = response.data.data
+                    }
                 }
             } catch (error) {
                 console.error('获取分类失败:', error)
@@ -312,7 +318,6 @@ export default {
             
             console.log('获取插件列表', category)
             
-            let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
             let params = {
                 title: this.search_form.title,
                 page: 0,
@@ -320,50 +325,80 @@ export default {
                 category_id: category
             }
 
-
-            // this.main_loading = true
-            // this.main_loading_word = "加载中..."
-            try { 
-                const res = await axios.get(url, { params: params }) 
-                // this.main_loading = false
+            try {
+                // 检查是否使用Mock模式
+                const useMock = await shouldUseMock()
+                let res
                 
-                if (res.data.code === 200) {
-                    console.log('获取插件列表成功', res.data)
-                    const tableData = res.data.data
-                    if (Array.isArray(res.data.data) && res.data.data.length > 0) {
-                        
-                        // 为每个插件添加额外的显示信息
+                if (useMock) {
+                    console.log('使用Mock数据获取插件列表')
+                    res = await mockApiService.getAddonsList(params)
+                } else {
+                    console.log('使用真实API获取插件列表')
+                    let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
+                    const response = await axios.get(url, { params: params })
+                    res = response.data
+                }
+                
+                if (res.code === 200) {
+                    console.log('获取插件列表成功', res)
+                    let tableData = res.data
+                    
+                    if (Array.isArray(tableData) && tableData.length > 0) {
+                        // 为每个插件添加额外的显示信息（如果mock数据中没有的话）
                         tableData.forEach((item, index) => {
-                            // 随机生成下载量
-                            item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                            // 随机生成体积
-                            item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
-                            // 随机生成是否已安装
-                            item.installed = index % 2 === 1
-                            item.modified = new Date().toLocaleString()
+                            // 只在真实API数据中添加这些字段，mock数据中已经包含了
+                            if (!useMock) {
+                                item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                                item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                                item.installed = index % 2 === 1
+                                item.modified = new Date().toLocaleString()
+                            }
                         })
                     }
   
-                    // 更新本地数据并返回
+                    // 更新本地数据
                     this.tableData = tableData
-                    // return tableData
                 } else {
-                    // ElMessageBox.alert(res.data.message, res.data.code, {
-                    //     confirmButtonText: 'OK',
-                    //     type: 'error',
-                    //     center: true,
-                    //     customClass: 'custom-message-box'
-                    // })
-                    // return []
+                    console.log('获取插件列表失败:', res.message)
                 }
             } catch (err) { 
                 this.main_loading = false
-                ElMessageBox.alert(err, "错误", {
+                console.error('获取插件列表错误:', err)
+                ElMessageBox.alert(err.message || err, "错误", {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
                     customClass: 'custom-message-box'
                 })
+                return []
+            }
+        },
+        // 获取客户端列表
+        async get_clients_list(searchTitle = '') {
+            try {
+                // 检查是否使用Mock模式
+                const useMock = await shouldUseMock()
+                let res
+                
+                if (useMock) {
+                    console.log('使用Mock数据获取客户端列表')
+                    res = await mockApiService.getClientsList({ title: searchTitle })
+                } else {
+                    console.log('使用真实API获取客户端列表')
+                    // 真实API调用 - 暂时使用mock数据
+                    res = await mockApiService.getClientsList({ title: searchTitle })
+                }
+                
+                if (res.code === 200) {
+                    console.log('获取客户端列表成功', res)
+                    return res.data
+                } else {
+                    console.log('获取客户端列表失败:', res.message)
+                    return []
+                }
+            } catch (err) {
+                console.error('获取客户端列表错误:', err)
                 return []
             }
         }

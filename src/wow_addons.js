@@ -70,7 +70,8 @@ export default {
                                 confirmButtonText: 'OK',
                                 type: 'error',
                                 center: true,
-                                customClass: 'custom-message-box'
+                                customClass: 'custom-message-box',
+                                lockScroll: false
                             }
                         );
                     }
@@ -86,7 +87,8 @@ export default {
                             confirmButtonText: 'OK',
                             type: 'error',
                             center: true,
-                            customClass: 'custom-message-box'
+                            customClass: 'custom-message-box',
+                            lockScroll: false
                         }
                     );
                 });
