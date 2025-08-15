@@ -23,10 +23,10 @@
     </div>
     
     <div class="plugin-list">
-      <div v-for="(item, index) in tableData" :key="index" class="plugin-card">
+      <div v-for="(item, index) in tableData" :key="item._key || item.id || item.title || index" class="plugin-card">
         <div class="plugin-content">
           <div class="plugin-image">
-            <img :src="item.image_url " alt="Plugin Image" />
+            <!-- <img :src="item.cover" alt="Plugin Image" /> -->
           </div>
           <div class="plugin-info" @click="showPluginDetail(item)">
             <div class="plugin-header">

@@ -58,7 +58,15 @@ function createWindow() {
 
 app.whenReady().then(async () => {
   if (process.env.NODE_ENV === 'development') {
-    await session.defaultSession.loadExtension(reactDevToolsPath)
+    try {
+      if (existsSync(reactDevToolsPath)) {
+        await session.defaultSession.loadExtension(reactDevToolsPath)
+      } else {
+        console.warn('Vue Devtools extension not found at:', reactDevToolsPath)
+      }
+    } catch (e) {
+      console.warn('Failed to load Vue Devtools extension:', e)
+    }
   }
   createWindow()
   app.on('activate', () => {

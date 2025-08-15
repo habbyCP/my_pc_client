@@ -7,6 +7,8 @@ export default {
     components: {
         // LoginButtonWlk
     },
+    tableData: [],
+    categories: [],
     name: 'AddonsList',
     props: {
         msg: ""
@@ -297,11 +299,11 @@ export default {
                     if (response.code === 200) {
                         this.categories = response.data
                     }
-                } else {
-                    console.log('使用真实API获取分类列表')
+                } else { 
                     let url = `${import.meta.env.VITE_API_BASE_URL}/categories/list`
-                    const response = await axios.get(url)
+                    const response = await axios.get(url) 
                     if (response.data.code === 200) { 
+                        console.log('获取分类列表', response.data.data)
                         this.categories = response.data.data
                     }
                 }
@@ -315,9 +317,7 @@ export default {
             }else{
                 this.category = category
             }
-            
-            console.log('获取插件列表', category)
-            
+             
             let params = {
                 title: this.search_form.title,
                 page: 0,
@@ -342,21 +342,25 @@ export default {
                 
                 if (res.code === 200) {
                     console.log('获取插件列表成功', res)
-                    let tableData = res.data
-                    
-                    if (Array.isArray(tableData) && tableData.length > 0) {
+                    let tableData = Array.isArray(res.data) ? [...res.data] : []
+                    console.log('tableData', tableData)
+                    if (tableData.length > 0) {
                         // 为每个插件添加额外的显示信息（如果mock数据中没有的话）
-                        tableData.forEach((item, index) => {
+                        tableData = tableData.map((item, index) => {
+                            const clone = { ...item }
                             // 只在真实API数据中添加这些字段，mock数据中已经包含了
                             if (!useMock) {
-                                item.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                                item.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
-                                item.installed = index % 2 === 1
-                                item.modified = new Date().toLocaleString()
+                                clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                                clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                                clone.installed = index % 2 === 1
+                                clone.modified = new Date().toLocaleString()
                             }
+                            // 生成稳定唯一 key
+                            const baseKey = clone.id ?? clone.slug ?? clone.title ?? `idx-${index}`
+                            clone._key = `${String(baseKey)}-${index}`
+                            return clone
                         })
-                    }
-  
+                    } 
                     // 更新本地数据
                     this.tableData = tableData
                 } else {

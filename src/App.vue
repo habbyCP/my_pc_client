@@ -25,8 +25,7 @@
     </div>
 
     <!-- 主体内容区域 -->
-    <div class="content-container">
-      <!-- 左侧边栏 - 只在插件库标签页显示 -->
+    <div class="content-container"> 
       <div class="sidebar" v-if="activeTab === '插件库'">
         <div class="category-list">
           <div class="category-item" 
@@ -37,9 +36,7 @@
             <!-- If icon path starts with '/', it's a local icon -->
             <img v-if="category.icon.startsWith('/')" :src="category.icon" class="category-icon" alt="category icon" />
             <!-- Otherwise use Element Plus icon -->
-            <el-icon v-else>
-              <component :is="category.icon" />
-            </el-icon>
+            
             <span>{{ category.name }}</span>
           </div>
         </div>
