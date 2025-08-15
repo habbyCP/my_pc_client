@@ -1,6 +1,7 @@
 const {BrowserWindow,session  } = require('electron')
 const path = require("path");
-const {get} = require("https");
+const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const compressing = require('compressing');
 const {debug,info,error} = require("./log");
@@ -51,8 +52,12 @@ async function downloadFile(url, fileName, index, event) {
             fs.unlinkSync(file_tmp_path);
         }
         debug("下载文件", url, fileName);
-        // 处理get回调
-        let req = get(url, (response) => {
+        // 处理get回调，支持 http 和 https
+        const isHttps = (() => {
+            try { return new URL(url).protocol === 'https:' } catch (_) { return /^https:/i.test(url) }
+        })();
+        const client = isHttps ? https : http;
+        let req = client.get(url, (response) => {
             //创建文件
             const fileStream = fs.createWriteStream(file_tmp_path);
             

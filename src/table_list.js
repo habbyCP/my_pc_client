@@ -235,7 +235,7 @@ export default {
                         throw new Error('接口未返回有效的下载地址')
                     }
                 }
-
+                
                 // 写回供下载逻辑使用
                 if (addon.row) {
                     addon.row.down_link = downloadUrl
