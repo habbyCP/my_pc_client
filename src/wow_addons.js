@@ -51,12 +51,18 @@ export default {
 
             // 准备下载参数
             const downloadParams = {
-                version: context.version,
-                id: row.id,
-                title: row.title,
+                // 显式转为基础类型，避免 Proxy/Ref 进入 IPC
+                version: String(context?.version ?? ''),
+                id: Number(row?.id ?? 0),
+                title: String(row?.title ?? ''),
                 cover: false,
-                url: row.down_link,
-                file_list: Array.isArray(row?.file_list) ? row.file_list : []
+                url: String(row?.down_link ?? ''),
+                file_list: Array.isArray(row?.file_list)
+                    ? row.file_list.map(it => {
+                        if (it == null) return ''
+                        try { return String(it) } catch (_) { return '' }
+                      })
+                    : []
             }  
             // 下载前目录冲突检查（如果提供了 file_list）
             if (downloadParams.file_list && downloadParams.file_list.length > 0) { 
@@ -100,9 +106,11 @@ export default {
                     logDetailedError('目录冲突检测失败', e)
                 }
             }
-            console.log('111', downloadParams)
+            // 通过 JSON 深拷贝去除潜在的响应式元信息，保证可结构化克隆
+            const cleanParams = JSON.parse(JSON.stringify(downloadParams))
+            console.log('111', cleanParams)
             // 使用await获取返回值
-            return window.electronAPI.downloadFile(downloadParams)
+            return window.electronAPI.downloadFile(cleanParams)
                 .then(result => {
                     console.log('下载结果:', result);
                     
