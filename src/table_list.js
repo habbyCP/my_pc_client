@@ -1,50 +1,18 @@
-import { format } from "date-fns";
 import axios from 'axios';
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { mockApiService, shouldUseMock } from './mock/mockService.js'
+import WowAddons from './wow_addons.js'
 
 export default {
-    components: {
-        // LoginButtonWlk
-    },
-    tableData: [],
-    categories: [],
-    name: 'AddonsList',
-    props: {
-        msg: ""
-    },
-    filters: {
-        ellipsis(value) {
-            if (!value) return ''
-            if (value.length > 8) {
-                return value.slice(0, 8) + '...'
-            }
-            return value
-        }
-    },
     data() {
         return {
-            detail_dialog: false,
             search_form: {
                 title: ''
             },
-            detail_title: '',
-            detail_text: '',
-            // menu_list: {
-            //     "2.43": {"version": "2.43", "title": "2.43工具下载","category_id": 8,'wow_path':''},
-            //     "3.35": {"version": "3.35", "title": "3.35工具下载","category_id": 9,'wow_path':''},
-            // },
-            wow_path: "",
             main_loading_word: "加载中",
             main_loading: false,
             download_progress: 0,
-            isDark: false,
             version: localStorage.getItem("version") || "2.43",
-            progress_dialog: false,
-            tableData: [],
-            version_data: {},
-            title: "",
-            // 新增数据
             activeTab: '插件库', // 当前激活的顶部标签
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
@@ -58,72 +26,10 @@ export default {
             if (data && data.data) {
                 this.download_progress = data.data.progress;
                 this.main_loading_word = data.data.msg || "下载中...";
-                console.log("下载进度:", this.download_progress + "%", this.main_loading_word);
-                 
+                console.log("下载进度:", this.download_progress + "%", this.main_loading_word); 
                 
             }
         });
-    },
-    created() {
-        return
-        let version = this.get_version()
-        window.electronAPI.allWowFilePath().then(res => {
-            for (const key in this.menu_list) {
-                if (res.data.hasOwnProperty(key)) {
-                    this.menu_list[key].wow_path = res.data[key]
-                }
-            }
-            this.wow_path = ""
-        })
-        //初始化基本信息
-        this.get_addons_list(version)
-        //进度反馈
-        window.electronAPI.onDownloadProgress((event, item) => {
-            this.main_loading_word = '下载ing'
-            if (item.code !== 200) {
-                this.main_loading = false
-                ElMessageBox.alert(item.data, item.code + ":" + item.message, {
-                    confirmButtonText: 'OK',
-                    type: 'error',
-                    center: true,
-                    customClass: 'custom-message-box'
-                })
-                console.log(item)
-                return
-            }
-            if (item.data.progress === 100) {
-                this.main_loading = false
-                ElMessageBox.alert('', '下载完成', {
-                    confirmButtonText: 'OK',
-                    type: 'success',
-                    center: true,
-                    customClass: 'custom-message-box'
-                })
-
-            }
-            // this.main_loading_word = "12312"
-        });
-        window.electronAPI.onResponse((event, item) => {
-            console.log("服务器返回 : ", item)
-            this.main_loading = false
-            let type
-
-            if (item.code === 200) {
-                type = 'success'
-            } else {
-                type = 'error'
-            }
-
-            ElMessageBox.alert(item.data, item.code + ":" + item.message, {
-                type: type,
-                center: true,
-                customClass: 'custom-message-box'
-            })
-            if (item.hasOwnProperty('sub_code') && item.sub_code === 20100) {
-                this.menu_list[this.version].wow_path = item.data
-                this.wow_path = item.data
-            }
-        })
     },
     methods: {
         // 切换顶部标签
@@ -150,60 +56,6 @@ export default {
             this.get_addons_list(category)
         },
 
-        show_detail: function (data) {
-            this.detail_title = data.title
-            this.detail_text = data.text
-            this.detail_dialog = true
-        },
-        get_version() {
-            this.version = localStorage.getItem("version")
-            if (this.version == null) {
-                this.version = "2.43"
-                localStorage.setItem("version", this.version)
-            }
-            return this.version
-        },
-        async check_wow_path(version) {
-            if (this.menu_list[version].wow_path === '') {
-                let path_data = await this.get_wow_exe({ version: version })
-                console.log(path_data)
-                if (path_data.code === 200) {
-                    this.menu_list[version].wow_path = path_data.data
-                } else if (path_data.code === 10404) {
-                    let confirm = await ElMessageBox.alert("没有配置wow.exe路径", '请选择你的' + version + 'wow.exe路径', {
-                        confirmButtonText: '现在去配置',
-                        type: 'warning',
-                        center: true,
-                        customClass: 'custom-message-box'
-                    })
-                    if (confirm === 'confirm') {
-                        let path_data = await this.select_wow_exe({ version: version })
-                        console.log('path_data', path_data)
-                        return ''
-                    }
-                } else {
-                    ElMessageBox.alert(path_data.message, path_data.code, {
-                        confirmButtonText: 'OK',
-                        type: 'error',
-                        center: true,
-                        customClass: 'custom-message-box'
-                    })
-                }
-
-            }
-        },
-        //切换版本
-        // async switch_version(key) {
-        //     this.version = key
-        //     localStorage.setItem("version", key)
-        //     this.get_addons_list(key)
-        //     if (this.menu_list.hasOwnProperty(key)) {
-        //         this.wow_path = this.menu_list[key].wow_path
-        //     } else {
-        //         this.wow_path = ''
-        //     }
-
-        // },
         //启动客户端
         start_wow: async function () { 
             try {
@@ -261,33 +113,8 @@ export default {
                 });
             }
         },
-        // 获取当前版本的可执行文件地址
-        get_wow_exe(data) {
-            return window.electronAPI.wowFilePath(data)
-        },
-        // 判断目录是否重复
-        is_duplicate_directory(data) {
-            return window.electronAPI.isDuplicateDirectory(data)
-        },
-
-        handle_select_wow() {
-            this.select_wow_exe({ version: this.version })
-        },
-        // 选择wow.exe文件
-        select_wow_exe(request_data) {
-            return window.electronAPI.selectFile(request_data)
-        },
         open_link(url) {
             window.electronAPI.openLink({ outLink: url })
-        },
-        jump_kook() {
-            window.electronAPI.openLink({ outLink: 'https://kook.top/K8G1ir' })
-        },
-        jump_website() {
-            window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/' })
-        },
-        jump_frost() {
-            window.electronAPI.openLink({ outLink: 'https://www.stormwow.com/frost' })
         },
         async get_categories() {
             try {
@@ -325,20 +152,18 @@ export default {
                 category_id: category
             }
 
-            try {
-                // 检查是否使用Mock模式
-                const useMock = await shouldUseMock()
+            // 显示加载遮罩
+            this.main_loading = true
+            this.main_loading_word = '加载插件列表...'
+            this.download_progress = 0
+
+            try { 
                 let res
-                
-                if (useMock) {
-                    console.log('使用Mock数据获取插件列表')
-                    res = await mockApiService.getAddonsList(params)
-                } else {
-                    console.log('使用真实API获取插件列表')
-                    let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
-                    const response = await axios.get(url, { params: params })
-                    res = response.data
-                }
+                 
+                console.log('使用真实API获取插件列表')
+                let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
+                const response = await axios.get(url, { params: params })
+                res = response.data 
                 
                 if (res.code === 200) {
                     console.log('获取插件列表成功', res)
@@ -349,12 +174,11 @@ export default {
                         tableData = tableData.map((item, index) => {
                             const clone = { ...item }
                             // 只在真实API数据中添加这些字段，mock数据中已经包含了
-                            if (!useMock) {
-                                clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                                clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
-                                clone.installed = index % 2 === 1
-                                clone.modified = new Date().toLocaleString()
-                            }
+                            clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                            clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                            clone.installed = index % 2 === 1
+                            clone.modified = new Date().toLocaleString()
+                            
                             // 生成稳定唯一 key
                             const baseKey = clone.id ?? clone.slug ?? clone.title ?? `idx-${index}`
                             clone._key = `${String(baseKey)}-${index}`
@@ -367,7 +191,6 @@ export default {
                     console.log('获取插件列表失败:', res.message)
                 }
             } catch (err) { 
-                this.main_loading = false
                 console.error('获取插件列表错误:', err)
                 ElMessageBox.alert(err.message || err, "错误", {
                     confirmButtonText: 'OK',
@@ -376,6 +199,56 @@ export default {
                     customClass: 'custom-message-box'
                 })
                 return []
+            } finally {
+                this.main_loading = false
+            }
+        },
+        async down_addons(addon) {
+            try {
+                const id = addon?.row?.id || addon?.id
+                if (!id) {
+                    ElMessage.error('缺少插件ID，无法获取下载地址')
+                    return
+                }
+
+                // 获取下载地址
+                this.main_loading = true
+                this.main_loading_word = '获取下载地址...'
+
+                const useMock = await shouldUseMock()
+                let downloadUrl = ''
+
+                if (useMock) {
+                    // Mock 模式：优先使用已有 down_link 字段
+                    downloadUrl = addon?.row?.down_link || addon?.down_link || ''
+                    if (!downloadUrl) {
+                        throw new Error('Mock模式下未找到下载地址')
+                    }
+                } else {
+                    const url = `${import.meta.env.VITE_API_BASE_URL}/addons/download_url/${id}`
+                    const response = await axios.get(url)
+                    if (response.data?.code !== 200) {
+                        throw new Error(response.data?.message || '获取下载地址失败')
+                    }
+                    downloadUrl = response.data?.data?.download_url
+                    if (!downloadUrl) {
+                        throw new Error('接口未返回有效的下载地址')
+                    }
+                }
+
+                // 写回供下载逻辑使用
+                if (addon.row) {
+                    addon.row.down_link = downloadUrl
+                } else {
+                    addon.down_link = downloadUrl
+                }
+
+                this.main_loading_word = '开始下载...'
+                await WowAddons.down_addons(addon, this)
+            } catch (e) {
+                console.error('获取下载地址出错:', e)
+                this.main_loading = false
+                ElMessage.error(e.message || '获取下载地址失败')
             }
         },
         // 获取客户端列表

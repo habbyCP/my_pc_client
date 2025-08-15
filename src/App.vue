@@ -34,7 +34,7 @@
                :class="{ active: activeCategory === category.name }"
                @click="switchCategory(category.id, category.name)">
             <!-- If icon path starts with '/', it's a local icon -->
-            <img v-if="category.icon.startsWith('/')" :src="category.icon" class="category-icon" alt="category icon" />
+            <img v-if="category.icon.length > 0" :src="category.icon" class="category-icon" alt="category icon" />
             <!-- Otherwise use Element Plus icon -->
             
             <span>{{ category.name }}</span>
@@ -87,25 +87,25 @@
           />
         </div>
       </div>
-    </div>
 
-    <!-- 加载中遮罩 -->
-    <div class="loading-mask" v-if="main_loading">
-      <div class="loading-content">
-        <el-icon v-if="download_progress < 100" class="loading-icon"><Loading /></el-icon>
-        <span>{{ main_loading_word }}</span>
-        <div v-if="download_progress > 0" class="progress-bar-container">
-          <div class="progress-bar" :style="{ width: download_progress + '%' }"></div>
-          <span class="progress-text">{{ download_progress }}%</span>
+      <!-- 加载中遮罩（仅覆盖 content-container） -->
+      <div class="loading-mask" v-if="main_loading">
+        <div class="loading-content">
+          <el-icon v-if="download_progress < 100" class="loading-icon"><Loading /></el-icon>
+          <span>{{ main_loading_word }}</span>
+          <div v-if="download_progress > 0" class="progress-bar-container">
+            <div class="progress-bar" :style="{ width: download_progress + '%' }"></div>
+            <span class="progress-text">{{ download_progress }}%</span>
+          </div>
+          <el-button 
+            v-if="download_progress >= 100" 
+            type="success" 
+            class="confirm-button" 
+            @click="main_loading = false"
+          >
+            确认
+          </el-button>
         </div>
-        <el-button 
-          v-if="download_progress >= 100" 
-          type="success" 
-          class="confirm-button" 
-          @click="main_loading = false"
-        >
-          确认
-        </el-button>
       </div>
     </div>
 
@@ -115,7 +115,6 @@
 
 <script>
 import AddonsList from './table_list.js'
-import WowAddons from './wow_addons.js'
 import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-vue'
 import PluginLibrary from './components/PluginLibrary.vue'
 import Settings from './components/Settings.vue'
@@ -169,9 +168,7 @@ export default {
         console.error('加载客户端列表失败:', error)
       }
     },
-    down_addons(addon) {
-      WowAddons.down_addons(addon, this);
-    }
+    
   }
 }
 </script>
@@ -179,17 +176,21 @@ export default {
 <style>
 @import './assets/styles/index.css';
 
+.content-container {
+  position: relative;
+}
+
 .loading-mask {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 9;
 }
 
 .loading-content {

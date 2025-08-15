@@ -50,7 +50,7 @@ async function downloadFile(url, fileName, index, event) {
         if (fs.existsSync(file_tmp_path)) {
             fs.unlinkSync(file_tmp_path);
         }
-        
+        debug("下载文件", url, fileName);
         // 处理get回调
         let req = get(url, (response) => {
             //创建文件

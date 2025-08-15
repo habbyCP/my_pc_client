@@ -30,7 +30,7 @@ export default {
             // 继续下载插件的逻辑
             let row = data.row
             context.main_loading = true
-            context.main_loading_word = "准备下载..."
+            context.main_loading_word = "开始下载..."
             context.download_progress = 0
             
             // 准备下载参数

@@ -26,7 +26,7 @@
       <div v-for="(item, index) in tableData" :key="item._key || item.id || item.title || index" class="plugin-card">
         <div class="plugin-content">
           <div class="plugin-image">
-            <!-- <img :src="item.cover" alt="Plugin Image" /> -->
+            <img :src="item.cover" alt="Plugin Image" />
           </div>
           <div class="plugin-info" @click="showPluginDetail(item)">
             <div class="plugin-header">
@@ -362,9 +362,15 @@ export default {
 }
 
 .text-content {
-  color: #b8b8b8;
+  background-color: #252220;
+  color: #e0d6cc;
   line-height: 1.8;
   white-space: pre-line;
+  padding: 12px 14px;
+  border: 1px solid #4a3530;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  overflow-wrap: anywhere;
 }
 
 .dialog-footer {
