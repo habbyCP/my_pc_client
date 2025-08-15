@@ -6,7 +6,7 @@ const { webContents } = require('electron')
 const { get_realmlist, fix_realmlist } = require("./lib/realmlist");
 const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons } = require("./lib/down");
-const { select_wow_exe, is_duplicate_directory, wow_file_path, all_wow_file_path } = require("./lib/wow");
+const {  is_duplicate_directory } = require("./lib/wow");
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 
 const { runExec } = require("./lib/runExec");
@@ -108,9 +108,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
-//选择文件
-ipcMain.handle('select-file', select_wow_exe)
+}) 
 
 //文件下载相关的
 ipcMain.handle('download-file',  down_addons);
@@ -122,14 +120,7 @@ ipcMain.on('open-link', function (event, data) {
 //检查目录是否重复
 ipcMain.handle('is-duplicate-directory', is_duplicate_directory)
 
-//版本相关的查询
-ipcMain.handle('wow-file-path', function (event, version_data) {
-  return wow_file_path(version_data)
-});
-
-ipcMain.handle('all-wow-file-path', function () {
-  return all_wow_file_path()
-});
+ 
 //获取realmlist
 ipcMain.handle('get-realmlist', get_realmlist)
 //获取realmlist

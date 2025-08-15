@@ -2513,3 +2513,267 @@
 17:06:42:838 wow路径 C:\Users\habby\Downloads\Interface\AddOns
 17:06:42:839 插件路径 C:\Users\habby\Downloads\Interface\AddOns
 17:06:42:939 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:01:446 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:01:449 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:01:546 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:01:660 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:03:967 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:03:968 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:04:051 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:04:150 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:06:993 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:06:994 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:07:089 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:07:196 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:10:036 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:10:037 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:10:121 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:10:221 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:27:657 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:27:661 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:27:768 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:27:886 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:29:955 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:29:957 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:30:043 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:30:147 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:02:34:703 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:02:34:704 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:02:34:810 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:02:34:929 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:04:28:507 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:04:28:510 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:04:28:611 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:04:28:723 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:04:49:412 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:04:49:414 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:04:49:499 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:04:49:600 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:05:04:108 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:05:04:109 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:05:04:189 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:05:04:286 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:13:56:795 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:13:56:796 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:13:56:871 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:13:56:996 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:14:00:538 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:14:00:539 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:14:00:614 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:14:00:704 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:15:37:147 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:15:37:148 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:15:37:271 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:15:37:368 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:15:44:247 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:15:44:248 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:15:44:332 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:15:44:438 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:18:27:760 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:18:27:764 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:18:27:856 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:18:27:971 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:18:59:008 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:18:59:009 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:18:59:092 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:18:59:185 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:19:23:899 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:19:23:901 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:19:23:986 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:19:24:093 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:20:05:665 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:20:05:666 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:20:05:742 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:20:05:838 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:20:41:119 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:20:41:120 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:20:41:221 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:20:41:321 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:20:48:188 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:20:48:188 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:20:48:280 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:20:48:375 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:21:57:345 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:21:57:348 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:21:57:451 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:21:57:562 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:22:31:610 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:22:31:612 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:22:31:701 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:22:31:810 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:22:37:803 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:22:37:804 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:22:37:897 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:22:37:993 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:23:52:458 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  cover: false,
+  url: 'http://127.0.0.1:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:23:52:459 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:23:52:546 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:23:52:648 下发指令 { code: 200, data: '下载完成', message: '成功' }

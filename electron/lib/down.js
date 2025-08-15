@@ -13,6 +13,19 @@ const {getSettings} = require("./settings");
 const {findAddonsDirectory} = require("./path_validator");
 let  req_list  = new Map()
 
+is_duplicate_directory = function (event,data) {
+    return new Promise((resolve, reject)=>{
+        let dir_list = addons_dir_list({version:data.version})
+        let result = dir_list.filter(item => data.dir_list.includes(item));
+        resolve({
+            code: OK_CODE,
+            message: "",
+            data:result
+        });
+
+    })
+}
+
 //安装插件
 exports.addons_install =  function (tmp_dir,addons_dir){
     console.log(tmp_dir,addons_dir)
@@ -206,7 +219,6 @@ exports.down_addons = async function (event, down_data) {
             // 4. 解压文件
             await unzipFile(file_tmp_path, file_unzip_path, event, down_data.index);
             
-            error("wow路径", down_data.addonsPath);
             let addons_path = down_data.addonsPath;
             error("插件路径", addons_path);
             

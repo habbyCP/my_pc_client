@@ -32,12 +32,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', (_, data) => callback(data)),
-  // 获取wow.exe路径
-  wowFilePath: (version_data) => ipcRenderer.invoke('wow-file-path', version_data),
-  // 获取所有wow.exe路径
-  allWowFilePath: () => ipcRenderer.invoke('all-wow-file-path'),
-  // 选择wow.exe文件
-  selectFile: (version_data) => ipcRenderer.invoke('select-file',version_data),
+ 
+  
   //获取realmlist文件是否正常
   getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
   //修复realmlist文件

@@ -217,31 +217,47 @@ export default {
 
                 const useMock = await shouldUseMock()
                 let downloadUrl = ''
-
-                if (useMock) {
-                    // Mock 模式：优先使用已有 down_link 字段
-                    downloadUrl = addon?.row?.down_link || addon?.down_link || ''
-                    if (!downloadUrl) {
-                        throw new Error('Mock模式下未找到下载地址')
-                    }
-                } else {
-                    const url = `${import.meta.env.VITE_API_BASE_URL}/addons/download_url/${id}`
-                    const response = await axios.get(url)
-                    if (response.data?.code !== 200) {
-                        throw new Error(response.data?.message || '获取下载地址失败')
-                    }
-                    downloadUrl = response.data?.data?.download_url
-                    if (!downloadUrl) {
-                        throw new Error('接口未返回有效的下载地址')
-                    }
+                let file_list = []
+ 
+                const url = `${import.meta.env.VITE_API_BASE_URL}/addons/download_url/${id}`
+                const response = await axios.get(url)
+                if (response.data?.code !== 200) {
+                    throw new Error(response.data?.message || '获取下载地址失败')
                 }
-                
+                downloadUrl = response.data?.data?.download_url
+                file_list = response.data?.data?.file_list
+                // 服务端可能返回 JSON 字符串，这里做健壮解析，确保为数组
+                if (typeof file_list === 'string') {
+                    try {
+                        const parsed = JSON.parse(file_list)
+                        if (Array.isArray(parsed)) {
+                            file_list = parsed
+                        } else if (parsed && Array.isArray(parsed.file_list)) {
+                            file_list = parsed.file_list
+                        } else {
+                            file_list = []
+                        }
+                    } catch (e) {
+                        console.warn('file_list JSON 解析失败:', e)
+                        file_list = []
+                    }
+                } else if (!Array.isArray(file_list)) {
+                    // 如果不是字符串也不是数组，兜底为空数组
+                    file_list = []
+                }
+                if (!downloadUrl) {
+                    throw new Error('接口未返回有效的下载地址')
+                }
+       
+                console.log('获取下载地址成功', file_list)
                 // 写回供下载逻辑使用
                 if (addon.row) {
                     addon.row.down_link = downloadUrl
+                    // 回写解析后的 file_list，供后续目录冲突检查使用
+                    addon.row.file_list = file_list
                 } else {
                     addon.down_link = downloadUrl
-                }
+                } 
 
                 this.main_loading_word = '开始下载...'
                 await WowAddons.down_addons(addon, this)
