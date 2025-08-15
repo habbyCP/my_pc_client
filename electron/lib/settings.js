@@ -21,9 +21,7 @@ function getSettings() {
         autoCheckUpdate: settings.autoCheckUpdate !== undefined ? settings.autoCheckUpdate : true,
         useMockData: settings.useMockData !== undefined ? settings.useMockData : false
       };
-      console.log('读取设置文件:', settingsPath);
-      console.log('原始设置:', settings);
-      console.log('处理后设置:', result);
+ 
       return result;
     }
     return {

@@ -5,8 +5,7 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
 const { get_realmlist, fix_realmlist } = require("./lib/realmlist");
 const { ERROR_CODE } = require("./lib/error_code");
-const { down_addons } = require("./lib/down");
-const {  is_duplicate_directory } = require("./lib/wow");
+const { down_addons,is_duplicate_directory } = require("./lib/down"); 
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 
 const { runExec } = require("./lib/runExec");

@@ -44,8 +44,7 @@ export default {
             }
             
             // 继续下载插件的逻辑
-            let row = data.row
-            console.log('开始下载', row)
+            let row = data.row 
             context.main_loading = true
             context.main_loading_word = "开始下载..."
             context.download_progress = 0
@@ -60,8 +59,7 @@ export default {
                 file_list: Array.isArray(row?.file_list) ? row.file_list : []
             }  
             // 下载前目录冲突检查（如果提供了 file_list）
-            if (downloadParams.file_list && downloadParams.file_list.length > 0) {
-                alert('目录冲突检查')
+            if (downloadParams.file_list && downloadParams.file_list.length > 0) { 
                 try {
                     // 确保传给主进程的是可结构化克隆的纯数据（避免 Vue Proxy/复杂对象）
                     const safeDirList = JSON.parse(JSON.stringify(
@@ -102,7 +100,7 @@ export default {
                     logDetailedError('目录冲突检测失败', e)
                 }
             }
-
+            console.log('111', downloadParams)
             // 使用await获取返回值
             return window.electronAPI.downloadFile(downloadParams)
                 .then(result => {

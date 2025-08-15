@@ -1,8 +1,8 @@
 const {BrowserWindow,session  } = require('electron')
-const path = require("path");
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 const compressing = require('compressing');
 const {debug,info,error} = require("./log");
 const {send_msg} = require("./notice");
@@ -13,18 +13,45 @@ const {getSettings} = require("./settings");
 const {findAddonsDirectory} = require("./path_validator");
 let  req_list  = new Map()
 
-is_duplicate_directory = function (event,data) {
-    return new Promise((resolve, reject)=>{
-        let dir_list = addons_dir_list({version:data.version})
-        let result = dir_list.filter(item => data.dir_list.includes(item));
-        resolve({
-            code: OK_CODE,
-            message: "",
-            data:result
-        });
+exports.is_duplicate_directory = function (event, data) {
+    return new Promise((resolve) => {
+        try {
+            // 统一解析 AddOns 目录
+            const settings = getSettings();
+            const gamePath = settings && settings.gamePath ? settings.gamePath : '';
+            const addonsPath = findAddonsDirectory(gamePath);
 
+            if (!addonsPath) {
+                // 无法定位 AddOns 目录则认为没有重复
+                return resolve({ code: OK_CODE, message: '', data: [] });
+            }
+
+            const names = Array.isArray(data?.dir_list) ? data.dir_list : [];
+            const result = [];
+
+            for (const rawName of names) {
+                if (typeof rawName !== 'string') continue;
+                const name = rawName.trim();
+                if (!name) continue;
+
+                const target = path.join(addonsPath.data.addonsPath, name);
+                try {
+                    const stat = fs.statSync(target);
+                    if (stat.isDirectory()) {
+                        result.push(name);
+                    }
+                } catch (e) {
+                    // 不存在或无法访问则跳过
+                }
+            }
+
+            resolve({ code: OK_CODE, message: '', data: result });
+        } catch (e) {
+            error('is_duplicate_directory error', e);
+            resolve({ code: OK_CODE, message: '', data: [] });
+        }
     })
-}
+} 
 
 //安装插件
 exports.addons_install =  function (tmp_dir,addons_dir){
@@ -168,6 +195,7 @@ async function installAddon(file_unzip_path, addons_path, file_tmp_path, event, 
 
 //下载插件
 exports.down_addons = async function (event, down_data) {
+    console.log("收到下载需求：", down_data)
     // 获取设置信息
     let settings = getSettings()
     

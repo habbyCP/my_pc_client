@@ -2777,3 +2777,25 @@
 18:23:52:459 下载文件 http://127.0.0.1:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
 18:23:52:546 插件路径 C:\Users\habby\Downloads\Interface\AddOns
 18:23:52:648 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:58:32:759 is_duplicate_directory error TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received an instance of Object
+    at new NodeError (node:internal/errors:372:5)
+    at validateString (node:internal/validators:120:11)
+    at Object.join (node:path:429:7)
+    at D:\code\my_pc_client\electron\lib\down.js:37:37
+    at new Promise (<anonymous>)
+    at exports.is_duplicate_directory (D:\code\my_pc_client\electron\lib\down.js:17:12)
+    at node:electron/js2c/browser_init:193:567
+    at EventEmitter.<anonymous> (node:electron/js2c/browser_init:165:11606)
+    at EventEmitter.emit (node:events:527:28)
+    at EventEmitter.callbackTrampoline (node:internal/async_hooks:130:17)
+18:59:49:859 is_duplicate_directory error TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received an instance of Object
+    at new NodeError (node:internal/errors:372:5)
+    at validateString (node:internal/validators:120:11)
+    at Object.join (node:path:429:7)
+    at D:\code\my_pc_client\electron\lib\down.js:37:37
+    at new Promise (<anonymous>)
+    at exports.is_duplicate_directory (D:\code\my_pc_client\electron\lib\down.js:17:12)
+    at node:electron/js2c/browser_init:193:567
+    at EventEmitter.<anonymous> (node:electron/js2c/browser_init:165:11606)
+    at EventEmitter.emit (node:events:527:28)
+    at EventEmitter.callbackTrampoline (node:internal/async_hooks:130:17)
