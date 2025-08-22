@@ -39,10 +39,10 @@
           <span class="setting-label">启动时自动检查更新</span>
           <el-switch v-model="autoCheckUpdate" />
         </div>
-        <div class="setting-item">
+        <!-- <div class="setting-item">
           <span class="setting-label">使用本地Mock数据</span>
           <el-switch v-model="useMockData" />
-        </div>
+        </div> -->
       </div>
 
       <!-- 保存状态显示 -->

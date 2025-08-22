@@ -32,3 +32,4 @@ yarn.lock
 
 # Extensions directory
 /extension/
+logs/application.log
