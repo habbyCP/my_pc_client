@@ -174,8 +174,8 @@ export default {
                         tableData = tableData.map((item, index) => {
                             const clone = { ...item }
                             // 只在真实API数据中添加这些字段，mock数据中已经包含了
-                            clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                            clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
+                            // clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
+                            // clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
                             clone.installed = index % 2 === 1
                             clone.modified = new Date().toLocaleString()
                             
