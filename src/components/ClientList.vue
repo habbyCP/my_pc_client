@@ -9,7 +9,7 @@
           <div class="client-meta">
             <span class="update-time">
               <el-icon><Calendar /></el-icon>
-              更新时间: {{ client.updateTime }}
+              更新时间: {{ client.update_time }}
             </span>
           </div>
           <div class="client-description" @click="showFullDescription(client)">
@@ -21,6 +21,10 @@
           <el-button type="primary" @click="downloadClient(client)" :loading="client.downloading">
             <el-icon><Download /></el-icon>
             {{ client.downloading ? '下载中...' : '下载' }}
+          </el-button>
+          <el-button type="primary" @click="copyLink(client)">
+            <el-icon><DocumentCopy /></el-icon>
+            复制链接
           </el-button>
         </div>
       </div>
@@ -48,7 +52,7 @@
 </template>
 
 <script>
-import { Search, Download, Calendar } from '@element-plus/icons-vue'
+import { Search, Download, Calendar, DocumentCopy } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 export default {
@@ -56,7 +60,8 @@ export default {
   components: {
     Search,
     Download,
-    Calendar
+    Calendar,
+    DocumentCopy
   },
   data() {
     return {
@@ -108,7 +113,7 @@ export default {
     },
  
     downloadClient(client) {
-      if (!client || !client.downloadUrl) {
+      if (!client || !client.download_url) {
         ElMessage.error('下载链接无效')
         return
       }
@@ -118,15 +123,42 @@ export default {
       
       // 跳转到外部网页
       if (window.electronAPI) {
-        window.electronAPI.openLink({ outLink: client.downloadUrl })
+        window.electronAPI.openLink({ outLink: client.download_url })
       } else {
         // 浏览器环境下直接跳转
-        window.open(client.downloadUrl, '_blank')
+        window.open(client.download_url, '_blank')
       }
       
 
       
     },
+    async copyLink(client) {
+      if (!client || !client.download_url) {
+        ElMessage.error('无效的下载链接')
+        return
+      }
+      const text = String(client.download_url)
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text)
+        } else {
+          const textarea = document.createElement('textarea')
+          textarea.value = text
+          textarea.style.position = 'fixed'
+          textarea.style.opacity = '0'
+          document.body.appendChild(textarea)
+          textarea.focus()
+          textarea.select()
+          document.execCommand('copy')
+          document.body.removeChild(textarea)
+        }
+        ElMessage.success('链接已复制到剪贴板')
+      } catch (e) {
+        console.error('复制失败:', e)
+        ElMessage.error('复制失败，请手动复制')
+      }
+    },
+ 
     // 接收父组件传入的客户端数据
     updateClients(clients) {
       this.clients = clients.map(client => ({
@@ -241,6 +273,13 @@ export default {
   flex-direction: column;
   gap: 8px;
   min-width: 120px;
+  align-items: stretch;
+}
+.client-actions .el-button {
+  width: 100%;
+}
+.client-actions .el-button + .el-button {
+  margin-left: 0; /* 覆盖 Element Plus 默认相邻按钮左间距 */
 }
 .el-dialog__header{
   color: #e0d6cc !important;
