@@ -279,8 +279,11 @@ export default {
                     res = await mockApiService.getClientsList({ title: searchTitle })
                 } else {
                     console.log('使用真实API获取客户端列表')
-                    // 真实API调用 - 暂时使用mock数据
-                    res = await mockApiService.getClientsList({ title: searchTitle })
+                    // 真实API调用
+                    const base = import.meta.env.VITE_API_BASE_URL
+                    const url = base ? `${base}/articles` : '/articles'
+                    const response = await axios.get(url, { params: { title: searchTitle } })
+                    res = response.data
                 }
                 
                 if (res.code === 200) {
