@@ -32,13 +32,13 @@
           </div>
         </div>
       </div>
-
+ 
       <!-- 应用设置 -->
       <div class="setting-group">
         <h4 class="group-title">应用配置</h4>
         <div class="setting-item">
-          <span class="setting-label">启动时自动检查更新</span>
-          <el-switch v-model="autoCheckUpdate" />
+          <span class="setting-label">检查更新</span>
+          <el-button @click="manualCheckForUpdates">检查更新</el-button>
         </div>
         <!-- <div class="setting-item">
           <span class="setting-label">使用本地Mock数据</span>
@@ -46,17 +46,7 @@
         </div> -->
       </div>
 
-      <!-- 保存状态显示 -->
-      <div class="status-info" v-if="gamePath || isSaving">
-        <div class="save-status" v-if="isSaving">
-          <el-icon class="loading-icon"><Loading /></el-icon>
-          <span>正在保存...</span>
-        </div>
-        <div class="save-status success" v-else-if="isPathValid">
-          <el-icon class="success-icon"><Check /></el-icon>
-          <span>设置已自动保存</span>
-        </div>
-      </div>
+
     </div>
   </div>
 </div>
@@ -80,7 +70,6 @@ export default {
       isSelectingFile: false,
       isSaving: false,
       isPathValid: false,
-      autoCheckUpdate: true,
       useMockData: false
     }
   },
@@ -88,39 +77,17 @@ export default {
     // 从本地存储或配置中获取已保存的游戏路径
     this.loadSavedSettings();
   },
-  watch: {
-    // 监听gamePath变化，验证并自动保存
-    gamePath(newVal, oldVal) {
-      if (this.savedGamePath !== undefined && newVal !== oldVal) { // 确保已经初始化完成且值确实变化
-        this.validateAndSaveGamePath();
-      }
-    },
-    // 监听autoCheckUpdate变化，自动保存
-    autoCheckUpdate(newVal) {
-      if (this.savedGamePath !== undefined) { // 确保已经初始化完成
-        this.autoSaveSettings();
-      }
-    },
-    // 监听useMockData变化，自动保存
-    useMockData(newVal) {
-      if (this.savedGamePath !== undefined) { // 确保已经初始化完成
-        console.log('Mock模式切换为:', newVal);
-        this.autoSaveSettings();
-      }
-    }
+  watch: { 
   },
   methods: {
-    loadSavedSettings() {
+    loadSavedSettings() { 
       // 从electron的存储中获取已保存的设置
       if (window.electronAPI) {
         this.isSelectingFile = true;
-        window.electronAPI.getSettings().then(settings => {
+        window.electronAPI.getSettings().then(settings => { 
           if (settings) {
             this.gamePath = settings.gamePath || '';
-            this.savedGamePath = this.gamePath;
-            this.autoCheckUpdate = settings.autoCheckUpdate !== undefined ? settings.autoCheckUpdate : true;
-            this.useMockData = settings.useMockData !== undefined ? settings.useMockData : false;
-            
+            this.savedGamePath = this.gamePath;  
             if (this.gamePath) {
               this.validatePath();
             } else {
@@ -135,6 +102,7 @@ export default {
       }
     },
     selectGamePath() {
+      console.trace('[TRACE] 进入 selectGamePath')
       this.isSelectingFile = true;
       
       // 调用electron的对话框API选择文件夹
@@ -142,9 +110,10 @@ export default {
         window.electronAPI.selectDirectory({
           title: '选择wow.exe',
           defaultPath: this.gamePath || undefined
-        }).then(result => {
+        }).then(result => { 
           if (!result.canceled && result.filePaths.length > 0) {
             this.gamePath = result.filePaths[0];
+            this.validateAndSaveGamePath();
             // 路径变化会触发watch自动验证和保存
           }
           this.isSelectingFile = false;
@@ -156,13 +125,14 @@ export default {
       } else {
         // 如果在浏览器环境中测试，模拟选择文件夹的行为
         setTimeout(() => {
+          console.trace('[TRACE] 浏览器环境模拟选择路径')
           this.gamePath = '/模拟/游戏/路径';
           // 路径变化会触发watch自动验证和保存
           this.isSelectingFile = false;
         }, 1000);
       }
     },
-    validatePath() {
+    validatePath() { 
       // 验证选择的路径是否有效
       if (!this.gamePath) {
         this.isPathValid = false;
@@ -172,6 +142,7 @@ export default {
       if (window.electronAPI) {
         window.electronAPI.validateGamePath(this.gamePath)
           .then(isValid => {
+            
             this.isPathValid = isValid;
           })
           .catch(err => {
@@ -185,7 +156,7 @@ export default {
       }
     },
     // 验证路径并自动保存
-    async validateAndSaveGamePath() {
+    async validateAndSaveGamePath() { 
       if (!this.gamePath) {
         this.isPathValid = false;
         return;
@@ -206,23 +177,16 @@ export default {
           this.isPathValid = false;
           ElMessage.error('验证路径失败');
         }
-      } else {
-        // 模拟验证
-        this.isPathValid = this.gamePath.length > 5;
-        if (this.isPathValid) {
-          this.autoSaveGamePath();
-        }
-      }
+      } 
     },
     // 自动保存游戏路径
-    autoSaveGamePath() {
+    autoSaveGamePath() { 
       if (this.isSaving || !this.isPathValid) return;
       
       this.isSaving = true;
       
       const settings = {
         gamePath: this.gamePath,
-        autoCheckUpdate: this.autoCheckUpdate,
         useMockData: this.useMockData
       };
       
@@ -259,7 +223,6 @@ export default {
       
       const settings = {
         gamePath: this.gamePath,
-        autoCheckUpdate: this.autoCheckUpdate,
         useMockData: this.useMockData
       };
       
@@ -283,6 +246,19 @@ export default {
           this.isSaving = false;
           this.$emit('save-settings', settings);
         }, 100);
+      }
+    },
+    // 手动检查更新
+    manualCheckForUpdates() {
+      if (window.electronAPI && typeof window.electronAPI.checkForUpdates === 'function') {
+        try {
+          window.electronAPI.checkForUpdates()
+        } catch (e) {
+          console.error('触发检查更新失败:', e)
+          ElMessage.error('触发检查更新失败')
+        }
+      } else {
+        ElMessage.warning('当前环境不支持检查更新')
       }
     }
   }
@@ -397,6 +373,7 @@ export default {
 
 .status-info {
   margin-top: 20px;
+  margin-bottom: 20px;
   padding: 16px;
   border-radius: 8px;
   background-color: rgba(194, 133, 64, 0.1);

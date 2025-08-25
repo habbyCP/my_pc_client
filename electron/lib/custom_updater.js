@@ -1,11 +1,11 @@
 const axios = require('axios');
 const { dialog, shell } = require('electron');
 const { version } = require('../../package.json');
-const { UPDATE_URL } = require('../config.js');
+const { API_URL } = require('../config.js');
 
-const updateUrl = UPDATE_URL;
+const updateUrl = API_URL+"/update/latest";
 
-async function checkForUpdates(isManualCheck = false) {
+async function checkForUpdates() {
   try {
     const response = await axios.get(updateUrl, { responseType: 'text' });
     const latestVersionInfo = response.data;
@@ -38,7 +38,7 @@ async function checkForUpdates(isManualCheck = false) {
         }
       });
 
-    } else if (isManualCheck) {
+    } else {
       dialog.showMessageBox({
         type: 'info',
         title: '无可用更新',
@@ -46,9 +46,7 @@ async function checkForUpdates(isManualCheck = false) {
       });
     }
   } catch (error) {
-    if (isManualCheck) {
-      dialog.showErrorBox('更新出错', '检查更新时遇到问题，请稍后重试。详情请查看日志。');
-    }
+    dialog.showErrorBox('更新出错', '检查更新时遇到问题，请稍后重试。详情请查看日志。');
     console.error('检查更新失败:', error);
   }
 }

@@ -71,7 +71,6 @@ app.whenReady().then(async () => {
     }
   }
   createWindow()
-  checkForUpdates(false)
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -248,7 +247,7 @@ ipcMain.handle('apply-client-patches', async (event, options) => {
 });
 
 ipcMain.on('check-for-updates', () => {
-  checkForUpdates(true);
+  checkForUpdates();
 });
 
 ipcMain.handle('get-config', () => {

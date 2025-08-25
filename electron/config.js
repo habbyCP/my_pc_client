@@ -1,7 +1,17 @@
-const config = {
-  UPDATE_URL: 'https://download.9136347.com/d/%E9%A3%8E%E6%9A%B4%E5%8A%A9%E6%89%8B/update/latest.yml',
+const baseConfig = { 
   API_URL: 'https://your-api-server.com',
   WOW_PATH_CONFIG: './file.json'
 };
+
+const devConfig = {
+  ...baseConfig,
+  API_URL: 'http://localhost:8888', // Example of overriding for development
+};
+
+const prodConfig = {
+  ...baseConfig,
+};
+
+const config = process.env.NODE_ENV === 'development' ? devConfig : prodConfig;
 
 module.exports = config;
