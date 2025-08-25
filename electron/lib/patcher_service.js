@@ -2,8 +2,11 @@ const path = require('path');
 const fs = require('fs').promises;
 const { spawn } = require('child_process');
 const my_logger = require("electron-log");
+ 
 
 async function applyClientPatches(app, options) {
+ 
+ 
   const { gamePath, selectedPatches } = options;
   my_logger.info(`开始为 ${gamePath} 应用补丁...`);
 

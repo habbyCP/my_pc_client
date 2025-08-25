@@ -2904,3 +2904,94 @@
 10:42:05:440 下载文件 http://127.0.0.1:8888/uploads\2025\08\22\e55a38d5-f6ec-464c-8e63-77cc522c363b.zip e55a38d5-f6ec-464c-8e63-77cc522c363b.zip
 10:42:10:728 插件路径 C:\Users\habby\Downloads\Interface\AddOns
 10:42:13:597 下发指令 { code: 200, data: '下载完成', message: '成功' }
+14:45:42:860 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:42:863 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:44:348 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:44:349 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:44:956 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:44:957 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:45:371 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:45:372 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:45:739 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:45:741 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:46:036 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:46:037 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:46:245 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:46:246 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:47:748 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:47:749 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:48:268 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:48:269 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:48:652 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:48:653 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:49:051 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:49:052 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:45:49:460 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:45:49:461 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:48:13:134 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:48:13:137 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:48:19:313 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:48:19:314 应用补丁时发生错误: 补丁工具 vanilla_tweaks.exe 未在 tools 目录中找到。
+14:53:16:944 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:53:16:946 未找到备份，正在创建备份文件: C:\Users\habby\Downloads\wow.exe.bak
+14:53:16:949 从备份复制新的 wow.exe 用于打补丁...
+14:53:16:951 执行补丁工具，参数: --fov --camera-distance --fix-camera-jitter --sound-channels --large-address-aware C:\Users\habby\Downloads\wow.exe
+14:53:17:017 Patcher-stderr: error: Found argument '--camera-distance' which wasn't expected, or isn't valid in this context
+
+	Did you mean '--maxcameradistance'?
+
+	If you tried to supply `--camera-distance` as a value rather than a flag, use `-- --camera-distance`
+
+USAGE:
+    vanilla_tweaks.exe --fov <FOV> --maxcameradistance <MAXCAMERADISTANCE> <INFILE>
+
+For more information try --help
+
+14:53:17:019 应用补丁时发生错误: 补丁工具执行失败，退出码: 2
+14:53:17:021 已从备份中恢复原始 Wow.exe。
+14:55:24:528 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+14:55:24:529 备份文件已存在，跳过备份步骤。
+14:55:24:530 从备份复制新的 wow.exe 用于打补丁...
+14:55:24:531 执行补丁工具，参数: --fov --camera-distance --fix-camera-jitter --sound-channels --large-address-aware C:\Users\habby\Downloads\wow.exe
+14:55:24:571 Patcher-stderr: error: Found argument '--camera-distance' which wasn't expected, or isn't valid in this context
+
+	Did you mean '--maxcameradistance'?
+
+	If you tried to supply `--camera-distance` as a value rather than a flag, use `-- --camera-distance`
+
+USAGE:
+    vanilla_tweaks.exe --fov <FOV> --maxcameradistance <MAXCAMERADISTANCE> <INFILE>
+
+For more information try --help
+
+14:55:24:572 应用补丁时发生错误: 补丁工具执行失败，退出码: 2
+14:55:24:574 已从备份中恢复原始 Wow.exe。
+15:14:14:427 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+15:14:14:431 备份文件已存在，跳过备份步骤。
+15:14:14:432 从备份复制新的 wow.exe 用于打补丁...
+15:14:14:433 执行补丁工具，参数: --fov --camera-distance --fix-camera-jitter --sound-channels --large-address-aware C:\Users\habby\Downloads\wow.exe
+15:14:14:474 Patcher-stderr: error: Found argument '--camera-distance' which wasn't expected, or isn't valid in this context
+
+	Did you mean '--maxcameradistance'?
+
+	If you tried to supply `--camera-distance` as a value rather than a flag, use `-- --camera-distance`
+
+USAGE:
+    vanilla_tweaks.exe --fov <FOV> --maxcameradistance <MAXCAMERADISTANCE> <INFILE>
+
+For more information try --help
+
+15:14:14:476 应用补丁时发生错误: 补丁工具执行失败，退出码: 2
+15:14:14:478 已从备份中恢复原始 Wow.exe。
+16:06:59:939 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:06:59:942 工作目录: C:\Users\habby\Downloads
+16:06:59:943 执行文件: wow.exe
+16:07:06:315 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:07:06:316 工作目录: C:\Users\habby\Downloads
+16:07:06:317 执行文件: wow.exe
+16:09:09:116 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:09:09:116 工作目录: C:\Users\habby\Downloads
+16:09:09:117 执行文件: wow.exe
+16:09:49:251 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:09:49:254 工作目录: C:\Users\habby\Downloads
+16:09:49:255 执行文件: wow.exe

@@ -80,12 +80,12 @@
           />
         </div>
 
-        <div v-if="activeTab === '客户端优化'" class="tab-content">
+        <div v-if="activeTab === '游戏补丁'" class="tab-content">
+ 
           <client-patcher :client="activeClient" />
         </div>
         
-        <div v-if="activeTab === '设置'" class="tab-content">
-          <h2>设置</h2>
+        <div v-if="activeTab === '设置'" class="tab-content"> 
           <settings 
             @save-settings="handleSaveSettings"
           />
@@ -141,7 +141,7 @@ export default {
   },
   data() {
     return {
-      tabs: ['插件库', '客户端', '客户端优化', '设置'],
+      tabs: ['插件库', '客户端', '游戏补丁', '设置'],
       activeClient: { path: '' }, // 初始化为空对象以避免渲染问题
       isDark: true, // 默认使用暗色主题
       tableData: [],

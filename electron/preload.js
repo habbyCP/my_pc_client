@@ -15,8 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
 contextBridge.exposeInMainWorld('electronAPI', {
   //下载文件
   downloadFile: (down_data) => ipcRenderer.invoke('download-file', down_data),
-  // 取消下载
-  cancelDownload: (down_data) => ipcRenderer.send('cancel-download',down_data),
   // 用浏览器打开链接
   openLink: (url) => ipcRenderer.send('open-link', url),
 
@@ -32,17 +30,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', (_, data) => callback(data)),
- 
-  
-  //获取realmlist文件是否正常
-  getRealmlist: (version_data) => ipcRenderer.invoke('get-realmlist',version_data),
-  //修复realmlist文件
-  fixRealmlist: (version_data) => ipcRenderer.invoke('fix-realmlist',version_data),
-  //启动主程序
-  startWow: (version_data) => ipcRenderer.send('start-wow', version_data),
-
-  //响应主程序
-  onResponse: (callback) => ipcRenderer.on('response', callback),
   
   // 设置相关API
   // 选择目录

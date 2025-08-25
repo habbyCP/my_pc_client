@@ -1,8 +1,16 @@
 <template>
+  <div class="client-list-container">
   <div class="settings-container">
     <div class="settings-section">
-      <h3>客户端优化工具 <span class="auto-save-hint"> (基于 vanilla-tweaks)</span></h3>
-
+      <div class="section-header">
+        <h3>客户端优化工具<span class="auto-save-hint"> (基于网络开源项目)</span> </h3>
+        <div class="action-area">
+          <el-button type="primary" @click="applyPatches" :loading="isLoading">应用补丁</el-button>
+        </div>
+      </div>
+      <div v-if="statusMessage" class="status-area">
+        <el-alert :title="statusMessage" :type="statusType" show-icon :closable="false" />
+      </div>
       <div v-if="isReady" class="setting-group">
         <h4 class="group-title">功能开关</h4>
         <div v-for="patch in patchList" :key="patch.key" class="setting-item">
@@ -11,15 +19,10 @@
         </div>
       </div>
 
-      <div class="action-area">
-        <el-button type="primary" @click="applyPatches" :loading="isLoading">应用补丁</el-button>
-      </div>
 
-      <div v-if="statusMessage" class="status-area">
-        <el-alert :title="statusMessage" :type="statusType" show-icon :closable="false" />
-      </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -103,9 +106,8 @@ export default {
 
 <style scoped>
 .settings-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  /* max-width: 800px; */
+  margin: 0 auto; 
 }
 
 .settings-section {
@@ -115,13 +117,19 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
-.settings-section h3 {
-  margin-top: 0;
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  color: #e0d6cc;
-  font-size: 18px;
   border-bottom: 1px solid #332e2a;
   padding-bottom: 10px;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #e0d6cc;
+  font-size: 18px;
 }
 
 .auto-save-hint {
@@ -160,11 +168,11 @@ export default {
 }
 
 .action-area {
-  margin-top: 20px;
-  text-align: right;
+  /* Styles for the button area if needed */
 }
 
 .status-area {
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

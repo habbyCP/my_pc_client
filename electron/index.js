@@ -5,7 +5,6 @@ const fs = require('fs').promises;
 const { spawn } = require('child_process');
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
-const { get_realmlist, fix_realmlist } = require("./lib/realmlist");
 const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons,is_duplicate_directory } = require("./lib/down"); 
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
@@ -121,31 +120,6 @@ ipcMain.on('open-link', function (event, data) {
 })
 //检查目录是否重复
 ipcMain.handle('is-duplicate-directory', is_duplicate_directory)
-
- 
-//获取realmlist
-ipcMain.handle('get-realmlist', get_realmlist)
-//获取realmlist
-ipcMain.handle('fix-realmlist', fix_realmlist);
-//启动程序
-ipcMain.on('start-wow', function (event, data) {
-  wow_file_path(data).then(res => {
-    if (res.code === 200) {
-      runExec(res.data).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-        send_msg(event, ERROR_CODE, err, "启动失败")
-      })
-    } else {
-      my_logger.info("wow_file_path error ", res)
-      send_msg(event, res.code, {}, res.message)
-    }
-  }).catch(err => {
-    my_logger.info("wow_file_path catch ", err)
-    send_msg(event, err.code, {}, err.message)
-  })
-});
 
 // 设置相关的处理
 // 选择目录

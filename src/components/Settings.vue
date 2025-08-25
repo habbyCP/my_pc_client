@@ -1,4 +1,5 @@
 <template>
+   <div class="client-list-container"> 
   <div class="settings-container">
     <div class="settings-section">
       <h3>应用设置 <span class="auto-save-hint">(自动保存)</span></h3>
@@ -58,6 +59,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -289,7 +291,7 @@ export default {
 
 <style scoped>
 .settings-container {
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 auto;
 }
 
