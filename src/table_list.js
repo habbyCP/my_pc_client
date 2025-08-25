@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { ElMessageBox, ElMessage } from 'element-plus'
-import { mockApiService, shouldUseMock } from './mock/mockService.js'
+import { ElMessageBox, ElMessage } from 'element-plus' 
+import { apiService, initializeApiService } from './apiService.js'
 import WowAddons from './wow_addons.js'
 
 export default {
@@ -20,7 +19,8 @@ export default {
             ]
         }
     },
-    mounted() {
+    async mounted() {
+        await initializeApiService();
         // 监听下载进度
         window.electronAPI.onDownloadProgress((data) => {
             if (data && data.data) {
@@ -123,21 +123,11 @@ export default {
         },
         async get_categories() {
             try {
-                // 检查是否使用Mock模式
-                const useMock = await shouldUseMock()
-                if (useMock) {
-                    console.log('使用Mock数据获取分类列表')
-                    const response = await mockApiService.getCategories()
-                    if (response.code === 200) {
-                        this.categories = response.data
-                    }
-                } else { 
-                    let url = `${import.meta.env.VITE_API_BASE_URL}/categories/list`
-                    const response = await axios.get(url) 
-                    if (response.data.code === 200) { 
-                        console.log('获取分类列表', response.data.data)
-                        this.categories = response.data.data
-                    }
+                response = await apiService.getCategories()
+
+                if (response.code === 200) { 
+                    console.log('获取分类列表', response.data)
+                    this.categories = response.data
                 }
             } catch (error) {
                 console.error('获取分类失败:', error)
@@ -163,24 +153,16 @@ export default {
             this.download_progress = 0
 
             try { 
-                let res
-                 
-                console.log('使用真实API获取插件列表')
-                let url = `${import.meta.env.VITE_API_BASE_URL}/addons/list`
-                const response = await axios.get(url, { params: params })
-                res = response.data 
+                res = await apiService.getAddonsList(params)
                 
                 if (res.code === 200) {
                     console.log('获取插件列表成功', res)
                     let tableData = Array.isArray(res.data) ? [...res.data] : []
                     console.log('tableData', tableData)
                     if (tableData.length > 0) {
-                        // 为每个插件添加额外的显示信息（如果mock数据中没有的话）
+                        // 为每个插件添加额外的显示信息 
                         tableData = tableData.map((item, index) => {
                             const clone = { ...item }
-                            // 只在真实API数据中添加这些字段，mock数据中已经包含了
-                            // clone.download_count = ((90 - index * 5) / 10).toFixed(1) + '万'
-                            // clone.size = index === 2 ? '35.64MB' : (index % 3 === 0 ? (3 - index * 0.2).toFixed(2) + 'MB' : (400 + index * 20) + 'KB')
                             clone.installed = index % 2 === 1
                             clone.modified = new Date().toLocaleString()
                             
@@ -223,14 +205,14 @@ export default {
  
                 let downloadUrl = ''
                 let file_list = []
- 
-                const url = `${import.meta.env.VITE_API_BASE_URL}/addons/download_url/${id}`
-                const response = await axios.get(url)
-                if (response.data?.code !== 200) {
-                    throw new Error(response.data?.message || '获取下载地址失败')
+
+                response = await apiService.getAddonDownloadUrl(id)
+
+                if (response.code !== 200) {
+                    throw new Error(response.message || '获取下载地址失败')
                 }
-                downloadUrl = response.data?.data?.download_url
-                file_list = response.data?.data?.file_list
+                downloadUrl = response.data?.download_url
+                file_list = response.data?.file_list
                 // 服务端可能返回 JSON 字符串，这里做健壮解析，确保为数组
                 if (typeof file_list === 'string') {
                     try {
@@ -275,21 +257,9 @@ export default {
         // 获取客户端列表
         async get_clients_list(searchTitle = '') {
             try {
-                // 检查是否使用Mock模式
-                const useMock = await shouldUseMock()
+                // 检查是否使用Mock模式 
                 let res
-                
-                if (useMock) {
-                    console.log('使用Mock数据获取客户端列表')
-                    res = await mockApiService.getClientsList({ title: searchTitle })
-                } else {
-                    console.log('使用真实API获取客户端列表')
-                    // 真实API调用
-                    const base = import.meta.env.VITE_API_BASE_URL
-                    const url = base ? `${base}/articles` : '/articles'
-                    const response = await axios.get(url, { params: { title: searchTitle } })
-                    res = response.data
-                }
+                res = await apiService.getClientsList({ title: searchTitle })
                 
                 if (res.code === 200) {
                     console.log('获取客户端列表成功', res)

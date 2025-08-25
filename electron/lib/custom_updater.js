@@ -1,9 +1,9 @@
 const axios = require('axios');
 const { dialog, shell } = require('electron');
 const { version } = require('../../package.json');
-const { UPDATE_URL } = require('../config.json');
+const { UPDATE_URL } = require('../config.js');
 
-const updateUrl = UPDATE_URL || 'https://download.9136347.com/d/%E9%A3%8E%E6%9A%B4%E5%8A%A9%E6%89%8B/update/latest.yml';
+const updateUrl = UPDATE_URL;
 
 async function checkForUpdates(isManualCheck = false) {
   try {

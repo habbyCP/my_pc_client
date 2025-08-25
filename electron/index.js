@@ -249,6 +249,11 @@ ipcMain.handle('apply-client-patches', async (event, options) => {
 
 ipcMain.on('check-for-updates', () => {
   checkForUpdates(true);
+});
+
+ipcMain.handle('get-config', () => {
+  const config = require('./config.js');
+  return config;
 }); 
 send_progress = function (code, data, msg) {
 
