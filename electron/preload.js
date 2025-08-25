@@ -44,7 +44,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   startGame: (gamePath) => ipcRenderer.invoke('start-game', gamePath),
   // 应用补丁
   applyClientPatches: (options) => ipcRenderer.invoke('apply-client-patches', options),
-  checkForUpdates: () => ipcRenderer.send('check-for-updates'),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   // 获取配置
   getConfig: () => ipcRenderer.invoke('get-config'),
 });

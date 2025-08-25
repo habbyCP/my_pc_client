@@ -124,6 +124,7 @@ import PluginLibrary from './components/PluginLibrary.vue'
 import Settings from './components/Settings.vue'
 import ClientList from './components/ClientList.vue'
 import ClientPatcher from './components/ClientPatcher.vue'
+import { checkForUpdatesAndPrompt } from './utils/updateHelper.js'
 
 export default {
   name: 'App',
@@ -153,7 +154,10 @@ export default {
     }
   },
   async mounted() {
-    await this.loadActiveClient();
+    // 应用启动时检查一次更新，并由前端弹窗处理结果
+    if (window.electronAPI) {
+      await this.checkForUpdatesAtStartup()
+    }
     // 等待一小段时间确保设置已加载，然后初始化插件列表
     setTimeout(async () => {
       await this.get_categories()
@@ -161,6 +165,14 @@ export default {
     }, 100);
   },
   methods: {
+    async checkForUpdatesAtStartup() {
+      try {
+        await checkForUpdatesAndPrompt({ silenceNoUpdate: true, showError: true })
+      } catch (e) {
+        // 静默失败，避免启动打扰；如需提示可打印日志
+        console.error('启动检查更新失败:', e)
+      }
+    },
     async loadActiveClient() {
       if (window.electronAPI) {
         try {

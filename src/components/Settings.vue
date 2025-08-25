@@ -55,6 +55,7 @@
 <script>
 import { Folder, Loading, Check } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { checkForUpdatesAndPrompt } from '../utils/updateHelper.js'
 
 export default {
   name: 'Settings',
@@ -248,18 +249,9 @@ export default {
         }, 100);
       }
     },
-    // 手动检查更新
-    manualCheckForUpdates() {
-      if (window.electronAPI && typeof window.electronAPI.checkForUpdates === 'function') {
-        try {
-          window.electronAPI.checkForUpdates()
-        } catch (e) {
-          console.error('触发检查更新失败:', e)
-          ElMessage.error('触发检查更新失败')
-        }
-      } else {
-        ElMessage.warning('当前环境不支持检查更新')
-      }
+    // 手动检查更新（统一调用工具模块）
+    async manualCheckForUpdates() {
+      await checkForUpdatesAndPrompt({ silenceNoUpdate: false, showError: true })
     }
   }
 }

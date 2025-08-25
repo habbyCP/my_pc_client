@@ -183,7 +183,7 @@ export default {
 .client-list-container {
   padding: 20px;
   background-color: #1a1a1a;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 130px);
 }
 
 .search-bar {

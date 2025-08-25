@@ -1,9 +1,21 @@
 const axios = require('axios');
-const { dialog, shell } = require('electron');
 const { version } = require('../../package.json');
 const { API_URL } = require('../config.js');
 
-const updateUrl = API_URL+"/update/latest";
+const updateUrl = API_URL + "/update/latest";
+
+function cmpVersion(a, b) {
+  const pa = String(a).split('.').map(n => parseInt(n, 10) || 0)
+  const pb = String(b).split('.').map(n => parseInt(n, 10) || 0)
+  const len = Math.max(pa.length, pb.length)
+  for (let i = 0; i < len; i++) {
+    const x = pa[i] || 0
+    const y = pb[i] || 0
+    if (x > y) return 1
+    if (x < y) return -1
+  }
+  return 0
+}
 
 async function checkForUpdates() {
   try {
@@ -16,38 +28,31 @@ async function checkForUpdates() {
     const pathLine = lines.find(line => line.startsWith('path:'));
 
     if (!versionLine || !pathLine) {
-      throw new Error('Invalid latest.yml format');
+      return { status: 'error', message: 'Invalid latest.yml format' };
     }
 
     const latestVersion = versionLine.split(':')[1].trim();
     const downloadPath = pathLine.split(':')[1].trim();
+    const baseUrl = updateUrl.substring(0, updateUrl.lastIndexOf('/'));
+    const downloadUrl = `${baseUrl}/${downloadPath}`;
 
-    if (latestVersion > version) {
-      dialog.showMessageBox({
-        type: 'info',
-        title: '发现新版本',
-        message: `发现新版本 ${latestVersion}，是否立即下载更新？`,
-        buttons: ['立即更新', '稍后提醒'],
-        defaultId: 0,
-        cancelId: 1
-      }).then(result => {
-        if (result.response === 0) {
-          const baseUrl = updateUrl.substring(0, updateUrl.lastIndexOf('/'));
-          const downloadUrl = `${baseUrl}/${downloadPath}`;
-          shell.openExternal(downloadUrl);
-        }
-      });
-
-    } else {
-      dialog.showMessageBox({
-        type: 'info',
-        title: '无可用更新',
-        message: '您当前使用的已是最新版本。'
-      });
+    if (cmpVersion(latestVersion, version) > 0) {
+      return {
+        status: 'update-available',
+        latestVersion,
+        currentVersion: version,
+        downloadUrl
+      };
     }
+
+    return {
+      status: 'no-update',
+      latestVersion,
+      currentVersion: version
+    };
   } catch (error) {
-    dialog.showErrorBox('更新出错', '检查更新时遇到问题，请稍后重试。详情请查看日志。');
     console.error('检查更新失败:', error);
+    return { status: 'error', message: error.message };
   }
 }
 

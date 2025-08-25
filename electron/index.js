@@ -246,8 +246,13 @@ ipcMain.handle('apply-client-patches', async (event, options) => {
   return applyClientPatches(app, options);
 });
 
-ipcMain.on('check-for-updates', () => {
-  checkForUpdates();
+ipcMain.handle('check-for-updates', async () => {
+  try {
+    const result = await checkForUpdates();
+    return result;
+  } catch (e) {
+    return { status: 'error', message: e.message };
+  }
 });
 
 ipcMain.handle('get-config', () => {
