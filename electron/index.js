@@ -1,12 +1,15 @@
 const { app, BrowserWindow, session, ipcMain, screen, shell, dialog } = require('electron')
 const path = require('path')
 const { mkdirSync, existsSync } = require("fs");
+const fs = require('fs').promises;
+const { spawn } = require('child_process');
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
 const { get_realmlist, fix_realmlist } = require("./lib/realmlist");
 const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons,is_duplicate_directory } = require("./lib/down"); 
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
+const { applyClientPatches } = require("./lib/patcher_service");
 
 const { runExec } = require("./lib/runExec");
 
@@ -263,6 +266,10 @@ ipcMain.handle('start-game', async (event, gamePath) => {
   }
 });
 
+// 应用客户端补丁
+ipcMain.handle('apply-client-patches', async (event, options) => {
+  return applyClientPatches(app, options);
+}); 
 send_progress = function (code, data, msg) {
 
   let send_data =

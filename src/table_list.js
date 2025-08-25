@@ -214,8 +214,7 @@ export default {
                 // 获取下载地址
                 this.main_loading = true
                 this.main_loading_word = '获取下载地址...'
-
-                const useMock = await shouldUseMock()
+ 
                 let downloadUrl = ''
                 let file_list = []
  

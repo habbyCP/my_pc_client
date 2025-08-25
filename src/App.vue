@@ -48,7 +48,7 @@
         <div v-if="activeTab === '插件库'" class="tab-content">
 
           <plugin-library 
-            :table-data="tableData" 
+            :table-data="tableData"
             :sort-by="sortBy"
             @get-addons-list="get_addons_list"
             @down-addons="down_addons"
@@ -78,6 +78,10 @@
             ref="clientList"
             @load-clients="handleLoadClients"
           />
+        </div>
+
+        <div v-if="activeTab === '客户端优化'" class="tab-content">
+          <client-patcher :client="activeClient" />
         </div>
         
         <div v-if="activeTab === '设置'" class="tab-content">
@@ -119,6 +123,7 @@ import { Search, Download, Files, Calendar, Loading } from '@element-plus/icons-
 import PluginLibrary from './components/PluginLibrary.vue'
 import Settings from './components/Settings.vue'
 import ClientList from './components/ClientList.vue'
+import ClientPatcher from './components/ClientPatcher.vue'
 
 export default {
   name: 'App',
@@ -131,12 +136,13 @@ export default {
     Loading,
     PluginLibrary,
     Settings,
-    ClientList
+    ClientList,
+    ClientPatcher
   },
   data() {
     return {
-      tabs: [  '插件库',  '客户端', '设置'],
-
+      tabs: ['插件库', '客户端', '客户端优化', '设置'],
+      activeClient: { path: '' }, // 初始化为空对象以避免渲染问题
       isDark: true, // 默认使用暗色主题
       tableData: [],
       sortBy: 'download',
@@ -147,6 +153,7 @@ export default {
     }
   },
   async mounted() {
+    await this.loadActiveClient();
     // 等待一小段时间确保设置已加载，然后初始化插件列表
     setTimeout(async () => {
       await this.get_categories()
@@ -154,9 +161,25 @@ export default {
     }, 100);
   },
   methods: {
+    async loadActiveClient() {
+      if (window.electronAPI) {
+        try {
+          const settings = await window.electronAPI.getSettings();
+          if (settings && settings.gamePath) {
+            this.activeClient = { path: settings.gamePath };
+          } else {
+            this.activeClient = { path: '' }; // 确保 activeClient 不为 null
+          }
+        } catch (error) {
+          console.error('加载游戏路径设置失败:', error);
+          this.activeClient = { path: '' };
+        }
+      }
+    },
     handleSaveSettings(settings) {
       console.log('Settings saved:', settings);
-      // 这里可以处理设置保存后的逻辑
+      // 当设置被保存后，重新加载客户端路径
+      this.loadActiveClient();
     },
     async handleLoadClients() {
       try {

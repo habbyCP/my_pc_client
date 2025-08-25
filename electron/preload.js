@@ -55,4 +55,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
   // 启动游戏
   startGame: (gamePath) => ipcRenderer.invoke('start-game', gamePath),
+  // 应用补丁
+  applyClientPatches: (options) => ipcRenderer.invoke('apply-client-patches', options),
 });
