@@ -9,6 +9,7 @@ const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons,is_duplicate_directory } = require("./lib/down"); 
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 const { applyClientPatches } = require("./lib/patcher_service");
+const { checkForUpdates } = require("./lib/custom_updater");
 
 const { runExec } = require("./lib/runExec");
 
@@ -70,6 +71,7 @@ app.whenReady().then(async () => {
     }
   }
   createWindow()
+  checkForUpdates(false)
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -243,6 +245,10 @@ ipcMain.handle('start-game', async (event, gamePath) => {
 // 应用客户端补丁
 ipcMain.handle('apply-client-patches', async (event, options) => {
   return applyClientPatches(app, options);
+});
+
+ipcMain.on('check-for-updates', () => {
+  checkForUpdates(true);
 }); 
 send_progress = function (code, data, msg) {
 
