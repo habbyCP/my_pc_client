@@ -1,8 +1,8 @@
 {
-  "name": "wow-storm-helper",
+  "name": "turtle-helper",
   "private": true,
-  "version": "1.0.0",
-  "description": "魔兽世界插件下载风暴助手",
+  "version": "1.0.2",
+  "description": "龟龟助手",
   "keywords": [
     "electron",
     "vite",
@@ -31,7 +31,8 @@
     "element-plus": "^2.7.5",
     "iconv-lite": "^0.6.3",
     "resolve": "^1.22.8",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "electron-updater": "^6.1.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

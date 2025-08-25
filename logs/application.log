@@ -2995,3 +2995,206 @@ For more information try --help
 16:09:49:251 启动游戏: C:\Users\habby\Downloads\wow.exe
 16:09:49:254 工作目录: C:\Users\habby\Downloads
 16:09:49:255 执行文件: wow.exe
+16:11:09:972 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:11:09:973 工作目录: C:\Users\habby\Downloads
+16:11:09:974 执行文件: wow.exe
+16:12:15:323 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:12:15:324 工作目录: C:\Users\habby\Downloads
+16:12:15:325 执行文件: wow.exe
+16:12:17:635 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:12:17:635 工作目录: C:\Users\habby\Downloads
+16:12:17:636 执行文件: wow.exe
+16:12:20:659 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:12:20:660 工作目录: C:\Users\habby\Downloads
+16:12:20:660 执行文件: wow.exe
+16:13:03:123 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:13:03:123 工作目录: C:\Users\habby\Downloads
+16:13:03:124 执行文件: wow.exe
+16:13:36:835 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:13:36:836 工作目录: C:\Users\habby\Downloads
+16:13:36:836 执行文件: wow.exe
+16:13:40:676 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:13:40:677 工作目录: C:\Users\habby\Downloads
+16:13:40:677 执行文件: wow.exe
+16:15:16:019 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:15:16:019 工作目录: C:\Users\habby\Downloads
+16:15:16:020 执行文件: wow.exe
+16:16:12:027 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:16:12:028 工作目录: C:\Users\habby\Downloads
+16:16:12:028 执行文件: wow.exe
+16:16:14:683 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:16:14:684 工作目录: C:\Users\habby\Downloads
+16:16:14:684 执行文件: wow.exe
+16:18:22:395 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:22:396 工作目录: C:\Users\habby\Downloads
+16:18:22:396 执行文件: wow.exe
+16:18:25:859 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:25:859 工作目录: C:\Users\habby\Downloads
+16:18:25:860 执行文件: wow.exe
+16:18:34:220 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:34:223 工作目录: C:\Users\habby\Downloads
+16:18:34:224 执行文件: wow.exe
+16:18:40:571 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:40:572 工作目录: C:\Users\habby\Downloads
+16:18:40:573 执行文件: wow.exe
+16:18:42:676 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:42:677 工作目录: C:\Users\habby\Downloads
+16:18:42:677 执行文件: wow.exe
+16:18:46:251 启动游戏: C:\Users\habby\Downloads\wow.exe
+16:18:46:252 工作目录: C:\Users\habby\Downloads
+16:18:46:252 执行文件: wow.exe
+16:52:13:785 检查更新...
+16:52:13:790 Skip checkForUpdates because application is not packed and dev update config is not forced
+17:19:09:757 检查更新...
+17:19:09:761 Skip checkForUpdates because application is not packed and dev update config is not forced
+17:20:18:900 检查更新...
+17:20:18:905 Skip checkForUpdates because application is not packed and dev update config is not forced
+17:21:42:390 检查更新...
+17:21:42:395 Skip checkForUpdates because application is not packed and dev update config is not forced
+17:22:25:772 检查更新...
+17:22:25:775 Checking for update
+17:22:25:795 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\electron\lib\latest.yml'
+17:22:25:797 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\electron\lib\latest.yml'
+17:22:43:954 检查更新...
+17:22:43:957 Checking for update
+17:22:43:976 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\dev-app-update.yml'
+17:22:43:977 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\dev-app-update.yml'
+17:27:02:812 检查更新...
+17:27:02:816 Checking for update
+17:27:02:835 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:27:02:836 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:29:02:034 检查更新...
+17:29:02:039 Checking for update
+17:29:02:057 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\electron\lib\latest.yml'
+17:29:02:058 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\electron\lib\latest.yml'
+17:30:00:330 Error: ERR_FAILED (-2) loading 'http://localhost:3000'
+    at rejectAndCleanup (node:electron/js2c/browser_init:165:7510)
+    at EventEmitter.stopLoadingListener (node:electron/js2c/browser_init:165:7885)
+    at EventEmitter.emit (node:events:527:28)
+    at EventEmitter.callbackTrampoline (node:internal/async_hooks:130:17)
+17:33:17:962 检查更新...
+17:33:17:965 Checking for update
+17:33:17:987 Error: Error: ENOENT: no such file or directory, open 'D:\latest.yml'
+17:33:17:989 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\latest.yml'
+17:34:10:614 检查更新...
+17:34:10:618 Checking for update
+17:34:10:642 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:34:10:643 更新过程中发生错误: Unsupported provider: undefined
+17:38:56:006 检查更新...
+17:38:56:010 Checking for update
+17:38:56:035 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:38:56:036 更新过程中发生错误: Unsupported provider: undefined
+17:42:14:579 检查更新...
+17:42:14:583 Checking for update
+17:42:14:612 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:42:14:613 更新过程中发生错误: Unsupported provider: undefined
+17:43:49:933 检查更新...
+17:43:49:936 Checking for update
+17:43:49:961 Error: TypeError: Cannot read properties of undefined (reading 'includes')
+    at isUrlProbablySupportMultiRangeRequests (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:12:17)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:50:89)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:43:49:961 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:44:55:521 检查更新...
+17:44:55:525 Checking for update
+17:44:55:544 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\dev-app-update.yml'
+17:44:55:546 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\dev-app-update.yml'
+17:45:18:953 检查更新...
+17:45:18:956 Checking for update
+17:45:18:983 Error: TypeError: Cannot read properties of undefined (reading 'includes')
+    at isUrlProbablySupportMultiRangeRequests (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:12:17)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:50:89)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:45:18:984 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:46:42:570 检查更新...
+17:46:42:573 Checking for update
+17:46:42:597 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:46:42:600 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:47:08:788 检查更新...
+17:47:08:792 Checking for update
+17:47:08:816 Error: TypeError: Cannot read properties of undefined (reading 'includes')
+    at isUrlProbablySupportMultiRangeRequests (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:12:17)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:50:89)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:47:08:817 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:47:59:082 检查更新...
+17:47:59:085 Checking for update
+17:47:59:116 Error: TypeError: Cannot read properties of undefined (reading 'includes')
+    at isUrlProbablySupportMultiRangeRequests (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:12:17)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:50:89)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:47:59:117 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:48:22:509 检查更新...
+17:48:22:511 Checking for update
+17:48:22:511 Error: TypeError: Cannot read properties of undefined (reading 'includes')
+    at isUrlProbablySupportMultiRangeRequests (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:12:17)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:50:89)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:48:22:512 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:48:24:904 更新过程中发生错误: Cannot read properties of undefined (reading 'includes')
+17:54:30:042 检查更新...
+17:54:30:045 Checking for update
+17:54:30:047 Error: Error: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:54:30:047 更新过程中发生错误: ENOENT: no such file or directory, open 'D:\code\my_pc_client\http:\localhost:8888\latest.yml'
+17:55:21:154 检查更新...
+17:55:21:156 Checking for update
+17:55:21:160 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:55:21:161 更新过程中发生错误: Unsupported provider: undefined
+17:57:30:553 检查更新...
+17:57:30:556 Checking for update
+17:57:30:560 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+17:57:30:561 更新过程中发生错误: Unsupported provider: undefined
+18:06:52:617 检查更新...
+18:06:52:620 Checking for update
+18:06:52:623 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+18:06:52:624 更新过程中发生错误: Unsupported provider: undefined
+18:07:14:169 检查更新...
+18:07:14:170 Checking for update
+18:07:14:171 Error: Error: Unsupported provider: undefined
+    at newError (D:\code\my_pc_client\node_modules\electron-updater\node_modules\builder-util-runtime\out\error.js:5:19)
+    at createClient (D:\code\my_pc_client\node_modules\electron-updater\out\providerFactory.js:62:55)
+    at D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:359:104
+    at async NsisUpdater.getUpdateInfoAndProvider (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:361:24)
+    at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
+18:07:14:172 更新过程中发生错误: Unsupported provider: undefined
+18:07:16:215 更新过程中发生错误: Unsupported provider: undefined
