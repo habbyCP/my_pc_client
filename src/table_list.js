@@ -66,6 +66,7 @@ export default {
                     ElMessageBox.alert('请先在设置中配置游戏路径', '游戏路径未配置', {
                         confirmButtonText: 'OK',
                         type: 'warning',
+                        lockScroll: false,
                         center: true,
                         customClass: 'custom-message-box'
                     });
@@ -78,6 +79,7 @@ export default {
                     ElMessageBox.alert('游戏路径无效，请检查设置', '路径验证失败', {
                         confirmButtonText: 'OK',
                         type: 'error',
+                        lockScroll: false,
                         center: true,
                         customClass: 'custom-message-box'
                     });
@@ -91,6 +93,7 @@ export default {
                 if (result.success) {
                     ElMessageBox.alert('游戏启动成功！', '成功', {
                         confirmButtonText: 'OK',
+                        lockScroll: false,
                         type: 'success',
                         center: true,
                         customClass: 'custom-message-box'
@@ -98,6 +101,7 @@ export default {
                 } else {
                     ElMessageBox.alert(result.error || '启动失败', '启动游戏失败', {
                         confirmButtonText: 'OK',
+                        lockScroll: false,
                         type: 'error',
                         center: true,
                         customClass: 'custom-message-box'
@@ -107,6 +111,7 @@ export default {
                 console.error('启动游戏失败:', err);
                 ElMessageBox.alert(err.message || '启动游戏时发生错误', '错误', {
                     confirmButtonText: 'OK',
+                    lockScroll: false,
                     type: 'error',
                     center: true,
                     customClass: 'custom-message-box'
@@ -196,6 +201,7 @@ export default {
                     confirmButtonText: 'OK',
                     type: 'error',
                     center: true,
+                    lockScroll: false,
                     customClass: 'custom-message-box'
                 })
                 return []

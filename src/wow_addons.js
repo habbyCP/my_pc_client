@@ -123,6 +123,7 @@ export default {
                             '成功',
                             {
                                 confirmButtonText: 'OK',
+                                lockScroll: false,
                                 type: 'success',
                                 center: true,
                                 customClass: 'custom-message-box'
