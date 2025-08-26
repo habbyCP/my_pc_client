@@ -3251,3 +3251,9 @@ For more information try --help
 18:56:34:840 下载文件 http://localhost:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
 18:56:34:942 插件路径 C:\Users\habby\Downloads\Interface\AddOns
 18:56:35:066 下发指令 { code: 200, data: '下载完成', message: '成功' }
+19:10:25:041 启动游戏: C:\Users\habby\Downloads\wow.exe
+19:10:25:044 工作目录: C:\Users\habby\Downloads
+19:10:25:044 执行文件: wow.exe
+19:10:59:345 启动游戏: C:\Users\habby\Downloads\wow.exe
+19:10:59:346 工作目录: C:\Users\habby\Downloads
+19:10:59:347 执行文件: wow.exe

@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const { spawn } = require('child_process');
 const my_logger = require("electron-log");
+const { getSettings, saveSettings } = require("./settings"); // Import settings functions
  
 
 async function applyClientPatches(app, options) {
@@ -86,6 +87,11 @@ async function applyClientPatches(app, options) {
     await fs.rename(patchedFilePath, gamePath);
 
     my_logger.info('补丁应用成功！');
+    // 保存已应用的补丁设置
+    const currentSettings = getSettings();
+    currentSettings.appliedPatches = selectedPatches;
+    saveSettings(currentSettings);
+    my_logger.info('已保存补丁设置。');
     return { success: true, message: '所有选定的补丁已成功应用！' };
 
   } catch (error) {

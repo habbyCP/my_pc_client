@@ -58,6 +58,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.isReady = true;
+      this.loadAppliedPatches(); // Load saved patches on mount
     });
   },
   methods: {
@@ -98,6 +99,22 @@ export default {
         this.statusType = 'error';
       } finally {
         this.isLoading = false;
+      }
+    },
+    async loadAppliedPatches() {
+      if (window.electronAPI) {
+        try {
+          const settings = await window.electronAPI.getSettings();
+          if (settings && settings.appliedPatches) {
+            this.patchList.forEach(patch => {
+              if (settings.appliedPatches.hasOwnProperty(patch.key)) {
+                patch.value = settings.appliedPatches[patch.key];
+              }
+            });
+          }
+        } catch (error) {
+          console.error('加载已应用补丁设置失败:', error);
+        }
       }
     },
   },
