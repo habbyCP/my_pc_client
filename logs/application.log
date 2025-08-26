@@ -3198,3 +3198,56 @@ For more information try --help
     at async NsisUpdater.doCheckForUpdates (D:\code\my_pc_client\node_modules\electron-updater\out\AppUpdater.js:378:24)
 18:07:14:172 更新过程中发生错误: Unsupported provider: undefined
 18:07:16:215 更新过程中发生错误: Unsupported provider: undefined
+19:18:39:905 开始为 C:\Users\habby\Downloads\wow.exe 应用补丁...
+19:18:39:910 备份文件已存在，跳过备份步骤。
+19:18:39:911 从备份复制新的 wow.exe 用于打补丁...
+19:18:39:913 执行补丁工具，参数: --fov --camera-distance --fix-camera-jitter --sound-channels --large-address-aware C:\Users\habby\Downloads\wow.exe
+19:18:39:953 Patcher-stderr: error: Found argument '--camera-distance' which wasn't expected, or isn't valid in this context
+
+	Did you mean '--maxcameradistance'?
+
+	If you tried to supply `--camera-distance` as a value rather than a flag, use `-- --camera-distance`
+
+USAGE:
+    vanilla_tweaks.exe --fov <FOV> --maxcameradistance <MAXCAMERADISTANCE> <INFILE>
+
+For more information try --help
+
+19:18:39:956 应用补丁时发生错误: 补丁工具执行失败，退出码: 2
+19:18:39:958 已从备份中恢复原始 Wow.exe。
+18:56:28:637 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  title: '',
+  cover: false,
+  url: 'http://localhost:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:56:28:641 下载文件 http://localhost:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:56:28:771 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:56:28:909 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:56:31:665 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  title: '',
+  cover: false,
+  url: 'http://localhost:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:56:31:666 下载文件 http://localhost:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:56:31:780 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:56:31:905 下发指令 { code: 200, data: '下载完成', message: '成功' }
+18:56:34:839 收到下载需求： {
+  version: '2.43',
+  id: 1,
+  title: '',
+  cover: false,
+  url: 'http://localhost:8888/uploads\\2025\\08\\15\\ae876d20-c48d-485a-9803-922544a03b64.zip',
+  file_list: [],
+  addonsPath: 'C:\\Users\\habby\\Downloads\\Interface\\AddOns'
+}
+18:56:34:840 下载文件 http://localhost:8888/uploads\2025\08\15\ae876d20-c48d-485a-9803-922544a03b64.zip ae876d20-c48d-485a-9803-922544a03b64.zip
+18:56:34:942 插件路径 C:\Users\habby\Downloads\Interface\AddOns
+18:56:35:066 下发指令 { code: 200, data: '下载完成', message: '成功' }

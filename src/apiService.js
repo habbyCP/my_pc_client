@@ -11,17 +11,17 @@ export async function initializeApiService() {
 // Real API service
 export const apiService = {
   async getCategories() {
-    const response = await axios.get(`${apiUrl}/categories`);
+    const response = await axios.get(`${apiUrl}/categories/list`); 
     return response.data;
   },
 
   async getAddonsList(params = {}) {
-    const response = await axios.get(`${apiUrl}/addons`, { params });
+    const response = await axios.get(`${apiUrl}/addons/list`, { params });
     return response.data;
   },
 
   async getClientsList(params = {}) {
-    const response = await axios.get(`${apiUrl}/clients`, { params });
+    const response = await axios.get(`${apiUrl}/articles`, { params });
     return response.data;
   },
 

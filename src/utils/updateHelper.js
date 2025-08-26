@@ -21,6 +21,19 @@ export async function checkForUpdatesRaw() {
   }
 }
 
+// 监听主进程的下载进度事件，并转换为全局DOM事件
+if (window.electronAPI && typeof window.electronAPI.onDownloadProgress === 'function') {
+  window.electronAPI.onDownloadProgress((data) => {
+    const { status, percent, message } = data;
+    if (status === 'progress') {
+      window.dispatchEvent(new CustomEvent('app-update-progress', { detail: { percent } }));
+    } else {
+      window.dispatchEvent(new CustomEvent('app-update-end', { detail: { status, message } }));
+    }
+  });
+}
+
+
 /**
  * 调用检查并在前端弹窗提示
  * @param {{
@@ -28,7 +41,7 @@ export async function checkForUpdatesRaw() {
  *  showError?: boolean        // 为 true 时，错误用弹窗提示
  * }} options
  */
-export async function checkForUpdatesAndPrompt(options = {}) {
+export async function checkForUpdatesAndPrompt(options = {}) { 
   const { silenceNoUpdate = false, showError = true } = options
   const result = await checkForUpdatesRaw()
   if (!result) return
@@ -38,22 +51,35 @@ export async function checkForUpdatesAndPrompt(options = {}) {
   if (status === 'update-available') {
     try {
       await ElMessageBox.confirm(
-        `发现新版本 ${latestVersion}，当前版本 ${currentVersion}。是否立即前往下载？`,
+        `发现新版本 ${latestVersion}，当前版本 ${currentVersion}。请点击下方按钮开始下载。`,
         '发现新版本',
-        { type: 'info', confirmButtonText: '立即下载', cancelButtonText: '稍后',lockScroll: false }
-      )
+        {
+          type: 'info',
+          confirmButtonText: '立即下载',
+          showCancelButton: false,
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          lockScroll: false
+        }
+      );
+      
+      // User clicked "立即下载"
       if (downloadUrl) {
-        if (window.electronAPI && typeof window.electronAPI.openLink === 'function') {
-          window.electronAPI.openLink({ outLink: downloadUrl })
+        if (window.electronAPI && typeof window.electronAPI.downloadUpdate === 'function') {
+          window.dispatchEvent(new CustomEvent('app-update-start'));
+          window.electronAPI.downloadUpdate({ downloadUrl });
         } else {
-          // 兜底：使用 window.open（开发环境）
-          window.open(downloadUrl, '_blank')
+          // Fallback for non-electron environment
+          ElMessage.warning('当前环境不支持自动下载，将在浏览器中打开链接');
+          window.open(downloadUrl, '_blank');
         }
       } else {
-        ElMessage.error('下载链接缺失')
+        ElMessage.error('下载链接缺失');
       }
     } catch (_) {
-      // 用户取消
+      // This catch block will likely not be hit since there is no cancel button,
+      // but it's good practice to keep it for unexpected dismissals.
     }
   } else if (status === 'no-update') {
     if (!silenceNoUpdate) {

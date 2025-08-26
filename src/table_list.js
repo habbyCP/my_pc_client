@@ -16,7 +16,10 @@ export default {
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
                 { id: '0', name: '全部插件', icon: 'Collection' },
-            ]
+            ],
+            // 下列两个属性在方法中被使用/赋值，需预先声明
+            tableData: [],
+            category: undefined,
         }
     },
     async mounted() {
@@ -43,7 +46,10 @@ export default {
                 // 切换到客户端标签时加载客户端列表
                 setTimeout(() => {
                     if (this.$refs.clientList) {
-                        this.handleLoadClients()
+                        const comp = this.$refs.clientList
+                        if (comp && typeof comp.handleLoadClients === 'function') {
+                            comp.handleLoadClients()
+                        }
                     }
                 }, 100)
             }
@@ -123,7 +129,7 @@ export default {
         },
         async get_categories() {
             try {
-                response = await apiService.getCategories()
+                const response = await apiService.getCategories()
 
                 if (response.code === 200) { 
                     console.log('获取分类列表', response.data)
@@ -153,8 +159,8 @@ export default {
             this.download_progress = 0
 
             try { 
-                res = await apiService.getAddonsList(params)
-                
+                const res = await apiService.getAddonsList(params)
+                console.log('获取插件列表', res)
                 if (res.code === 200) {
                     console.log('获取插件列表成功', res)
                     let tableData = Array.isArray(res.data) ? [...res.data] : []
@@ -206,7 +212,7 @@ export default {
                 let downloadUrl = ''
                 let file_list = []
 
-                response = await apiService.getAddonDownloadUrl(id)
+                const response = await apiService.getAddonDownloadUrl(id)
 
                 if (response.code !== 200) {
                     throw new Error(response.message || '获取下载地址失败')

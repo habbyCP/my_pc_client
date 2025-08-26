@@ -1,9 +1,13 @@
 const axios = require('axios');
-const { version } = require('../../package.json');
+const { app, shell } = require('electron');
+const version = app.getVersion();
 const { API_URL } = require('../config.js');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
-const updateUrl = API_URL + "/update/latest";
-
+const updateUrl = API_URL + "/update/latest"; 
 function cmpVersion(a, b) {
   const pa = String(a).split('.').map(n => parseInt(n, 10) || 0)
   const pb = String(b).split('.').map(n => parseInt(n, 10) || 0)
@@ -19,22 +23,15 @@ function cmpVersion(a, b) {
 
 async function checkForUpdates() {
   try {
-    const response = await axios.get(updateUrl, { responseType: 'text' });
+    const response = await axios.get(updateUrl); // Default responseType is 'json'
     const latestVersionInfo = response.data;
 
-    // a simple yaml parser
-    const lines = latestVersionInfo.split('\n');
-    const versionLine = lines.find(line => line.startsWith('version:'));
-    const pathLine = lines.find(line => line.startsWith('path:'));
-
-    if (!versionLine || !pathLine) {
-      return { status: 'error', message: 'Invalid latest.yml format' };
+    if (!latestVersionInfo.version || !latestVersionInfo.path) {
+      return { status: 'error', message: 'Invalid JSON format from server' };
     }
 
-    const latestVersion = versionLine.split(':')[1].trim();
-    const downloadPath = pathLine.split(':')[1].trim();
-    const baseUrl = updateUrl.substring(0, updateUrl.lastIndexOf('/'));
-    const downloadUrl = `${baseUrl}/${downloadPath}`;
+    const latestVersion = latestVersionInfo.version;
+    const downloadUrl = latestVersionInfo.path;
 
     if (cmpVersion(latestVersion, version) > 0) {
       return {
@@ -51,9 +48,68 @@ async function checkForUpdates() {
       currentVersion: version
     };
   } catch (error) {
-    console.error('检查更新失败:', error);
+    console.error('检查更新失败:', updateUrl+error);
     return { status: 'error', message: error.message };
   }
 }
 
-module.exports = { checkForUpdates };
+async function downloadUpdateAndInstall(win, downloadUrl) {
+  const tempDir = app.getPath('temp');
+  // Extract filename from URL
+  let fileName;
+  try {
+    fileName = path.basename(new URL(downloadUrl).pathname);
+  } catch (e) {
+    // fallback for invalid URLs
+    const urlParts = downloadUrl.split('/');
+    fileName = urlParts[urlParts.length - 1] || 'update.exe';
+  }
+  const filePath = path.join(tempDir, fileName);
+
+  // Ensure file doesn't exist
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+
+  const client = downloadUrl.startsWith('https:') ? https : http;
+
+  const req = client.get(downloadUrl, (response) => {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      win.webContents.send('download-progress', { status: 'error', message: `下载失败: ${response.statusCode}` });
+      return;
+    }
+
+    const fileStream = fs.createWriteStream(filePath);
+    const totalBytes = parseInt(response.headers['content-length'], 10);
+    let downloadedBytes = 0;
+
+    response.on('data', (chunk) => {
+      downloadedBytes += chunk.length;
+      const progress = (downloadedBytes / totalBytes) * 100;
+      win.webContents.send('download-progress', { status: 'progress', percent: progress.toFixed(2), message: '下载中...' });
+    });
+
+    response.on('end', () => {
+      fileStream.close(() => {
+        win.webContents.send('download-progress', { status: 'completed', path: filePath, message: '下载完成' });
+        shell.openPath(filePath).catch(err => {
+            console.error('Failed to open installer:', err);
+            win.webContents.send('download-progress', { status: 'error', message: '无法打开安装程序' });
+        });
+      });
+    });
+
+    response.on('error', (err) => {
+        fs.unlink(filePath, () => {}); // cleanup
+        win.webContents.send('download-progress', { status: 'error', message: `下载出错: ${err.message}` });
+    });
+
+    response.pipe(fileStream);
+  });
+
+  req.on('error', (err) => {
+    win.webContents.send('download-progress', { status: 'error', message: `请求错误: ${err.message}` });
+  });
+}
+
+module.exports = { checkForUpdates, downloadUpdateAndInstall };

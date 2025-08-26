@@ -47,4 +47,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   // 获取配置
   getConfig: () => ipcRenderer.invoke('get-config'),
+  // 下载更新
+  downloadUpdate: (args) => ipcRenderer.send('download-update', args),
+  // 打开本地路径
+  openLocalPath: (args) => ipcRenderer.send('open-local-path', args),
 });

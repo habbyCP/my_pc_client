@@ -9,7 +9,7 @@ const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons,is_duplicate_directory } = require("./lib/down"); 
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 const { applyClientPatches } = require("./lib/patcher_service");
-const { checkForUpdates } = require("./lib/custom_updater");
+const { checkForUpdates, downloadUpdateAndInstall } = require("./lib/custom_updater");
 
 const { runExec } = require("./lib/runExec");
 
@@ -118,6 +118,12 @@ ipcMain.handle('download-file',  down_addons);
 //浏览器打开链接
 ipcMain.on('open-link', function (event, data) {
   shell.openExternal(data.outLink);
+})
+// 打开本地路径
+ipcMain.on('open-local-path', function (event, data) {
+  shell.openPath(data.path).catch(err => {
+    console.error('Failed to open local path:', err);
+  });
 })
 //检查目录是否重复
 ipcMain.handle('is-duplicate-directory', is_duplicate_directory)
@@ -252,6 +258,13 @@ ipcMain.handle('check-for-updates', async () => {
     return result;
   } catch (e) {
     return { status: 'error', message: e.message };
+  }
+});
+
+ipcMain.on('download-update', (event, { downloadUrl }) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win) {
+    downloadUpdateAndInstall(win, downloadUrl);
   }
 });
 

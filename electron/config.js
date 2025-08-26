@@ -5,7 +5,7 @@ const baseConfig = {
 
 const devConfig = {
   ...baseConfig,
-  API_URL: 'http://localhost:8888', // Example of overriding for development
+  API_URL: 'http://localhost:8888/api', // Example of overriding for development
 };
 
 const prodConfig = {

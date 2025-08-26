@@ -105,7 +105,7 @@
             v-if="download_progress >= 100" 
             type="success" 
             class="confirm-button" 
-            @click="main_loading = false"
+            @click="reopenInstaller"
           >
             确认
           </el-button>
@@ -150,6 +150,7 @@ export default {
       main_loading: false,
       main_loading_word: '',
       download_progress: 0,
+      downloadedInstallerPath: '', // New property to store the path
       category: 0
     }
   },
@@ -163,6 +164,33 @@ export default {
       await this.get_categories()
       await this.get_addons_list();
     }, 100);
+
+    // 监听应用更新事件
+    window.addEventListener('app-update-start', () => {
+      this.main_loading = true;
+      this.main_loading_word = '正在下载更新...';
+      this.download_progress = 0;
+    });
+
+    window.addEventListener('app-update-progress', (e) => {
+      this.download_progress = parseFloat(e.detail.percent);
+    });
+
+    window.addEventListener('app-update-end', (e) => {
+      const { status, message } = e.detail;
+      if (status === 'completed') {
+        this.main_loading_word = '下载完成！安装程序已启动';
+        this.download_progress = 100;
+        this.downloadedInstallerPath = e.detail.path; // Store the path
+        // The loading mask will show a "确认" button for the user to dismiss.
+      } else {
+        // On error, hide the mask and log the error.
+        this.main_loading = false;
+        console.error("Update download failed:", message);
+        // You could use ElMessage here if you import it.
+        // For now, we just log the error and hide the loading screen.
+      }
+    });
   },
   methods: {
     async checkForUpdatesAtStartup() {
@@ -201,6 +229,15 @@ export default {
         }
       } catch (error) {
         console.error('加载客户端列表失败:', error)
+      }
+    },
+    reopenInstaller() {
+      if (this.downloadedInstallerPath && window.electronAPI && typeof window.electronAPI.openLocalPath === 'function') {
+        window.electronAPI.openLocalPath({ path: this.downloadedInstallerPath });
+        this.main_loading = false; // Close the dialog after attempting to open
+      } else {
+        console.error('无法重新打开安装程序：路径缺失或API不可用');
+        this.main_loading = false; // Close the dialog anyway if it can't reopen
       }
     },
     
