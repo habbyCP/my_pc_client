@@ -41,28 +41,15 @@ async function applyClientPatches(app, options) {
 
     // 4. 构建参数并执行 Patcher
     const patcherArgs = [];
-    const patchMap = {
-      fov: '--fov',
-      camera: '--camera-distance',
-      soundChannels: '--sound-channels',
-      soundInBackground: '--sound-in-background',
-      largeAddressAware: '--large-address-aware',
-      fastLoot: '--fast-loot',
-      nameplateDistance: '--nameplate-distance',
-      cameraJitter: '--fix-camera-jitter',
-      maxRender: '--increase-max-render-distance',
-      grassRender: '--increase-grass-render-distance'
-    };
-
-    for (const [key, value] of Object.entries(selectedPatches)) {
-      if (value && patchMap[key]) {
-        patcherArgs.push(patchMap[key]);
-      }
+     
+    if (!selectedPatches.fastLoot) {
+      patcherArgs.push('--no-quickloot');
     }
+     
     patcherArgs.push(gamePath); // 将wow.exe路径作为最后一个参数
-
+ 
     my_logger.info(`执行补丁工具，参数: ${patcherArgs.join(' ')}`);
-
+    return 
     await new Promise((resolve, reject) => {
       const process = spawn(patcherPath, patcherArgs, { cwd: gameDir });
 

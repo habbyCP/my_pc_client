@@ -39,16 +39,16 @@ export default {
     return {
       isReady: false,
       patchList: [
-        { key: 'fov', label: '宽屏视野修复 (Widescreen FoV)', value: false },
-        { key: 'camera', label: '提升最大镜头距离 (Increase Camera Distance)', value: false },
-        { key: 'cameraJitter', label: '修复镜头跳动问题 (Fix Camera Jitter)', value: false },
-        { key: 'soundChannels', label: '增加声音通道到64 (Increase Sound Channels)', value: false },
-        { key: 'soundInBackground', label: '后台播放声音 (Sound in Background)', value: false },
-        { key: 'largeAddressAware', label: '允许使用超过2GB内存 (Large Address Aware)', value: false },
-        { key: 'fastLoot', label: '反向快速拾取 (Reverse Fast Loot)', value: false },
-        { key: 'nameplateDistance', label: '提升姓名板显示距离 (Increase Nameplate Distance)', value: false },
-        { key: 'maxRender', label: '提升最大渲染距离 (Increase Max Render Distance)', value: false },
-        { key: 'grassRender', label: '提升草地渲染距离 (Increase Grass Render Distance)', value: false },
+        // { key: 'fov', label: '宽屏视野修复 (Widescreen FoV)', value: false },
+        // { key: 'camera', label: '提升最大镜头距离 (Increase Camera Distance)', value: false },
+        // { key: 'cameraJitter', label: '修复镜头跳动问题 (Fix Camera Jitter)', value: false },
+        // { key: 'soundChannels', label: '增加声音通道到64 (Increase Sound Channels)', value: false },
+        // { key: 'soundInBackground', label: '后台播放声音 (Sound in Background)', value: false },
+        // { key: 'largeAddressAware', label: '允许使用超过2GB内存 (Large Address Aware)', value: false },
+        { key: 'fastLoot', label: '快速拾取 (默认开启)', value: false },
+        // { key: 'nameplateDistance', label: '提升姓名板显示距离 (Increase Nameplate Distance)', value: false },
+        // { key: 'maxRender', label: '提升最大渲染距离 (Increase Max Render Distance)', value: false },
+        // { key: 'grassRender', label: '提升草地渲染距离 (Increase Grass Render Distance)', value: false },
       ],
       isLoading: false,
       statusMessage: '',
@@ -84,7 +84,8 @@ export default {
           gamePath: this.client.path,
           selectedPatches: selectedPatches,
         };
-        
+        alert(JSON.stringify(options));
+        return;
         const result = await window.electronAPI.applyClientPatches(options);
 
         if (result.success) {

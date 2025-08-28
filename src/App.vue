@@ -101,14 +101,7 @@
             <div class="progress-bar" :style="{ width: download_progress + '%' }"></div>
             <span class="progress-text">{{ download_progress }}%</span>
           </div>
-          <el-button 
-            v-if="download_progress >= 100" 
-            type="success" 
-            class="confirm-button" 
-            @click="reopenInstaller"
-          >
-            确认
-          </el-button>
+ 
         </div>
       </div>
     </div>
