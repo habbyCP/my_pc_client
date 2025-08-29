@@ -112,8 +112,7 @@ export const useAppStore = defineStore('app', {
           console.log('tableData', data)
           if (data.length > 0) {
             data = data.map((item, index) => {
-              const clone = { ...item }
-              clone.installed = index % 2 === 1
+              const clone = { ...item } 
               clone.modified = new Date().toLocaleString()
               const baseKey = clone.id ?? clone.slug ?? clone.title ?? `idx-${index}`
               clone._key = `${String(baseKey)}-${index}`

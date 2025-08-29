@@ -91,7 +91,8 @@ export default {
                                     type: 'warning',
                                     customClass: 'custom-message-box',
                                     distinguishCancelAndClose: true,
-                                    center: true
+                                    center: true,
+                                    lockScroll: false
                                 }
                             )
                             downloadParams.cover = true
