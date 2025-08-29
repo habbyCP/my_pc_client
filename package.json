@@ -28,11 +28,13 @@
     "date-fns": "^3.6.0",
     "electron-dl": "^4.0.0",
     "electron-log": "^5.1.5",
+    "electron-updater": "^6.1.1",
     "element-plus": "^2.7.5",
     "iconv-lite": "^0.6.3",
+    "pinia": "^3.0.3",
     "resolve": "^1.22.8",
     "vue": "^3.2.25",
-    "electron-updater": "^6.1.1"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

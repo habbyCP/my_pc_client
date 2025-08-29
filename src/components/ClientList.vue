@@ -63,14 +63,19 @@ export default {
     Calendar,
     DocumentCopy
   },
+  props: {
+    clients: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       searchForm: {
         title: ''
       },
       detailDialog: false,
-      selectedClient: null,
-      clients: []
+      selectedClient: null
     }
   },
   computed: {
@@ -84,9 +89,6 @@ export default {
         client.description.toLowerCase().includes(keyword)
       )
     }
-  },
-  mounted() {
-    this.loadClients()
   },
   watch: {
     detailDialog(newVal) {
@@ -103,10 +105,6 @@ export default {
     document.body.style.width = '100%'
   },
   methods: {
-    async loadClients() {
-      // 这里会调用API或mock数据
-      this.$emit('load-clients')
-    },
     searchClients() {
       // 搜索功能已通过computed实现
       console.log('搜索客户端:', this.searchForm.title)
@@ -159,14 +157,6 @@ export default {
       }
     },
  
-    // 接收父组件传入的客户端数据
-    updateClients(clients) {
-      this.clients = clients.map(client => ({
-        ...client,
-        shortDescription: this.truncateDescription(client.description, 100),
-        downloading: false
-      }))
-    },
     truncateDescription(description, maxLength) {
       // 移除HTML标签来计算纯文本长度
       const textOnly = description.replace(/<[^>]*>/g, '')

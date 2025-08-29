@@ -166,7 +166,13 @@ body {
   /* padding: 20px;  */
   background-color: #121110; 
   overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+  height: 100%; 
+  width: calc(100vw - 200px);
 }
+ 
 
 /* Custom Scrollbar for main-content */
 .main-content::-webkit-scrollbar {

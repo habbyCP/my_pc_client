@@ -9,7 +9,7 @@ export default {
             search_form: {
                 title: '',
                 category_id: 0,
-                sortBy: 'download',
+                sort_by: 'download',
             }, 
             main_loading_word: "加载中",
             main_loading: false,
