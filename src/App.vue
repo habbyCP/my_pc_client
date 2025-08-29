@@ -45,15 +45,13 @@
       <!-- 主内容区域 -->
       <div class="main-content" :class="{ 'full-width': activeTab !== '插件库' }">
         <!-- 插件列表 -->
-        <div v-if="activeTab === '插件库'" class="tab-content">
-
+        <div v-if="activeTab === '插件库'" class="tab-content"> 
           <plugin-library 
             :table-data="tableData"
             :sort-by="sortBy"
             @get-addons-list="get_addons_list"
             @down-addons="down_addons"
-            @open-link="open_link"
-            @show-detail="show_detail"
+            @open-link="open_link" 
           />
         </div>
         

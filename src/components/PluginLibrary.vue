@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>
     <!-- 搜索和排序区域 -->
     <div class="search-bar">
       <el-input
@@ -16,7 +17,7 @@
       
       <el-button type="primary" class="start-button" @click="get_addons_list">搜索</el-button>
       
-      <el-select v-model="sortBy" placeholder="排序方式" style="width: 150px">
+      <el-select v-model="search_form.sortBy" placeholder="排序方式" style="width: 150px">
         <el-option label="下载量" value="download"></el-option>
         <el-option label="最新更新" value="update"></el-option>
       </el-select>
@@ -112,6 +113,7 @@
       </span>
     </template>
   </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -129,15 +131,13 @@ export default {
       type: Array,
       default: () => []
     },
-    
+    search_form: {
+      type: Object,
+      default: () => ({ title: '', sortBy: 'download' })
+    }
   },
   data() {
     return {
-     
-      search_form: {
-        title: '',
-        sortBy: 'download',
-      },
       detailDialog: false,
       selectedPlugin: null,
       currentImageIndex: 0
@@ -157,7 +157,7 @@ export default {
   },
   methods: {
     get_addons_list() {
-      this.$emit('get-addons-list', this.search_form)
+      this.$emit('get-addons-list')
     },
     down_addons(data) {
       this.$emit('down-addons', data)
@@ -165,9 +165,7 @@ export default {
     open_link(link) {
       this.$emit('open-link', link)
     },
-    show_detail(item) {
-      this.$emit('show-detail', item)
-    },
+    
     showPluginDetail(plugin) {
       this.selectedPlugin = plugin
       this.currentImageIndex = 0

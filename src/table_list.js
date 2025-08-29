@@ -1,6 +1,7 @@
 import { ElMessageBox, ElMessage } from 'element-plus' 
 import { apiService, initializeApiService } from './apiService.js'
 import WowAddons from './wow_addons.js'
+import { pa } from 'element-plus/es/locales.mjs'
 
 export default {
     data() {
@@ -8,6 +9,7 @@ export default {
             search_form: {
                 title: '',
                 category_id: 0,
+                sortBy: 'download',
             }, 
             main_loading_word: "加载中",
             main_loading: false,
