@@ -4,10 +4,12 @@
 .search-bar {
   display: flex;
   gap: 10px;
-  background-color: #121110;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  border-radius: 4px;
+  background-color:#2a2520 !important;
+  padding: 15px;   
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  align-items: center;
 }
 
 /* Plugin List Styles */

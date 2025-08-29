@@ -32,7 +32,7 @@
                v-for="category in categories" 
                :key="category.id"
                :class="{ active: activeCategory === category.name }"
-               @click="switchCategory(category.id, category.name)">
+               @click="switchCategory(category)">
             <!-- If icon path starts with '/', it's a local icon -->
             <img v-if="category.icon.length > 0" :src="category.icon" class="category-icon" alt="category icon" />
             <!-- Otherwise use Element Plus icon -->
@@ -73,7 +73,7 @@
           <p>此功能正在开发中...</p>
         </div>
         
-        <div v-if="activeTab === '客户端'" class="tab-content">
+        <div v-if="activeTab === '文件下载'" class="tab-content">
           <client-list 
             ref="clientList"
             @load-clients="handleLoadClients"
@@ -135,7 +135,7 @@ export default {
   },
   data() {
     return {
-      tabs: ['插件库', '客户端', '游戏补丁', '设置'],
+      tabs: ['插件库', '文件下载',  '设置'],
       activeClient: { path: '' }, // 初始化为空对象以避免渲染问题
       isDark: true, // 默认使用暗色主题
       tableData: [],

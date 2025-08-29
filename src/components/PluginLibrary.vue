@@ -133,9 +133,10 @@ export default {
   },
   data() {
     return {
-      sortBy: 'download',
+     
       search_form: {
-        title: ''
+        title: '',
+        sortBy: 'download',
       },
       detailDialog: false,
       selectedPlugin: null,

@@ -6,8 +6,9 @@ export default {
     data() {
         return {
             search_form: {
-                title: ''
-            },
+                title: '',
+                category_id: 0,
+            }, 
             main_loading_word: "加载中",
             main_loading: false,
             download_progress: 0,
@@ -15,7 +16,7 @@ export default {
             activeTab: '插件库', // 当前激活的顶部标签
             activeCategory: '全部插件', // 当前激活的左侧分类
             categories: [
-                { id: '0', name: '全部插件', icon: 'Collection' },
+                // { id: '0', name: '全部插件', icon: 'Collection' },
             ],
             // 下列两个属性在方法中被使用/赋值，需预先声明
             tableData: [],
@@ -42,7 +43,7 @@ export default {
             if (tab === '插件库') { 
                 this.get_categories()
                 this.get_addons_list()
-            } else if (tab === '客户端') {
+            } else if (tab === '文件下载') {
                 // 切换到客户端标签时加载客户端列表
                 setTimeout(() => {
                     if (this.$refs.clientList) {
@@ -56,10 +57,10 @@ export default {
         },
 
         // 切换左侧分类
-        switchCategory(category, name) {
-            this.activeCategory = name
+        switchCategory(category) {
+            this.category = category
             // 根据分类筛选插件列表
-            this.get_addons_list(category)
+            this.get_addons_list()
         },
 
         //启动客户端
@@ -132,26 +133,22 @@ export default {
                 const response = await apiService.getCategories()
 
                 if (response.code === 200) { 
-                    console.log('获取分类列表', response.data)
-                    this.categories = response.data
+                    console.log('获取分类列表', response.data) 
+                    this.categories = response.data 
                 }
             } catch (error) {
                 console.error('获取分类失败:', error)
             }
         },
-        async get_addons_list(category) { 
+        async get_addons_list(category) {
             if (category === undefined || category === null) {
                 category = this.category
             }else{
                 this.category = category
             }
-             
-            let params = {
-                title: this.search_form.title,
-                page: 0,
-                page_size: 100,
-                category_id: category
-            }
+            let params = this.search_form
+            params.category_id = category.id
+            console.log('params', params)
 
             // 显示加载遮罩
             this.main_loading = true
@@ -159,10 +156,8 @@ export default {
             this.download_progress = 0
 
             try { 
-                const res = await apiService.getAddonsList(params)
-                console.log('获取插件列表', res)
-                if (res.code === 200) {
-                    console.log('获取插件列表成功', res)
+                const res = await apiService.getAddonsList(params) 
+                if (res.code === 200) { 
                     let tableData = Array.isArray(res.data) ? [...res.data] : []
                     console.log('tableData', tableData)
                     if (tableData.length > 0) {

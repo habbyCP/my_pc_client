@@ -187,10 +187,6 @@ export default {
 }
 
 .search-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  align-items: center;
 }
 
 .search-bar .el-input {
