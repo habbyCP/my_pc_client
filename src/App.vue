@@ -54,6 +54,7 @@ export default {
     const tabs = ref([
       { name: '插件库', path: '/plugins' },
       { name: '文件下载', path: '/downloads' },
+      { name: '本地插件', path: '/local-plugins' },
       { name: '设置', path: '/settings' },
     ])
 

@@ -24,6 +24,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.7.2",
+    "better-sqlite3": "^12.2.0",
     "compressing": "^1.10.1",
     "date-fns": "^3.6.0",
     "electron-dl": "^4.0.0",
@@ -33,6 +34,7 @@
     "iconv-lite": "^0.6.3",
     "pinia": "^3.0.3",
     "resolve": "^1.22.8",
+    "sqlite3": "^5.1.7",
     "vue": "^3.2.25",
     "vue-router": "^4.5.1"
   },
@@ -43,6 +45,7 @@
     "electron": "^21.4.4",
     "electron-builder": "^23.6.0",
     "electron-packager": "^17.1.2",
+    "electron-rebuild": "^3.2.9",
     "electron-reloader": "^1.2.3",
     "electron-winstaller": "^5.3.1",
     "sass": "^1.49.9",

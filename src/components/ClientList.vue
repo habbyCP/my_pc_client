@@ -197,7 +197,7 @@ export default {
 .client-item {
   background-color: #252220;
   border-radius: 8px;
-  padding: 20px;
+  padding: 12px 15px;
   border: 1px solid #332e2a;
   display: flex;
   justify-content: space-between;
@@ -206,13 +206,17 @@ export default {
 }
 
 .client-item:hover {
-  border-color: #409eff;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
+  /* border-color: #409eff; */
+  /* box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15); */
+  border-left: 3px solid #c28540;
 }
 
 .client-info {
   flex: 1;
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 70px;
 }
 
 .client-title {
@@ -222,11 +226,12 @@ export default {
   font-weight: 600;
 }
 
-.client-meta {
-  margin-bottom: 12px;
+.client-meta { 
   display: flex;
   gap: 16px;
   align-items: center;
+  order: 2;           /* 放在描述之后 */
+  margin-top: auto;   /* 靠底边 */
 }
 
 .update-time {
@@ -242,6 +247,8 @@ export default {
   line-height: 1.6;
   cursor: pointer;
   transition: color 0.3s ease;
+  order: 1;           /* 描述在中间，填充空间 */
+  flex: 1;
 }
 
 .client-description:hover {

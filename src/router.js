@@ -17,6 +17,11 @@ const routes = [
     component: () => import('./views/Downloads.vue')
   },
   {
+    path: '/local-plugins',
+    name: 'LocalPlugins',
+    component: () => import('./views/LocalPlugins.vue')
+  },
+  {
     path: '/settings',
     name: 'Settings',
     component: () => import('./views/Settings.vue')

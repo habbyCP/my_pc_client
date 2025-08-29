@@ -18,7 +18,8 @@ export function logDetailedError(tag, e) {
 
 export default {
     // 下载插件
-    down_addons(data, context) {
+    down_addons(row, context) {
+        console.log('down_addons', row, context)
         // 检查是否已经选择wow.exe路径
         return window.electronAPI.getSettings().then(async (settings) => {
             if (!settings || !settings.gamePath) {
@@ -42,9 +43,7 @@ export default {
                 })
                 return
             }
-            
-            // 继续下载插件的逻辑
-            let row = data.row 
+             
             context.main_loading = true
             context.main_loading_word = "开始下载..."
             context.download_progress = 0
@@ -52,9 +51,9 @@ export default {
             // 准备下载参数
             const downloadParams = {
                 // 显式转为基础类型，避免 Proxy/Ref 进入 IPC
-                version: String(context?.version ?? ''),
+                version: String(row?.version ?? row?.latest_version ?? ''),
                 id: Number(row?.id ?? 0),
-                title: String(row?.title ?? ''),
+                title: String(row?.title ?? row?.name ?? row?.slug ?? `addon-${row?.id ?? ''}`),
                 cover: false,
                 url: String(row?.down_link ?? ''),
                 file_list: Array.isArray(row?.file_list)
@@ -75,7 +74,7 @@ export default {
                         })
                     ))
                     const dupRes = await window.electronAPI.isDuplicateDirectory({
-                        version: String(context.version || ''),
+                        version: String(downloadParams.version || ''),
                         dir_list: safeDirList
                     })
                     const conflicts = Array.isArray(dupRes?.data) ? dupRes.data : []

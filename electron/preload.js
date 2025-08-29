@@ -47,6 +47,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   // 获取配置
   getConfig: () => ipcRenderer.invoke('get-config'),
+  // 获取本地已安装插件列表
+  getInstalledPlugins: () => ipcRenderer.invoke('get-installed-plugins'),
   // 下载更新
   downloadUpdate: (args) => ipcRenderer.send('download-update', args),
   // 打开本地路径

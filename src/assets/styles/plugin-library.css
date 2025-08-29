@@ -33,7 +33,7 @@
 .plugin-card:hover {
   /* background-color: #252220;  */
   /* transform: scale(1.01); */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
 }
 
 .plugin-content {
@@ -41,7 +41,7 @@
   align-items: center;
   padding: 12px 15px;
   background-color: #252220;
-  border-left: 3px solid transparent;
+  /* border-left: 3px solid transparent; */
 }
 
 .plugin-content:hover {

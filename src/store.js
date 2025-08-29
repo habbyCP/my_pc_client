@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { apiService, initializeApiService } from './apiService.js'
 import WowAddons from './wow_addons.js'
+import { add } from 'date-fns'
 
 export const useAppStore = defineStore('app', {
   state: () => ({
@@ -170,14 +171,10 @@ export const useAppStore = defineStore('app', {
 
         console.log('获取下载地址成功', file_list)
         
-        const addonToDownload = { ...addon };
-        if (addonToDownload.row) {
-            addonToDownload.row.down_link = downloadUrl
-            addonToDownload.row.file_list = file_list
-        } else {
-            addonToDownload.down_link = downloadUrl
-        }
-
+        const addonToDownload = addon.row;
+        addonToDownload.down_link = downloadUrl
+        addonToDownload.file_list = file_list
+        console.log('addonToDownload', addonToDownload)
         this.main_loading_word = '开始下载...'
         await WowAddons.down_addons(addonToDownload, this)
       } catch (e) {
