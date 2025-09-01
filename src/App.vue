@@ -65,7 +65,7 @@ export default {
       // 应用启动时检查一次更新
       if (window.electronAPI) {
         try {
-          await checkForUpdatesAndPrompt({ silenceNoUpdate: true, showError: true })
+          checkForUpdatesAndPrompt({ silenceNoUpdate: true, showError: true })
         } catch (e) {
           console.error('启动检查更新失败:', e)
         }

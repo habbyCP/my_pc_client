@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { app, shell } = require('electron');
 const version = app.getVersion();
-const { API_URL } = require('../config.js');
+const { API_URL } = require('../config.js');  
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
@@ -23,8 +23,41 @@ function cmpVersion(a, b) {
 
 async function checkForUpdates() {
   try {
-    const response = await axios.get(updateUrl); // Default responseType is 'json'
-    const latestVersionInfo = response.data;
+    const client = updateUrl.startsWith('https:') ? https : http;
+    const res = await new Promise((resolve, reject) => {
+      const req = client.get(updateUrl, { headers: { 'Accept': 'application/json' } }, (response) => {
+        resolve(response);
+      });
+      req.on('error', reject);
+    });
+
+    // 如果是 3xx（如 302），不跳转，直接返回提示
+    if (res.statusCode >= 300 && res.statusCode < 400) {
+      return {
+        status: 'redirect-blocked',
+        code: res.statusCode,
+        location: res.headers?.location || '',
+        message: 'Update endpoint responded with redirect; not following as requested',
+      };
+    }
+
+    if (res.statusCode < 200 || res.statusCode >= 300) {
+      return { status: 'error', message: `HTTP ${res.statusCode}` };
+    }
+
+    // 读取 body 并解析 JSON
+    const chunks = [];
+    await new Promise((resolve, reject) => {
+      res.on('data', (c) => chunks.push(c));
+      res.on('end', resolve);
+      res.on('error', reject);
+    });
+    let latestVersionInfo;
+    try {
+      latestVersionInfo = JSON.parse(Buffer.concat(chunks).toString('utf-8'));
+    } catch (_) {
+      return { status: 'error', message: 'Invalid JSON format from server' };
+    }
 
     if (!latestVersionInfo.version || !latestVersionInfo.path) {
       return { status: 'error', message: 'Invalid JSON format from server' };
@@ -48,7 +81,7 @@ async function checkForUpdates() {
       currentVersion: version
     };
   } catch (error) {
-    console.error('检查更新失败:', updateUrl+error);
+    console.error('检查更新失败:', updateUrl+" "+error);
     return { status: 'error', message: error.message };
   }
 }

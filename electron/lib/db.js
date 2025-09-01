@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const { app } = require('electron');
-let sqlite3;
+let BetterSqlite3;
 
 try {
   // 动态引入，若未安装会抛错，便于后续提示
-  sqlite3 = require('sqlite3').verbose();
+  BetterSqlite3 = require('better-sqlite3');
 } catch (e) {
-  sqlite3 = null;
+  BetterSqlite3 = null;
 }
 
 function getInstalledPlugins() {
@@ -16,14 +16,9 @@ function getInstalledPlugins() {
     return Promise.resolve([]);
   }
   return new Promise((resolve) => {
-    const sql = `SELECT plugin_id, title, version, file_list, installed_at FROM installed_plugins ORDER BY datetime(installed_at) DESC`;
- 
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        console.error('[db] 读取插件记录失败:', err);
-        return resolve([]);
-      }
-      console.log(rows)
+    try {
+      const sql = `SELECT plugin_id, title, version, file_list, installed_at FROM installed_plugins ORDER BY datetime(installed_at) DESC`;
+      const rows = db.prepare(sql).all();
       const list = Array.isArray(rows) ? rows.map(r => ({
         plugin_id: r.plugin_id,
         title: r.title,
@@ -31,9 +26,11 @@ function getInstalledPlugins() {
         file_list: (() => { try { return JSON.parse(r.file_list || '[]') } catch { return [] } })(),
         installed_at: r.installed_at,
       })) : [];
-      console.log(list)
       resolve(list);
-    });
+    } catch (err) {
+      console.error('[db] 读取插件记录失败:', err);
+      resolve([]);
+    }
   });
 }
 
@@ -57,17 +54,14 @@ const getDbPath = () => {
 let db = null;
 
 function initDB() {
-  if (!sqlite3) {
-    console.warn('[db] sqlite3 未安装，无法启用 SQLite 持久化');
+  if (!BetterSqlite3) {
+    console.warn('[db] better-sqlite3 未安装，无法启用 SQLite 持久化');
     return;
   }
-  const dbPath = getDbPath();
-  db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('[db] 打开数据库失败:', err);
-      return;
-    }
-    db.run(
+  try {
+    const dbPath = getDbPath();
+    db = new BetterSqlite3(dbPath);
+    db.prepare(
       `CREATE TABLE IF NOT EXISTS installed_plugins (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         plugin_id TEXT,
@@ -75,17 +69,15 @@ function initDB() {
         version TEXT,
         file_list TEXT,
         installed_at TEXT
-      )`,
-      (e) => {
-        if (e) console.error('[db] 初始化表失败:', e);
-        // 为 plugin_id 创建唯一索引，便于按插件唯一更新
-        db.run(
-          `CREATE UNIQUE INDEX IF NOT EXISTS idx_installed_plugins_plugin_id ON installed_plugins(plugin_id)`,
-          (ie) => { if (ie) console.error('[db] 创建索引失败:', ie); }
-        );
-      }
-    );
-  });
+      )`
+    ).run();
+    // 为 plugin_id 创建唯一索引，便于按插件唯一更新
+    db.prepare(
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_installed_plugins_plugin_id ON installed_plugins(plugin_id)`
+    ).run();
+  } catch (err) {
+    console.error('[db] 初始化数据库失败:', err);
+  }
 }
 
 function saveInstalledPlugin({ plugin_id, title = '', version = '', file_list = [] }) {
@@ -94,40 +86,25 @@ function saveInstalledPlugin({ plugin_id, title = '', version = '', file_list = 
     return Promise.resolve(false);
   }
   return new Promise((resolve) => {
-    const pid = String(plugin_id ?? '');
-    const now = new Date().toISOString();
-    const files = JSON.stringify(Array.isArray(file_list) ? file_list : []);
+    try {
+      const pid = String(plugin_id ?? '');
+      const now = new Date().toISOString();
+      const files = JSON.stringify(Array.isArray(file_list) ? file_list : []);
 
-    // 先查是否存在
-    db.get(`SELECT id FROM installed_plugins WHERE plugin_id = ?`, [pid], (selErr, row) => {
-      if (selErr) {
-        console.error('[db] 查询插件记录失败:', selErr);
-        return resolve(false);
-      }
-      if (row) {
-        // 存在则更新
-        const sqlU = `UPDATE installed_plugins SET title = ?, version = ?, file_list = ?, installed_at = ? WHERE plugin_id = ?`;
-        const paramsU = [String(title ?? ''), String(version ?? ''), files, now, pid];
-        db.run(sqlU, paramsU, function (updErr) {
-          if (updErr) {
-            console.error('[db] 更新插件记录失败:', updErr);
-            return resolve(false);
-          }
-          return resolve(true);
-        });
+      const sel = db.prepare(`SELECT id FROM installed_plugins WHERE plugin_id = ?`).get(pid);
+      if (sel) {
+        const stmtU = db.prepare(`UPDATE installed_plugins SET title = ?, version = ?, file_list = ?, installed_at = ? WHERE plugin_id = ?`);
+        stmtU.run(String(title ?? ''), String(version ?? ''), files, now, pid);
+        return resolve(true);
       } else {
-        // 不存在则插入
-        const sqlI = `INSERT INTO installed_plugins (plugin_id, title, version, file_list, installed_at) VALUES (?, ?, ?, ?, ?)`;
-        const paramsI = [pid, String(title ?? ''), String(version ?? ''), files, now];
-        db.run(sqlI, paramsI, function (insErr) {
-          if (insErr) {
-            console.error('[db] 插入插件记录失败:', insErr);
-            return resolve(false);
-          }
-          return resolve(true);
-        });
+        const stmtI = db.prepare(`INSERT INTO installed_plugins (plugin_id, title, version, file_list, installed_at) VALUES (?, ?, ?, ?, ?)`);
+        stmtI.run(pid, String(title ?? ''), String(version ?? ''), files, now);
+        return resolve(true);
       }
-    });
+    } catch (err) {
+      console.error('[db] 保存插件记录失败:', err);
+      return resolve(false);
+    }
   });
 }
 

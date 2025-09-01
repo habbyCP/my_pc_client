@@ -201,17 +201,9 @@ export default {
   flex-direction: column;
 }
 
-.category-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  cursor: pointer; 
-  margin-bottom: 5px;
-  transition: background-color 0.2s, color 0.2s;
-  color: #ccc;
-}
+ 
 
-.category-item:hover {
+/* .category-item:hover {
   background-color: #3a3a3a;
 }
 
@@ -219,13 +211,9 @@ export default {
   background-color: #c28540;
   color: white;
   font-weight: bold;
-}
+} */
 
-.category-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
+ 
 
 /* Styles from PluginLibrary.vue */
 .plugin-detail-dialog {
