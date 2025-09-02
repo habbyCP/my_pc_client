@@ -7,7 +7,7 @@ const { ERROR_CODE } = require('./error_code');
  * @param {string} gamePath 游戏可执行文件路径
  * @returns {Object} 包含查找结果的对象
  */
-function findAddonsDirectory(gamePath) {
+function findAddonsDirectory(gamePath, override_mode) {
     if (!gamePath) {
         return {
             success: false,
@@ -18,6 +18,18 @@ function findAddonsDirectory(gamePath) {
     }
     
     const gameDir = path.dirname(gamePath); // 获取游戏目录（去掉可执行文件名）
+    
+    // 覆盖模式 2：直接将插件目录视为游戏目录
+    if (override_mode === 2) {
+        return {
+            success: true,
+            code: 200,
+            message: "已使用覆盖模式，插件目录为游戏目录",
+            data: {
+                addonsPath: gameDir
+            }
+        };
+    }
     
     try {
         // 读取游戏目录下的所有文件和文件夹

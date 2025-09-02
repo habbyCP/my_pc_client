@@ -17,10 +17,11 @@ let  req_list  = new Map()
 exports.is_duplicate_directory = function (event, data) {
     return new Promise((resolve) => {
         try {
+            console.log('is_duplicate_directory', data)
             // 统一解析 AddOns 目录
             const settings = getSettings();
             const gamePath = settings && settings.gamePath ? settings.gamePath : '';
-            const addonsPath = findAddonsDirectory(gamePath);
+            const addonsPath = findAddonsDirectory(gamePath,data.override_mode);
 
             if (!addonsPath) {
                 // 无法定位 AddOns 目录则认为没有重复
@@ -204,7 +205,7 @@ exports.down_addons = async function (event, down_data) {
     }
     
     // 使用path_validator模块查找或创建插件目录
-    const result = findAddonsDirectory(settings.gamePath);
+    const result = findAddonsDirectory(settings.gamePath,down_data.override_mode);
      
     if (!result.success) {
         return {

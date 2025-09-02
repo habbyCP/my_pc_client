@@ -27,7 +27,7 @@ export const useAppStore = defineStore('app', {
         if (data && data.data) {
           this.download_progress = data.data.progress;
           this.main_loading_word = data.data.msg || "下载中...";
-          console.log("下载进度:", this.download_progress + "%", this.main_loading_word);
+          // console.log("下载进度:", this.download_progress + "%", this.main_loading_word);
         }
       });
     },
@@ -167,13 +167,13 @@ export const useAppStore = defineStore('app', {
 
         if (!downloadUrl) {
           throw new Error('接口未返回有效的下载地址')
-        }
-
+        } 
         console.log('获取下载地址成功', file_list)
         
         const addonToDownload = addon.row;
         addonToDownload.down_link = downloadUrl
         addonToDownload.file_list = file_list
+        addonToDownload.override_mode = addon.row.override_mode
         console.log('addonToDownload', addonToDownload)
         this.main_loading_word = '开始下载...'
         await WowAddons.down_addons(addonToDownload, this)

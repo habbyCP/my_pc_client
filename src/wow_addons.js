@@ -56,6 +56,7 @@ export default {
                 title: String(row?.title ?? row?.name ?? row?.slug ?? `addon-${row?.id ?? ''}`),
                 cover: false,
                 url: String(row?.down_link ?? ''),
+                override_mode: row?.override_mode,
                 file_list: Array.isArray(row?.file_list)
                     ? row.file_list.map(it => {
                         if (it == null) return ''
@@ -64,7 +65,7 @@ export default {
                     : []
             }  
             // 下载前目录冲突检查（如果提供了 file_list）
-            if (downloadParams.file_list && downloadParams.file_list.length > 0) { 
+            if (downloadParams.file_list && downloadParams.file_list.length > 0) {
                 try {
                     // 确保传给主进程的是可结构化克隆的纯数据（避免 Vue Proxy/复杂对象）
                     const safeDirList = JSON.parse(JSON.stringify(
@@ -107,8 +108,7 @@ export default {
                 }
             }
             // 通过 JSON 深拷贝去除潜在的响应式元信息，保证可结构化克隆
-            const cleanParams = JSON.parse(JSON.stringify(downloadParams))
-            console.log('111', cleanParams)
+            const cleanParams = JSON.parse(JSON.stringify(downloadParams)) 
             // 使用await获取返回值
             return window.electronAPI.downloadFile(cleanParams)
                 .then(result => {
