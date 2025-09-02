@@ -45,16 +45,19 @@
             </div>
             <div class="plugin-info" @click="showPluginDetail(item)">
               <div class="plugin-header">
-                <div class="plugin-title">{{ item.name || item.title }}</div>
+                <div class="plugin-title">
+                  <span v-if="item.is_featured==1" style="color: #F56C6C; font-weight: bold; margin-right: 8px;">[推荐]</span>{{ item.name || item.title }}
+                </div>
                 <div class="plugin-badges" v-if="item.categories && item.categories.length > 0">
                   <span class="plugin-badge" v-for="(category, catIndex) in item.categories" :key="catIndex">{{ category.name }}</span>
                 </div>
               </div>
               <div class="plugin-description">{{ item.description ? (item.description.length > 100 ? item.description.substring(0, 100) + '...' : item.description) : '暂无描述' }}</div>
               <div class="plugin-meta">
-                <span>下载量: {{ item.download_count ?? item.downloads ?? '0' }}</span>
-                <span>最后更新: {{ item.updated_at_string || item.updated_at || '未知' }}</span>
-                <span v-if="item.version || item.latest_version">最新版本: {{ item.version || item.latest_version }}</span>
+                <span><strong style="color: #909399;">下载量:</strong> {{ item.download_count ?? item.downloads ?? '0' }}</span>
+                <span><strong style="color: #909399;">最后更新:</strong> {{ item.updated_at_string || item.updated_at || '未知' }}</span>
+                <span v-if="item.version || item.latest_version"><strong style="color: #909399;">最新版本:</strong> {{ item.version || item.latest_version }}</span>
+                <span v-if="item.size"><strong style="color: #909399;">大小:</strong> {{ item.size }}</span>
               </div>
             </div>
             <div class="plugin-actions">
