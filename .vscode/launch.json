@@ -1,13 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
+ 
     {
-      "name": "客户端", 
+      "name": "启动应用 (npm run start)",
+      "type": "node-terminal",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
-      "console": "integratedTerminal"
+      "command": "npm run start",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
