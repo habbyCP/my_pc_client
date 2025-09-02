@@ -122,12 +122,7 @@ async function downloadFile(url, fileName, index, event) {
             response.on('data', (chunk) => {
                 has_down_length += chunk.length
                 const progress = (80.0 * has_down_length / file_length).toFixed(1) // 当前下载进度（最多到70%，解压和安装占30%）
-                
-                // 只有进度变化超过5%才发送进度更新
-                if (progress - progress_now >= 5 || progress >= 80) {
-                    progress_now = progress
-                    updateDownloadProgress(event, progress, index, "下载中...");
-                }
+                updateDownloadProgress(event, progress, index, "下载中...");
             });
             
             //下载错误

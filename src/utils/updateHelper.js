@@ -24,11 +24,17 @@ export async function checkForUpdatesRaw() {
 // 监听主进程的下载进度事件，并转换为全局DOM事件
 if (window.electronAPI && typeof window.electronAPI.onDownloadProgress === 'function') {
   window.electronAPI.onDownloadProgress((data) => {
-    const { status, percent, message } = data;
+    const { status, percent, message, path } = data;
     if (status === 'progress') {
       window.dispatchEvent(new CustomEvent('app-update-progress', { detail: { percent } }));
     } else {
-      window.dispatchEvent(new CustomEvent('app-update-end', { detail: { status, message } }));
+      // 无论页面是否监听事件，都直接给出用户可见的提示
+      if (status === 'completed') {
+        ElMessage.success('更新包下载完成');
+      } else if (status === 'error') {
+        ElMessage.error(message || '下载失败');
+      }
+      window.dispatchEvent(new CustomEvent('app-update-end', { detail: { status, message, path } }));
     }
   });
 }
