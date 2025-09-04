@@ -78,7 +78,7 @@ export const useAppStore = defineStore('app', {
       window.electronAPI.openLink({ outLink: url })
     },
 
-    async get_categories() {
+    async get_categories() { 
       try {
         const response = await apiService.getCategories()
         if (response.code === 200) {

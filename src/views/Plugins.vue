@@ -78,7 +78,7 @@
         :title="selectedPlugin?.name || selectedPlugin?.title"
         width="60%"
         :lock-scroll="false"
-        class="plugin-detail-dialog"
+        class="app-dialog plugin-detail-dialog"
         @close="closePluginDetail"
       >
         <div v-if="selectedPlugin" class="plugin-detail-container">
@@ -218,64 +218,8 @@ export default {
 
  
 
-/* Styles from PluginLibrary.vue */
-.plugin-detail-dialog {
-  --el-dialog-bg-color: #3c2e26;
-  --el-dialog-title-font-size: 18px;
-  --el-dialog-header-bg-color: #3c2e26;
-  --el-dialog-header-border-bottom: 1px solid #4a3530;
-  --el-overlay-color-lighter: rgba(0, 0, 0, 0.7);
-}
-
-.plugin-detail-dialog :deep(.el-dialog) {
-  margin: 0;
-  max-height: 80vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background-color: #3c2e26;
-  border: 1px solid #4a3530;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.plugin-detail-dialog :deep(.el-dialog__header) {
-  background-color: #3c2e26;
-  border-bottom: 1px solid #4a3530;
-  padding: 20px 20px 15px 20px;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__title) {
-  color: #e0d6cc;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__headerbtn) {
-  top: 20px;
-  right: 20px;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__close) {
-  color: #a09890;
-  font-size: 16px;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__close):hover {
-  color: #e0d6cc;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__body) {
-  background-color: #3c2e26;
-  padding: 20px;
-  flex: 1;
-  overflow: hidden;
-}
-
-.plugin-detail-dialog :deep(.el-dialog__footer) {
-  background-color: #3c2e26;
-  border-top: 1px solid #4a3530;
-  padding: 15px 20px 20px 20px;
-}
+/* 弹窗通用结构样式已抽取到 src/assets/styles/dialog.css 并通过 .app-dialog 应用。
+   这里仅保留与内容显示相关的样式。 */
 
 .plugin-detail-container {
   display: flex;

@@ -3,7 +3,7 @@
     <!-- 顶部标签栏 -->
     <div class="header">
       <div class="logo">
-        <img :src="logoImg" alt="logo" class="app-logo" />
+        <img src="./assets/logo.png" alt="logo" class="app-logo" />
       </div>
       <div class="header-tabs">
         <router-link v-for="tab in tabs" :key="tab.name" :to="tab.path" class="tab" active-class="active">
@@ -53,8 +53,8 @@ export default {
 
     const tabs = ref([
       { name: '插件库', path: '/plugins' },
-      { name: '文件下载', path: '/downloads' },
-      { name: '本地插件', path: '/local-plugins' },
+      { name: '资源下载', path: '/downloads' },
+      // { name: '本地插件', path: '/local-plugins' },
       { name: '设置', path: '/settings' },
     ])
 
