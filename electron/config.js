@@ -7,8 +7,10 @@ const baseConfig = {
 
 const devConfig = {
   ...baseConfig,
-  API_URL: 'http://127.0.0.1:8888/api', // Example of overriding for development
-  STATIC_URL: 'http://127.0.0.1:8888/uploads'
+  API_URL: 'https://addons_api.9136347.com/api',
+  WOW_PATH_CONFIG: './file.json',
+  //静态资源地址
+  STATIC_URL: 'https://download.9136347.com'
 };
 
 const prodConfig = {

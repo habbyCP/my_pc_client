@@ -41,6 +41,12 @@ export default {
                 }).catch(() => {
                     // 用户取消，不做任何操作
                 })
+                // 提前复位加载状态，避免“开始下载...”悬挂
+                try {
+                    context.main_loading = false
+                    context.main_loading_word = ''
+                    context.download_progress = 0
+                } catch (_) { /* noop */ }
                 return
             }
              
