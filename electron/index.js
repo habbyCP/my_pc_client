@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session, ipcMain, screen, shell, dialog } = require('electron')
+const { app, BrowserWindow, session, ipcMain, screen, shell, dialog, globalShortcut } = require('electron')
 const path = require('path')
 const { mkdirSync, existsSync } = require("fs");
 const fs = require('fs').promises;
@@ -45,12 +45,23 @@ function createWindow() {
     mkdirSync('downloaded_files', { recursive: true });
   }
 
+  // 屏蔽系统快捷键打开 DevTools（F12、Ctrl/Cmd+Shift+I）
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    const isToggleDevtoolsCombo =
+      // Ctrl/Cmd + Shift + I
+      input.type === 'keyDown' && input.shift && (input.control || input.meta) && String(input.key).toUpperCase() === 'I';
+    const isF12 = input.type === 'keyDown' && String(input.key).toUpperCase() === 'F12';
+    if (isToggleDevtoolsCombo || isF12) {
+      event.preventDefault();
+    }
+  });
+
 
   // 打开开发者工具
   let url
   if (process.env.NODE_ENV === 'development') {
     url = 'http://localhost:3000'
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
+    // 默认不自动打开 DevTools，改为通过自定义快捷键触发
   } else {
     url = 'file://' + path.join(__dirname, '../dist/index.html')
   }
@@ -72,6 +83,21 @@ app.whenReady().then(async () => {
     }
   }
   createWindow()
+  // 注册自定义全局快捷键：Ctrl/Cmd + Alt + Shift + D 切换 DevTools
+  const accelerator = 'CommandOrControl+Alt+Shift+D'
+  const ok = globalShortcut.register(accelerator, () => {
+    const win = BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
+    if (win && win.webContents) {
+      if (win.webContents.isDevToolsOpened()) {
+        win.webContents.closeDevTools()
+      } else {
+        win.webContents.openDevTools({ mode: 'detach' })
+      }
+    }
+  })
+  if (!ok) {
+    console.warn('注册全局快捷键失败:', accelerator)
+  }
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -112,6 +138,11 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 }) 
+
+// 应用即将退出时，注销所有全局快捷键
+app.on('will-quit', () => {
+  try { globalShortcut.unregisterAll() } catch (e) { /* noop */ }
+})
 
 //文件下载相关的
 ipcMain.handle('download-file',  down_addons);
