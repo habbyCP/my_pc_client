@@ -19,13 +19,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron": "cross-env NODE_ENV=development electron .",
-    "rebuild-native": "electron-rebuild -f -w better-sqlite3"
+    "electron": "cross-env NODE_ENV=development electron .", 
+    "postinstall": "electron-rebuild"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.7.2",
-    "better-sqlite3": "^12.2.0",
+    "better-sqlite3": "^9.6.0",
     "compressing": "^1.10.1",
     "date-fns": "^3.6.0",
     "electron-dl": "^4.0.0",
@@ -42,7 +42,7 @@
     "@vitejs/plugin-vue": "^2.2.0",
     "concurrently": "^7.0.0",
     "cross-env": "^7.0.3",
-    "electron": "^21.4.4",
+    "electron": "^22.0.0",
     "electron-builder": "^23.6.0",
     "electron-packager": "^17.1.2",
     "electron-rebuild": "^3.2.9",
