@@ -84,7 +84,8 @@ export default {
                     ))
                     const dupRes = await window.electronAPI.isDuplicateDirectory({
                         version: String(downloadParams.version || ''),
-                        dir_list: safeDirList
+                        dir_list: safeDirList,
+                        override_mode: row?.override_mode,
                     })
                     const conflicts = Array.isArray(dupRes?.data) ? dupRes.data : []
                     if (conflicts.length > 0) {

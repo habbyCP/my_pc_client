@@ -22,7 +22,7 @@ exports.is_duplicate_directory = function (event, data) {
             const settings = getSettings();
             const gamePath = settings && settings.gamePath ? settings.gamePath : '';
             const addonsPath = findAddonsDirectory(gamePath,data.override_mode);
-
+            console.log('addonsPath', addonsPath)
             if (!addonsPath) {
                 // 无法定位 AddOns 目录则认为没有重复
                 return resolve({ code: OK_CODE, message: '', data: [] });
@@ -218,8 +218,6 @@ exports.down_addons = async function (event, down_data) {
     // 将插件目录路径添加到下载数据中
     down_data.addonsPath = result.data.addonsPath;
     console.log("找到或创建的插件目录:", result.data.addonsPath);
-    
-    console.log(event.sender)
     debug("收到下载需求：", down_data)
     try {
         // 解析URL
