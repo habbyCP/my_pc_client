@@ -72,6 +72,13 @@
         </div>
       </div>
 
+      <!-- Infinite Scroll Footer -->
+      <div class="infinite-footer">
+        <div v-if="store.loadingMore" class="infinite-status">加载中...</div>
+        <div v-else-if="!store.hasMore" class="infinite-status">没有更多了</div>
+        <div ref="infiniteSentinel" class="infinite-sentinel"></div>
+      </div>
+
       <!-- Plugin Detail Dialog -->
       <el-dialog
         v-model="detailDialog"
@@ -117,7 +124,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useAppStore } from '../store.js'
 import { Search, ArrowLeft, ArrowRight, Download } from '@element-plus/icons-vue'
 
@@ -136,6 +143,8 @@ export default {
     const detailDialog = ref(false)
     const selectedPlugin = ref(null)
     const currentImageIndex = ref(0)
+    const infiniteSentinel = ref(null)
+    let observer = null
 
     watch(detailDialog, (newVal) => {
       if (!newVal) {
@@ -170,11 +179,45 @@ export default {
       }
     }
 
+    // IntersectionObserver for infinite scroll
+    onMounted(() => {
+      if ('IntersectionObserver' in window) {
+        observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // 只有在还有更多并且未在加载中时触发
+              if (store.hasMore && !store.loadingMore) {
+                store.load_more_addons()
+              }
+            }
+          })
+        }, {
+          root: null, // 使用视口
+          rootMargin: '0px',
+          threshold: 0.1,
+        })
+        if (infiniteSentinel.value) {
+          observer.observe(infiniteSentinel.value)
+        }
+      }
+    })
+
+    onBeforeUnmount(() => {
+      if (observer && infiniteSentinel.value) {
+        observer.unobserve(infiniteSentinel.value)
+      }
+      if (observer) {
+        observer.disconnect()
+      }
+      observer = null
+    })
+
     return {
       store,
       detailDialog,
       selectedPlugin,
       currentImageIndex,
+      infiniteSentinel,
       showPluginDetail,
       closePluginDetail,
       prevImage,
@@ -428,5 +471,25 @@ export default {
 
 .install-button {
   width: 120px;
+}
+
+/* Infinite scroll */
+.infinite-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 24px;
+}
+
+.infinite-status {
+  color: #a09890;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.infinite-sentinel {
+  width: 100%;
+  height: 1px;
 }
 </style>

@@ -17,6 +17,11 @@ export const useAppStore = defineStore('app', {
     categories: [],
     activeCategory: null,
     tableData: [],
+    // 分页相关
+    page: 1,
+    page_size: 20,
+    hasMore: true,
+    loadingMore: false,
   }),
 
   actions: {
@@ -98,8 +103,15 @@ export const useAppStore = defineStore('app', {
         console.warn('get_addons_list called without an active category.');
         return;
       }
+      // 重置分页
+      this.page = 1;
+      this.hasMore = true;
+      this.loadingMore = false;
+
       let params = { ...this.search_form };
       params.category_id = this.activeCategory.id;
+      params.page = this.page;
+      params.page_size = this.page_size;
       console.log('params', params)
 
       this.main_loading = true
@@ -121,6 +133,11 @@ export const useAppStore = defineStore('app', {
             })
           }
           this.tableData = data
+          console.log(data.length + ' ' + this.page_size)
+          // 判断是否还有更多
+          if (data.length < this.page_size) {
+            this.hasMore = false;
+          }
         } else {
           console.log('获取插件列表失败:', res.message)
         }
@@ -131,6 +148,47 @@ export const useAppStore = defineStore('app', {
         })
       } finally {
         this.main_loading = false
+      }
+    },
+
+    // 加载更多（下一页）
+    async load_more_addons() {
+      if (!this.activeCategory) return;
+      if (this.loadingMore || !this.hasMore) return;
+
+      this.loadingMore = true;
+      try {
+        const nextPage = this.page + 1;
+        let params = { ...this.search_form };
+        params.category_id = this.activeCategory.id;
+        params.page = nextPage;
+        params.page_size = this.page_size;
+        const res = await apiService.getAddonsList(params);
+        if (res.code === 200) {
+          let data = Array.isArray(res.data) ? [...res.data] : []
+          if (data.length > 0) {
+            const baseLen = this.tableData.length;
+            data = data.map((item, index) => {
+              const clone = { ...item }
+              clone.modified = new Date().toLocaleString()
+              const baseKey = clone.id ?? clone.slug ?? clone.title ?? `idx-${baseLen + index}`
+              clone._key = `${String(baseKey)}-${baseLen + index}`
+              return clone
+            })
+            this.tableData = this.tableData.concat(data)
+            this.page = nextPage;
+          }
+          if (data.length < this.page_size) {
+            this.hasMore = false;
+          }
+        } else {
+          console.log('加载更多失败:', res.message)
+        }
+      } catch (err) {
+        console.error('加载更多错误:', err)
+        ElMessage.error(err.message || '加载更多失败')
+      } finally {
+        this.loadingMore = false;
       }
     },
 
