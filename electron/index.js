@@ -17,6 +17,7 @@ const { runExec } = require("./lib/runExec");
 const my_logger = require("electron-log");
 const { send_msg } = require("./lib/notice");
 const { error } = require("electron-log");
+const { WOW_PATH_CONFIG } = require('./config');
 
 let mainWindowId
 
@@ -81,6 +82,16 @@ app.whenReady().then(async () => {
     } catch (e) {
       console.warn('Failed to load Vue Devtools extension:', e)
     }
+  }
+  // 确保 WOW_PATH_CONFIG 文件存在（位于 userData 目录）
+  try {
+    const cfgDir = path.dirname(WOW_PATH_CONFIG);
+    if (!existsSync(cfgDir)) mkdirSync(cfgDir, { recursive: true });
+    if (!existsSync(WOW_PATH_CONFIG)) {
+      await fs.writeFile(WOW_PATH_CONFIG, '{}', 'utf8');
+    }
+  } catch (e) {
+    console.warn('初始化 WOW_PATH_CONFIG 失败:', e);
   }
   createWindow()
   // 注册自定义全局快捷键：Ctrl/Cmd + Alt + Shift + D 切换 DevTools

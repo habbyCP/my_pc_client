@@ -1,4 +1,5 @@
 import { ElMessageBox } from 'element-plus'
+import router from './router'
 
 // 统一的详细错误日志工具函数：任意位置可复用
 export function logDetailedError(tag, e) {
@@ -33,11 +34,12 @@ export default {
                         type: 'warning',
                         customClass: 'custom-message-box',
                         distinguishCancelAndClose: true,
-                        center: true
+                        center: true,   
+                        lockScroll: false
                     }
                 ).then(() => {
-                    // 用户点击确认后跳转到设置页面
-                    context.activeTab = '设置'
+                    // 用户点击确认后使用路由跳转到设置页面
+                    router.push('/settings')
                 }).catch(() => {
                     // 用户取消，不做任何操作
                 })

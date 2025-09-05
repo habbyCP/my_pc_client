@@ -87,6 +87,7 @@ export default {
         this.isSelectingFile = true;
         window.electronAPI.getSettings().then(settings => { 
           if (settings) {
+            console.log('从electron存储中获取到的设置:', settings);
             this.gamePath = settings.gamePath || '';
             this.savedGamePath = this.gamePath;  
             if (this.gamePath) {

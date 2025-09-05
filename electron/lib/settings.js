@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { app } = require('electron');
 const logger = require('electron-log');
+const { WOW_PATH_CONFIG } = require('../config');
 
-// 设置文件路径
-const settingsPath = path.join(app.getAppPath(), '..', 'settings.json');
+// 设置文件路径，统一从 config 中获取，位于 userData 目录
+const settingsPath = WOW_PATH_CONFIG;
 
 /**
  * 获取设置
@@ -49,6 +49,13 @@ function saveSettings(settings) {
   try {
     console.log('正在保存设置:', settings);
     const settingsData = JSON.stringify(settings, null, 2);
+    // 确保目录存在
+    try {
+      const dir = path.dirname(settingsPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    } catch (_) { /* noop */ }
     fs.writeFileSync(settingsPath, settingsData, 'utf8');
     console.log('设置保存成功，路径:', settingsPath);
     return true;
