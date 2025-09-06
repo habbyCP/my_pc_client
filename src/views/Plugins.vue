@@ -40,7 +40,7 @@
       <div class="plugin-list">
         <div v-for="(item, index) in store.tableData" :key="item._key || item.id || item.title || index" class="plugin-card">
           <div class="plugin-content">
-            <div class="plugin-image">
+            <div class="plugin-image"  @click="showPluginDetail(item)">
               <img :src="item.cover" alt="Plugin Image" />
             </div>
             <div class="plugin-info" @click="showPluginDetail(item)">
