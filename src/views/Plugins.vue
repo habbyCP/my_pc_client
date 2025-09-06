@@ -369,7 +369,7 @@ export default {
   color: #e0d6cc;
   line-height: 1.8;
   white-space: pre-line;
-  padding: 12px 14px;
+  padding: 10px;
   border: 1px solid #4a3530;
   border-radius: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
