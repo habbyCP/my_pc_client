@@ -15,7 +15,7 @@
     "publish": {
         "provider": "generic",
         "channel": "latest-win32",
-        "url": "https://download.9136347.com/update/"
+        "url": "https://download.9136347.com/release/"
     },
     "win": {
       "icon": "build/icons/icon.ico",

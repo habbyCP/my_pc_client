@@ -325,6 +325,9 @@ ipcMain.handle('get-installed-plugins', async () => {
     return { success: false, data: [], error: e.message };
   }
 });
+
+// 已弃用：open-image-viewer（现在使用应用内覆盖层显示图片）
+
 send_progress = function (code, data, msg) {
 
   let send_data =

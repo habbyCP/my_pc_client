@@ -95,7 +95,7 @@
                 <el-icon><ArrowLeft /></el-icon>
               </button>
               <div class="screenshot-display">
-                <img :src="selectedPlugin.screenshots[currentImageIndex]" :alt="`Screenshot ${currentImageIndex + 1}`" class="screenshot-image" />
+                <img :src="selectedPlugin.screenshots[currentImageIndex]" :alt="`Screenshot ${currentImageIndex + 1}`" class="screenshot-image" @click="openImageViewer" />
               </div>
               <button class="carousel-btn next-btn" @click="nextImage" v-if="selectedPlugin.screenshots.length > 1">
                 <el-icon><ArrowRight /></el-icon>
@@ -119,6 +119,19 @@
           </span>
         </template>
       </el-dialog>
+      <!-- Fullscreen Image Viewer Overlay -->
+      <div v-if="imageViewerVisible" class="image-viewer-overlay" @click.self="closeImageViewer">
+        <button class="image-viewer-close" @click="closeImageViewer" aria-label="关闭">✕</button>
+        <button v-if="selectedPlugin?.screenshots?.length > 1" class="image-viewer-nav prev" @click.stop="prevImageOverlay">
+          <el-icon><ArrowLeft /></el-icon>
+        </button>
+        <div class="image-viewer-content">
+          <img :src="imageViewerSrc" alt="原图" class="image-viewer-image" />
+        </div>
+        <button v-if="selectedPlugin?.screenshots?.length > 1" class="image-viewer-nav next" @click.stop="nextImageOverlay">
+          <el-icon><ArrowRight /></el-icon>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -145,6 +158,9 @@ export default {
     const currentImageIndex = ref(0)
     const infiniteSentinel = ref(null)
     let observer = null
+    // Image viewer state
+    const imageViewerVisible = ref(false)
+    const imageViewerSrc = ref('')
 
     watch(detailDialog, (newVal) => {
       if (!newVal) {
@@ -179,8 +195,59 @@ export default {
       }
     }
 
+    const openImageViewer = () => {
+      if (selectedPlugin.value && selectedPlugin.value.screenshots) {
+        const src = selectedPlugin.value.screenshots[currentImageIndex.value]
+        imageViewerSrc.value = src
+        imageViewerVisible.value = true
+        document.body.style.overflow = 'hidden'
+      }
+    }
+
+    const closeImageViewer = () => {
+      imageViewerVisible.value = false
+      document.body.style.overflow = ''
+    }
+
+    const onKeydown = (e) => {
+      if (imageViewerVisible.value) {
+        if (e.key === 'Escape') {
+          return closeImageViewer()
+        }
+        if (selectedPlugin.value && selectedPlugin.value.screenshots && selectedPlugin.value.screenshots.length > 1) {
+          if (e.key === 'ArrowLeft') return prevImageOverlay()
+          if (e.key === 'ArrowRight') return nextImageOverlay()
+        }
+      }
+    }
+
+    const updateOverlaySrc = () => {
+      if (selectedPlugin.value && selectedPlugin.value.screenshots) {
+        imageViewerSrc.value = selectedPlugin.value.screenshots[currentImageIndex.value]
+      }
+    }
+
+    const prevImageOverlay = () => {
+      if (selectedPlugin.value && selectedPlugin.value.screenshots) {
+        currentImageIndex.value = currentImageIndex.value > 0
+          ? currentImageIndex.value - 1
+          : selectedPlugin.value.screenshots.length - 1
+        updateOverlaySrc()
+      }
+    }
+
+    const nextImageOverlay = () => {
+      if (selectedPlugin.value && selectedPlugin.value.screenshots) {
+        currentImageIndex.value = currentImageIndex.value < selectedPlugin.value.screenshots.length - 1
+          ? currentImageIndex.value + 1
+          : 0
+        updateOverlaySrc()
+      }
+    }
+
     // IntersectionObserver for infinite scroll
     onMounted(() => {
+      window.addEventListener('keydown', onKeydown)
       if ('IntersectionObserver' in window) {
         observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
@@ -203,6 +270,7 @@ export default {
     })
 
     onBeforeUnmount(() => {
+      window.removeEventListener('keydown', onKeydown)
       if (observer && infiniteSentinel.value) {
         observer.unobserve(infiniteSentinel.value)
       }
@@ -221,7 +289,13 @@ export default {
       showPluginDetail,
       closePluginDetail,
       prevImage,
-      nextImage
+      nextImage,
+      openImageViewer,
+      closeImageViewer,
+      prevImageOverlay,
+      nextImageOverlay,
+      imageViewerVisible,
+      imageViewerSrc
     }
   }
 }
@@ -300,6 +374,7 @@ export default {
   max-width: 100%;
   object-fit: contain;
   border-radius: 4px;
+  cursor: zoom-in;
 }
 
 .carousel-btn {
@@ -491,5 +566,66 @@ export default {
 .infinite-sentinel {
   width: 100%;
   height: 1px;
+}
+
+/* Image Viewer Overlay */
+.image-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-viewer-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.image-viewer-nav.prev { left: 16px; }
+.image-viewer-nav.next { right: 16px; }
+
+.image-viewer-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.image-viewer-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.image-viewer-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 </style>

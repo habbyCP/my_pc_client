@@ -32,3 +32,5 @@ yarn.lock
 # Extensions directory
 /extension/
 logs/application.log
+
+sync_config.jsonc
