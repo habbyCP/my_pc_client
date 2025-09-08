@@ -41,7 +41,7 @@
         <div v-for="(item, index) in store.tableData" :key="item._key || item.id || item.title || index" class="plugin-card">
           <div class="plugin-content">
             <div class="plugin-image"  @click="showPluginDetail(item)">
-              <img :src="item.cover" alt="Plugin Image" />
+              <img :src="item.cover || placeholderImg" alt="Plugin Image" @error="onImgError" />
             </div>
             <div class="plugin-info" @click="showPluginDetail(item)">
               <div class="plugin-header">
@@ -151,6 +151,15 @@ export default {
   },
   setup() {
     const store = useAppStore()
+    // 本地占位图（当封面为空或加载失败时使用）
+    const placeholderImg = new URL('../assets/addons_none.jpg', import.meta.url).href
+    const onImgError = (e) => {
+      if (e && e.target) {
+        e.target.src = placeholderImg
+        // 防止死循环
+        e.target.onerror = null
+      }
+    }
 
     // State for the detail dialog
     const detailDialog = ref(false)
@@ -295,7 +304,9 @@ export default {
       prevImageOverlay,
       nextImageOverlay,
       imageViewerVisible,
-      imageViewerSrc
+      imageViewerSrc,
+      placeholderImg,
+      onImgError
     }
   }
 }

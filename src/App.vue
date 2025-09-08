@@ -33,12 +33,24 @@
           </div>
         </div>
       </div>
+
+      <!-- 应用更新全局遮罩（与插件下载分离的更新进度显示） -->
+      <div class="loading-mask" v-if="appUpdateVisible">
+        <div class="loading-content">
+          <el-icon v-if="appUpdatePercent < 100" class="loading-icon"><Loading /></el-icon>
+          <span>{{ appUpdateMsg }}</span>
+          <div v-if="appUpdatePercent >= 0" class="progress-bar-container">
+            <div class="progress-bar" :style="{ width: appUpdatePercent + '%' }"></div>
+            <span class="progress-text">{{ appUpdatePercent.toFixed(2) }}%</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useAppStore } from './store.js'
 import { checkForUpdatesAndPrompt } from './utils/updateHelper.js'
 import { Loading } from '@element-plus/icons-vue'
@@ -49,6 +61,10 @@ export default {
   setup() {
     const store = useAppStore()
     const isDark = ref(true) // 默认使用暗色主题
+    // 应用更新下载的全局状态
+    const appUpdateVisible = ref(false)
+    const appUpdatePercent = ref(0)
+    const appUpdateMsg = ref('应用更新下载中...')
     
     // 顶部 Logo 图片
     const logoImg = new URL('./assets/logo.png', import.meta.url).href
@@ -59,6 +75,8 @@ export default {
       // { name: '本地插件', path: '/local-plugins' },
       { name: '设置', path: '/settings' },
     ])
+
+    let onStart, onProgress, onEnd
 
     onMounted(async () => {
       // 初始化 store，包括API服务和事件监听
@@ -76,6 +94,42 @@ export default {
       // 初始化插件分类和列表
       await store.get_categories()
       await store.get_addons_list()
+
+      // 监听来自 updateHelper.js 转发的应用更新事件
+      onStart = () => {
+        appUpdateVisible.value = true
+        appUpdatePercent.value = 0
+        appUpdateMsg.value = '应用更新下载中...'
+      }
+      onProgress = (e) => {
+        const p = Number(e?.detail?.percent ?? 0)
+        if (!Number.isNaN(p)) {
+          appUpdatePercent.value = Math.max(0, Math.min(100, p))
+        }
+      }
+      onEnd = (e) => {
+        const { status, message } = e?.detail || {}
+        if (status === 'completed') {
+          appUpdateMsg.value = '更新包下载完成，正在打开安装程序...'
+          appUpdatePercent.value = 100
+        } else if (status === 'error') {
+          appUpdateMsg.value = message || '更新下载失败'
+        }
+        // 稍作延迟让用户看到状态
+        setTimeout(() => {
+          appUpdateVisible.value = false
+        }, 1200)
+      }
+
+      window.addEventListener('app-update-start', onStart)
+      window.addEventListener('app-update-progress', onProgress)
+      window.addEventListener('app-update-end', onEnd)
+    })
+
+    onBeforeUnmount(() => {
+      if (onStart) window.removeEventListener('app-update-start', onStart)
+      if (onProgress) window.removeEventListener('app-update-progress', onProgress)
+      if (onEnd) window.removeEventListener('app-update-end', onEnd)
     })
 
     const openUrl = (url) => {
@@ -96,6 +150,9 @@ export default {
       store, // 将 store 暴露给模板
       logoImg,
       openUrl,
+      appUpdateVisible,
+      appUpdatePercent,
+      appUpdateMsg,
     }
   },
 }

@@ -147,30 +147,30 @@ async function downloadUpdateAndInstall(win, downloadUrl) {
     const fileStream = fs.createWriteStream(filePath);
     const totalBytes = parseInt(response.headers['content-length'], 10);
     try { console.log('[Updater][Download] 保存路径 =>', filePath, '总大小(bytes) =>', totalBytes); } catch (_) {}
-    // let downloadedBytes = 0;
+    let downloadedBytes = 0;
 
-    // response.on('data', (chunk) => {
-    //   downloadedBytes += chunk.length;
-    //   const progress = (downloadedBytes / totalBytes) * 100;
-    //   win.webContents.send('download-progress', { status: 'progress', percent: progress.toFixed(2), message: '下载中...' });
-    //   // 进度日志（保留两位小数）
-    //   try { console.log('[Updater][Download] 进度 =>', progress.toFixed(2) + '%'); } catch (_) {}
-    // });
+    response.on('data', (chunk) => {
+      downloadedBytes += chunk.length;
+      const progress = (downloadedBytes / totalBytes) * 100;
+      win.webContents.send('app-update-progress', { status: 'progress', percent: progress.toFixed(2), message: '下载中...' });
+      // 进度日志（保留两位小数）
+      try { console.log('[Updater][Download] 进度 =>', progress.toFixed(2) + '%'); } catch (_) {}
+    });
 
     response.on('end', () => {
       fileStream.close(() => {
-        win.webContents.send('download-progress', { status: 'completed', path: filePath, message: '下载完成' });
+        win.webContents.send('app-update-end', { status: 'completed', path: filePath, message: '下载完成' });
         try { console.log('[Updater][Download] 下载完成，已保存 =>', filePath); } catch (_) {}
         shell.openPath(filePath).catch(err => {
             console.error('Failed to open installer:', err);
-            win.webContents.send('download-progress', { status: 'error', message: '无法打开安装程序' });
+            win.webContents.send('app-update-end', { status: 'error', message: '无法打开安装程序' });
         });
       });
     });
 
     response.on('error', (err) => {
         fs.unlink(filePath, () => {}); // 清理临时文件
-        win.webContents.send('download-progress', { status: 'error', message: `下载出错: ${err.message}` });
+        win.webContents.send('app-update-end', { status: 'error', message: `下载出错: ${err.message}` });
     });
 
     response.pipe(fileStream);
@@ -178,7 +178,7 @@ async function downloadUpdateAndInstall(win, downloadUrl) {
 
   req.on('error', (err) => {
     try { console.error('[Updater][Download] 请求错误 =>', err && err.message ? err.message : err); } catch (_) {}
-    win.webContents.send('download-progress', { status: 'error', message: `请求错误: ${err.message}` });
+    win.webContents.send('app-update-end', { status: 'error', message: `请求错误: ${err.message}` });
   });
 }
 
