@@ -21,21 +21,26 @@ export async function checkForUpdatesRaw() {
   }
 }
 
-// 监听主进程的下载进度事件，并转换为全局DOM事件
-if (window.electronAPI && typeof window.electronAPI.onDownloadProgress === 'function') {
-  window.electronAPI.onDownloadProgress((data) => {
-    const { status, percent, message, path } = data;
+// 监听主进程的“应用更新”专用事件，并转换为全局 DOM 事件
+if (window.electronAPI && typeof window.electronAPI.onAppUpdateProgress === 'function') {
+  window.electronAPI.onAppUpdateProgress((data) => {
+    const { status, percent } = data || {};
     if (status === 'progress') {
       window.dispatchEvent(new CustomEvent('app-update-progress', { detail: { percent } }));
-    } else {
-      // 无论页面是否监听事件，都直接给出用户可见的提示
-      if (status === 'completed') {
-        ElMessage.success('更新包下载完成');
-      } else if (status === 'error') {
-        ElMessage.error(message || '下载失败');
-      }
-      window.dispatchEvent(new CustomEvent('app-update-end', { detail: { status, message, path } }));
     }
+  });
+}
+
+if (window.electronAPI && typeof window.electronAPI.onAppUpdateEnd === 'function') {
+  window.electronAPI.onAppUpdateEnd((data) => {
+    const { status, message, path } = data || {};
+    // 无论页面是否监听事件，都直接给出用户可见的提示
+    if (status === 'completed') {
+      ElMessage.success('更新包下载完成');
+    } else if (status === 'error') {
+      ElMessage.error(message || '下载失败');
+    }
+    window.dispatchEvent(new CustomEvent('app-update-end', { detail: { status, message, path } }));
   });
 }
 

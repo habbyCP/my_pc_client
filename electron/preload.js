@@ -30,6 +30,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isDuplicateDirectory: (version_data) => ipcRenderer.invoke('is-duplicate-directory', version_data),
 
   onDownloadProgress: (callback) => ipcRenderer.on('download-progress', (_, data) => callback(data)),
+  // 应用更新专用事件（与插件下载区分）
+  onAppUpdateProgress: (callback) => ipcRenderer.on('app-update-progress', (_, data) => callback(data)),
+  onAppUpdateEnd: (callback) => ipcRenderer.on('app-update-end', (_, data) => callback(data)),
   
   // 设置相关API
   // 选择目录
