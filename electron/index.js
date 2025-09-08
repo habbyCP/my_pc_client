@@ -158,9 +158,18 @@ app.on('will-quit', () => {
 //文件下载相关的
 ipcMain.handle('download-file',  down_addons);
 
-//浏览器打开链接
+// 浏览器打开链接（支持直接传字符串或 { outLink } 对象）
 ipcMain.on('open-link', function (event, data) {
-  shell.openExternal(data.outLink);
+  try {
+    const url = typeof data === 'string' ? data : (data && data.outLink);
+    if (url) {
+      shell.openExternal(url);
+    } else {
+      console.warn('open-link 调用缺少 URL:', data);
+    }
+  } catch (e) {
+    console.error('open-link 处理失败:', e);
+  }
 })
 // 打开本地路径
 ipcMain.on('open-local-path', function (event, data) {

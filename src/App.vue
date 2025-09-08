@@ -11,7 +11,9 @@
         </router-link>
       </div>
       <div class="header-actions">
-        <el-button type="primary" size="medium" class="start-button" @click="store.start_wow">启动游戏</el-button>
+        <el-button size="medium" @click="openUrl('https://cn.turtle-wow.org/')">乌龟官网</el-button>
+        <el-button size="medium" @click="openUrl('https://www.kookapp.cn/app/invite/jzgWqY')">乌龟Kook</el-button>
+        <el-button type="primary" size="medium" class="start-button" @click="openUrl('https://kook.vip/tIsMSv')">龟龟助手KOOK</el-button>
       </div>
     </div>
 
@@ -76,11 +78,24 @@ export default {
       await store.get_addons_list()
     })
 
+    const openUrl = (url) => {
+      try {
+        if (window?.electronAPI?.openLink) {
+          window.electronAPI.openLink(url)
+        } else {
+          console.error('electronAPI.openLink 不可用：请确保在 preload 中通过 contextBridge 暴露 openLink，并在主进程使用 shell.openExternal 处理。')
+        }
+      } catch (e) {
+        console.error('打开外部链接失败:', e)
+      }
+    }
+
     return {
       tabs,
       isDark,
       store, // 将 store 暴露给模板
       logoImg,
+      openUrl,
     }
   },
 }
@@ -107,6 +122,17 @@ export default {
 
 .content-container {
   position: relative;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.contact-button {
+  font-weight: 700;
 }
 
 .loading-mask {

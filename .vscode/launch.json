@@ -3,10 +3,10 @@
   "configurations": [
  
     {
-      "name": "启动应用 (npm run start)",
+      "name": "启动应用 (pnpm run start)",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run start",
+      "command": "pnpm run start",
       "cwd": "${workspaceFolder}"
     }
   ]
