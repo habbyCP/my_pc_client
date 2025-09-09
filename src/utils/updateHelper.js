@@ -68,7 +68,7 @@ export async function checkForUpdatesAndPrompt(options = {}) {
           type: 'info',
           confirmButtonText: '立即下载',
           showCancelButton: false,
-          showClose: false,
+          showClose: true,
           closeOnClickModal: false,
           closeOnPressEscape: false,
           lockScroll: false
