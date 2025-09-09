@@ -70,9 +70,9 @@ export default {
     const logoImg = new URL('./assets/logo.png', import.meta.url).href
 
     const tabs = ref([
+      { name: '本地插件', path: '/local-plugins' },
       { name: '插件库', path: '/plugins' },
       { name: '资源下载', path: '/downloads' },
-      // { name: '本地插件', path: '/local-plugins' },
       { name: '设置', path: '/settings' },
     ])
 

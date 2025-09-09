@@ -7,10 +7,11 @@ const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
 const { ERROR_CODE } = require("./lib/error_code");
 const { down_addons,is_duplicate_directory } = require("./lib/down"); 
-const { getInstalledPlugins } = require('./lib/db');
+// const { getInstalledPlugins } = require('./lib/db');
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 const { applyClientPatches } = require("./lib/patcher_service");
 const { checkForUpdates, downloadUpdateAndInstall } = require("./lib/custom_updater");
+const { getLocalAddons } = require('./service/addon_service');
 
 const { runExec } = require("./lib/runExec");
 
@@ -62,7 +63,8 @@ function createWindow() {
   let url
   if (process.env.NODE_ENV === 'development') {
     url = 'http://localhost:3000'
-    // 默认不自动打开 DevTools，改为通过自定义快捷键触发
+    // 开发模式下默认打开 DevTools
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
     url = 'file://' + path.join(__dirname, '../dist/index.html')
   }
@@ -328,10 +330,10 @@ ipcMain.handle('get-config', () => {
 // 本地已安装插件列表
 ipcMain.handle('get-installed-plugins', async () => {
   try {
-    const rows = await getInstalledPlugins();
-    return { success: true, data: rows };
+    // 使用新的 addon_service 模块获取本地插件信息
+    return getLocalAddons();
   } catch (e) {
-    return { success: false, data: [], error: e.message };
+    return { success: false, data: { addons: [], addonsMap: {} }, error: e.message };
   }
 });
 

@@ -178,21 +178,21 @@ body {
  
 
 /* Custom Scrollbar for main-content */
-.main-content::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 8px;
 }
 
-.main-content::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #1a1815;
   border-radius: 4px;
 }
 
-.main-content::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #c28540;
   border-radius: 4px;
 }
 
-.main-content::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #d9a05c;
 }
 
