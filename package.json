@@ -1,7 +1,7 @@
 {
   "name": "turtle-helper",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "龟龟助手",
   "keywords": [
     "electron",

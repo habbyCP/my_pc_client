@@ -122,8 +122,7 @@ export default {
 .meta-value { color: #e0d6cc; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; line-height: 1; }
 .badge-danger { background: rgba(245, 108, 108, 0.15); color: #f56c6c; border: 1px solid rgba(245, 108, 108, 0.5); }
-.plugin-actions { display: flex; flex-direction: row; gap: 8px; min-width: 200px; align-items: center; align-self: auto; justify-content: flex-end; }
-.install-button { width: 100px; }
+.plugin-actions { display: flex; flex-direction: row; gap: 8px; min-width: 200px; align-items: center; align-self: auto; justify-content: flex-end; } 
 .empty-tip { text-align: center; color: #a09890; padding: 20px 0; }
 
 /* 响应式：窄屏时纵向堆叠 */

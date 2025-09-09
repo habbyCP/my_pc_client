@@ -115,3 +115,344 @@
 .install-button {
   min-width: 100px;
 }
+
+.green-button {
+  background-color: #6dbd27 !important;
+  border-color: #497f19 !important;
+
+  color: white !important;
+}
+
+.green-button:hover {
+  background-color: #7acc35 !important;
+  border-color: #7acc35 !important;
+}
+
+/* Scoped styles from both files, merged */
+.plugins-view-container {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #2c2c2c; 
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+}
+
+ 
+
+/* .category-item:hover {
+  background-color: #3a3a3a;
+}
+
+.category-item.active {
+  background-color: #c28540;
+  color: white;
+  font-weight: bold;
+} */
+
+ 
+
+/* 弹窗通用结构样式已抽取到 src/assets/styles/dialog.css 并通过 .app-dialog 应用。
+   这里仅保留与内容显示相关的样式。 */
+
+.plugin-detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+.screenshot-carousel {
+  margin-bottom: 20px;
+}
+
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #252220;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.screenshot-display {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.screenshot-image {
+  height: 300px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: zoom-in;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #e0d6cc;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.carousel-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #c28540;
+}
+
+.prev-btn {
+  left: 10px;
+}
+
+.next-btn {
+  right: 10px;
+}
+
+.plugin-text-content {
+  flex: 1;
+  overflow-y: auto;
+  color: #e0d6cc;
+}
+
+.plugin-text-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.plugin-text-content::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+
+.plugin-text-content::-webkit-scrollbar-thumb {
+  background: #a09890;
+  border-radius: 3px;
+}
+
+.plugin-text-content::-webkit-scrollbar-thumb:hover {
+  background: #e0d6cc;
+}
+
+.plugin-description-detail {
+  margin-bottom: 20px;
+}
+
+.plugin-description-detail h4 {
+  color: #c28540;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.text-content {
+  background-color: #252220;
+  color: #e0d6cc;
+  line-height: 1.8;
+  white-space: pre-line;
+  padding: 10px;
+  border: 1px solid #4a3530;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  overflow-wrap: anywhere;
+}
+
+.dialog-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.plugin-content {
+  cursor: pointer;
+}
+
+.plugin-content:hover {
+  background-color: #2a2520 !important;
+}
+
+/* Copied from PluginLibrary.vue, but it's not scoped, so it should be global or in a separate css file if needed */
+/* I will keep it here for now */
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+}
+
+.plugin-image {
+  width: 120px;
+  height: 80px;
+  flex: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.plugin-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plugin-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.plugin-header {
+  margin-bottom: 10px;
+}
+
+.plugin-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e0d6cc;
+  margin-bottom: 5px;
+}
+
+.plugin-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.plugin-badge {
+  background-color: #4a3530;
+  color: #e0d6cc;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.plugin-description {
+  font-size: 14px;
+  color: #a09890;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.plugin-meta {
+  font-size: 12px;
+  color: #a09890;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.plugin-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 160px;
+  flex: none;
+  padding: 0 12px 0 16px;
+  border-left: 1px solid #332e2a;
+}
+
+.install-button {
+  width: 120px;
+}
+
+
+
+/* Infinite scroll */
+.infinite-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 24px;
+}
+
+.infinite-status {
+  color: #a09890;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.infinite-sentinel {
+  width: 100%;
+  height: 1px;
+}
+
+/* Image Viewer Overlay */
+.image-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-viewer-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.image-viewer-nav.prev { left: 16px; }
+.image-viewer-nav.next { right: 16px; }
+
+.image-viewer-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.image-viewer-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.image-viewer-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
