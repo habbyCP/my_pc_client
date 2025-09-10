@@ -3,6 +3,7 @@ const path = require('path');
 const logger = require('electron-log');
 const { getSettings } = require('../lib/settings');
 const { findAddonsDirectory } = require('../lib/path_validator');
+const { getInstalledPlugins } = require('../lib/db');
 const { promisify } = require('util');
 
 /**
@@ -182,25 +183,189 @@ function scanAddons() {
 }
 
 /**
- * 获取所有本地插件信息
- * @returns {Object} 包含插件信息的对象
+ * 获取数据库中的插件信息
+ * @returns {Promise<Array>} 插件信息数组
  */
-function getLocalAddons() {
+async function getDbPlugins() {
   try {
-    const addons = scanAddons();
+    // 从数据库中获取已安装的插件信息
+    const dbPlugins = await getInstalledPlugins();
+    
+    // 将数据库中的插件信息转换为与扫描到的插件信息相同的格式
+    return dbPlugins.map(plugin => ({
+      plugin_id: plugin.plugin_id,
+      file_list: plugin.file_list,
+      title: plugin.title,
+      version: plugin.version,
+      installedAt: plugin.installed_at,
+      override_mode: plugin.override_mode || 1,
+      from_db: true // 标记来自数据库的插件
+    }));
+  } catch (error) {
+    logger.error('从数据库获取插件信息失败:', error);
+    return [];
+  }
+}
+
+/**
+ * 合并本地扫描到的插件和数据库中的插件信息
+ * @param {Array} localAddons 本地扫描到的插件
+ * @param {Array} dbAddons 数据库中的插件
+ * @returns {Array} 合并后的插件列表
+ */
+function mergeAddons(localAddons, dbAddons) {
+  // 创建一个映射，以插件名称为键，存放本地插件
+  const localAddonMap = {};
+  localAddons.forEach(addon => {
+    localAddonMap[addon.name] = { ...addon, override_mode: 1, under_controller: 0 }; // 默认 override_mode 为 1
+  });
+
+  // 最终的插件列表
+  const resultAddons = [];
+  
+  // 记录已处理过的数据库插件 ID，确保每个插件只添加一次
+  const processedDbPluginIds = new Set();
+  const needDel = [];
+  // 先处理数据库中的插件，以数据库中的数据为准
+  for (const dbAddon of dbAddons) {
+    // 如果该插件已经处理过，跳过
+    if (processedDbPluginIds.has(dbAddon.plugin_id)) {
+      continue;
+    }
+    
+    // 如果数据库插件有 file_list
+    if (dbAddon.plugin_id && dbAddon.file_list && Array.isArray(dbAddon.file_list)) {
+      let matchFound = false;  
+      let MissDir = []
+      // 首先尝试在本地插件中找到匹配项
+      for (const dirName of dbAddon.file_list) {
+
+        if (typeof dirName === 'string' && dirName.trim()) {
+          const trimmedDirName = dirName.trim();
+          
+          // 如果是 Blizzard_ 开头的插件，直接跳过
+          if (trimmedDirName.startsWith('Blizzard_')) {
+            continue;
+          }
+          
+          if (localAddonMap[trimmedDirName]) {
+            // console.log('找到匹配项:', trimmedDirName);
+            matchFound = true; 
+            needDel.push(trimmedDirName);
+          }else{
+            console.log('未找到匹配项:', trimmedDirName);
+            MissDir.push(trimmedDirName)
+          }
+        }
+      }
+      
+      // 如果找到了匹配项
+      if (matchFound) {
+        // 创建一个新的插件对象，使用数据库中的数据覆盖本地数据
+        const mergedAddon = { 
+          title: dbAddon.title,   // 使用数据库中的标题，如果有的话
+          version: dbAddon.version,   // 使用数据库中的版本，如果有的话
+          installedAt: dbAddon.installedAt,  // 使用数据库中的安装时间，如果有的话
+          plugin_id: dbAddon.plugin_id,
+          override_mode: dbAddon.override_mode || 1,
+          db_file_list: dbAddon.file_list, // 保存数据库中的完整文件列表
+          under_controller: 1, 
+          miss_dir: MissDir
+        };
+        
+        // 添加到结果列表
+        resultAddons.push(mergedAddon); 
+      } else {
+        // 如果本地没有匹配项，但数据库中有记录
+        // 选择第一个有效的目录名作为插件名称
+        let addonName = '';
+        for (const dirName of dbAddon.file_list) {
+          if (typeof dirName === 'string' && dirName.trim()) {
+            addonName = dirName.trim();
+            break;
+          }
+        }
+        
+        if (addonName) {
+          resultAddons.push({
+            name: addonName,
+            title: dbAddon.title || '',
+            version: dbAddon.version || '',
+            installedAt: dbAddon.installedAt || new Date().toISOString(),
+            plugin_id: dbAddon.plugin_id,
+            override_mode: dbAddon.override_mode || 1,
+            from_db: true,
+            db_file_list: dbAddon.file_list,
+            under_controller: 1, 
+            miss_dir: dbAddon.file_list
+          });
+        }
+      }
+       
+    }
+  }
+  for (const addonName of needDel) {
+    delete localAddonMap[addonName];
+  }
+  // 添加剩余的本地插件（数据库中没有的）
+  for (const addonName in localAddonMap) {
+    // 跳过 Blizzard_ 开头的插件
+    if (addonName.startsWith('Blizzard_')) {
+      continue;
+    }
+    resultAddons.push(localAddonMap[addonName]);
+  }
+  
+  return resultAddons;
+}
+
+/**
+ * 根据 override_mode 对插件进行排序
+ * @param {Array} addons 插件数组
+ * @returns {Array} 排序后的插件数组
+ */
+function sortAddonsByOverrideMode(addons) {
+  return [...addons].sort((a, b) => {
+    // 先按 override_mode 排序，将 override_mode=2 的插件放在前面
+    if ((a.override_mode === 2) && (b.override_mode !== 2)) {
+      return -1;
+    }
+    if ((a.override_mode !== 2) && (b.override_mode === 2)) {
+      return 1;
+    }
+    // 如果 override_mode 相同，则按安装时间排序（新到旧）
+    return new Date(b.installedAt || 0) - new Date(a.installedAt || 0);
+  });
+}
+
+/**
+ * 获取所有本地插件信息
+ * @returns {Promise<Object>} 包含插件信息的对象
+ */
+async function getLocalAddons() {
+  try {
+    // 扫描本地插件
+    const localAddons = scanAddons(); 
+    // 从数据库中获取插件信息
+    const dbAddons = await getDbPlugins(); 
+    // 合并本地插件和数据库插件信息
+    const mergedAddons = mergeAddons(localAddons, dbAddons);
+    
+    // 根据 override_mode 排序，将 override_mode=2 的插件放到前面
+    // const sortedAddons = sortAddonsByOverrideMode(mergedAddons);
     
     // 构建插件信息映射
-    const addonsMap = {};
-    addons.forEach(addon => {
-      addonsMap[addon.name] = addon;
-    });
+    // const addonsMap = {};
+    // sortedAddons.forEach(addon => {
+    //   addonsMap[addon.name] = addon;
+    // });
     
     return {
       success: true,
       message: '成功获取本地插件信息',
       data: {
-        addons: addons,
-        addonsMap: addonsMap
+        addons: mergedAddons,
+        // addonsMap: addonsMap
       }
     };
   } catch (error) {

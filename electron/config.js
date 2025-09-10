@@ -14,10 +14,15 @@ const baseConfig = {
 
 const devConfig = {
   ...baseConfig,
-  API_URL: 'https://addons_api.9136347.com/api',
+  // API_URL: 'https://addons_api.9136347.com/api',
+  // WOW_PATH_CONFIG: wowPathConfigFile,
+  // //静态资源地址
+  // STATIC_URL: 'https://download.9136347.com'
+
+  API_URL: 'http://localhost:8888/api',
   WOW_PATH_CONFIG: wowPathConfigFile,
   //静态资源地址
-  STATIC_URL: 'https://download.9136347.com'
+  STATIC_URL: 'http://localhost:8888'
 };
 
 const prodConfig = {

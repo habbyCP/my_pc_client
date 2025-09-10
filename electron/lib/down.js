@@ -11,7 +11,7 @@ const {wow_path} = require("../service/wow_service");
 const {send_progress, mainWindowId} = require("../index");
 const {getSettings} = require("./settings");
 const {findAddonsDirectory} = require("./path_validator");
-const { saveInstalledPlugin } = require('./db');
+const { saveInstalledPlugin, savePluginDirectories } = require('./db');
 let  req_list  = new Map()
 
 exports.is_duplicate_directory = function (event, data) {
@@ -251,12 +251,20 @@ exports.down_addons = async function (event, down_data) {
 
                 // 6. 安装成功后，记录到本地 SQLite（若可用）
                 try {
+                    const plugin_id = down_data.id ?? down_data.plugin_id ?? '';
+                    const file_list = Array.isArray(down_data.file_list) ? down_data.file_list : [];
+                    
+                    // 保存插件基本信息
                     await saveInstalledPlugin({
-                        plugin_id: down_data.id ?? down_data.plugin_id ?? '',
+                        plugin_id,
                         title: down_data.title ?? '',
                         version: down_data.version ?? '',
-                        file_list: Array.isArray(down_data.file_list) ? down_data.file_list : [],
+                        file_list,
+                        override_mode: down_data.override_mode
                     });
+                    
+                    // 保存插件目录信息到新表
+                    // await savePluginDirectories(plugin_id, file_list);
                 } catch (dbErr) {
                     error('保存已安装插件到本地数据库失败:', dbErr);
                 }
