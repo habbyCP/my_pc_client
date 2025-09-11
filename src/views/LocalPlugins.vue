@@ -1,6 +1,9 @@
 <template>
   <div class="local-plugins-container" >
  
+    <div class="search-bar"> 
+        <el-button type="primary" class="start-button" @click="refreshData">检查更新</el-button>
+      </div>
 
     <div class="plugin-list">
       <div v-for="(item, index) in list" :key="item.plugin_id || index" class="plugin-card">
@@ -20,15 +23,18 @@
                   <span class="meta-label">安装时间:</span>
                   <span class="meta-value">{{ formatTime(item.installedAt) }}</span>
                 </span>
-              </div>
-              <el-tooltip v-if="item.is_broken" content="助手检测到目录有缺失" placement="top">
-                <span class="badge badge-danger">破损需更新</span>
-              </el-tooltip>
+              </div> 
             </div>
           </div>
           <div class="plugin-actions">
-            <el-button v-if="item.is_broken" class="install-button" type="success">更新</el-button>
-            <el-button v-else class="install-button" type="primary" plain>重新安装</el-button>
+            <el-button v-if="item.miss_dir && item.miss_dir.length > 0"  class="install-button" type="success">重新安装</el-button>
+            <el-button v-else class="install-button" type="primary" plain>更新</el-button>
+          </div>
+        </div>
+        <div v-if="item.miss_dir && item.miss_dir.length > 0" class="missing-dirs-bar">
+          <div class="missing-dirs-title">缺失插件目录:</div>
+          <div class="missing-dirs-content">
+            <span v-for="(dir, dirIndex) in item.miss_dir" :key="dirIndex" class="missing-dir">{{ dir }}</span>
           </div>
         </div>
       </div>
@@ -49,28 +55,57 @@ export default {
     const keyword = ref('')
     const placeholder = '/favicon.ico'
 
-    const fetchData = async () => { 
+    // 从 API 加载数据的函数
+    const loadDataFromAPI = async () => {
+ 
       loading.value = true
       try {
+        console.log('开始调用 getInstalledPlugins API')
         const res = await window.electronAPI.getInstalledPlugins()
-        console.log("getInstalledPlugins",res)
+        console.log('API 返回结果:', res)
         if (res.success) {
           list.value = res.data.addons
+          // 将数据缓存到 sessionStorage
+          sessionStorage.setItem('localPluginsData', JSON.stringify(res.data.addons))
+        } else {
+          console.error('API 返回失败:', res.message || '未知错误')
+          list.value = []
         }
-        
       } catch (e) {
+        console.error('捕获到异常:', e)
         list.value = []
       } finally {
+        console.log('finally 块执行')
         loading.value = false
       }
     }
+    
+    // 强制刷新数据的函数
+    const refreshData = async () => { 
+      // 删除缓存数据
+      sessionStorage.removeItem('localPluginsData')
+      // 重新加载数据 
+      await loadDataFromAPI()
+    }
+    
+    // 获取数据的函数，优先使用缓存
+    const fetchData = async () => { 
+      // 检查 sessionStorage 中是否有缓存数据
+      const cachedData = sessionStorage.getItem('localPluginsData')
+      
+      if (cachedData) {
+        // 如果有缓存数据，直接使用
+        console.log('使用缓存数据')
+        list.value = JSON.parse(cachedData)
+        return
+      }
+      
+      // 没有缓存数据，需要重新加载
+      alert("getInstalledPlugins")
+      await loadDataFromAPI()
+    }
 
-    // const filteredList = computed(() => {
-    //   const k = keyword.value.trim().toLowerCase()
-    //   if (!k) return list.value
-    //   return list.value.filter(i => String(i.title || i.plugin_id).toLowerCase().includes(k))
-    // })
-
+    // 格式化时间
     const formatTime = (t) => {
       if (!t) return '未知'
       try { return new Date(t).toLocaleString() } catch { return t }
@@ -158,28 +193,25 @@ export default {
       return processedTitle
     }
 
-    onMounted(fetchData)
+    onMounted(()=>{
+      fetchData()
+    })
 
-    return { list, loading, keyword, placeholder, formatTime, parseWowTitle }
+    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData }
   }
 }
 </script>
 
 <style scoped>
 .local-plugins-container {
-  padding: 20px;
+  padding: 15px;
   background-color: #1a1a1a;
   min-height: calc(100vh - 130px);
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 90px);
 }
-.header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
+ 
 .plugin-list {
   display: flex;
   flex-direction: column;
@@ -244,10 +276,47 @@ export default {
 .plugin-actions { display: flex; flex-direction: row; gap: 8px; min-width: 200px; align-items: center; align-self: auto; justify-content: flex-end; } 
 .empty-tip { text-align: center; color: #a09890; padding: 20px 0; }
 
+/* 缺失目录横条样式 */
+.missing-dirs-bar {
+  background-color: rgba(245, 108, 108, 0.1);
+  border-top: 1px solid rgba(245, 108, 108, 0.3);
+  padding: 8px 15px;
+  display: flex;
+  /* align-items: center; */
+  border-radius: 0 0 8px 8px;
+  overflow: auto;
+  max-height: 60px;
+}
+
+.missing-dirs-title {
+  color: #f56c6c;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.missing-dirs-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.missing-dir {
+  background: rgba(245, 108, 108, 0.15);
+  color: #f56c6c;
+  border: 1px solid rgba(245, 108, 108, 0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
 /* 响应式：窄屏时纵向堆叠 */
 @media (max-width: 768px) {
   .plugin-content { flex-direction: column; align-items: stretch; gap: 12px; }
   .plugin-info { padding: 0; }
   .plugin-actions { align-self: stretch; flex-direction: row; }
+  .missing-dirs-bar { flex-direction: column; align-items: flex-start; }
+  .missing-dirs-title { margin-bottom: 6px; }
 }
 </style>

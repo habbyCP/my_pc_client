@@ -150,7 +150,22 @@ function scanAddons() {
       try {
         const addonPath = path.join(addonsPath, addonDir);
         const tocFilePath = path.join(addonPath, `${addonDir}.toc`);
-
+        
+        // 获取目录创建时间作为安装时间
+        const installedAt = getDirectoryCreationTime(addonPath);
+        
+        // 基本插件信息
+        const addonInfo = {
+          name: addonDir,
+          path: addonPath,
+          installedAt: installedAt,
+          // 默认值
+          title: addonDir,
+          notes: '',
+          version: '',
+          dependencies: []
+        };
+        
         // 检查是否存在同名的toc文件
         if (fs.existsSync(tocFilePath)) {
           // 读取toc文件内容
@@ -159,17 +174,12 @@ function scanAddons() {
           // 解析toc文件
           const tocInfo = parseTocFile(tocContent);
           
-          // 获取目录创建时间作为安装时间
-          const installedAt = getDirectoryCreationTime(addonPath);
-          
-          // 添加到插件信息数组
-          addonsInfo.push({
-            name: addonDir,
-            path: addonPath,
-            installedAt: installedAt,
-            ...tocInfo
-          });
+          // 合并toc信息
+          Object.assign(addonInfo, tocInfo);
         }
+        
+        // 添加到插件信息数组
+        addonsInfo.push(addonInfo);
       } catch (error) {
         logger.error(`解析插件 ${addonDir} 失败:`, error);
       }
@@ -252,7 +262,6 @@ function mergeAddons(localAddons, dbAddons) {
             matchFound = true; 
             needDel.push(trimmedDirName);
           }else{
-            console.log('未找到匹配项:', trimmedDirName);
             MissDir.push(trimmedDirName)
           }
         }

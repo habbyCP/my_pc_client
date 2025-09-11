@@ -56,15 +56,65 @@ exports.is_duplicate_directory = function (event, data) {
 } 
 
 //安装插件
-exports.addons_install =  function (tmp_dir,addons_dir){
-    console.log(tmp_dir,addons_dir)
+exports.addons_install = function (tmp_dir, addons_dir) {
+    const {debug, error} = require("./log");
+    debug(`开始安装插件: 从 ${tmp_dir} 到 ${addons_dir}`);
+    
     return new Promise((resolve, reject) => {
-        fs.cp(tmp_dir, addons_dir, { recursive: true }, (err) => {
-        if (err) {
-            reject(err);
-        }
-        resolve();
-    })
+        // 读取源目录中的所有文件和文件夹
+        fs.readdir(tmp_dir, { withFileTypes: true }, (err, entries) => {
+            if (err) {
+                error(`读取源目录失败: ${err.message}`);
+                return reject(err);
+            }
+            
+            // 确保目标目录存在
+            if (!fs.existsSync(addons_dir)) {
+                try {
+                    fs.mkdirSync(addons_dir, { recursive: true });
+                    debug(`创建目标目录: ${addons_dir}`);
+                } catch (mkdirErr) {
+                    error(`创建目标目录失败: ${mkdirErr.message}`);
+                    return reject(mkdirErr);
+                }
+            }
+            
+            // 如果源目录为空，直接返回成功
+            if (entries.length === 0) {
+                debug(`源目录为空，无需复制`);
+                return resolve();
+            }
+            
+            // 跟踪复制操作的完成情况
+            let completed = 0;
+            let hasError = false;
+            
+            // 遍历源目录中的每个条目
+            entries.forEach(entry => {
+                const sourcePath = path.join(tmp_dir, entry.name);
+                const destPath = path.join(addons_dir, entry.name);
+                
+                debug(`复制: ${sourcePath} -> ${destPath}`);
+                
+                // 使用递归复制
+                fs.cp(sourcePath, destPath, { recursive: true }, (cpErr) => {
+                    if (cpErr && !hasError) {
+                        hasError = true;
+                        error(`复制失败: ${cpErr.message}`);
+                        return reject(cpErr);
+                    }
+                    
+                    completed++;
+                    debug(`完成复制 ${entry.name} (${completed}/${entries.length})`);
+                    
+                    // 当所有条目都复制完成时，解析 Promise
+                    if (completed === entries.length && !hasError) {
+                        debug(`所有文件复制完成，共 ${entries.length} 个条目`);
+                        resolve();
+                    }
+                });
+            });
+        });
     });
 }
 
@@ -170,6 +220,7 @@ async function unzipFile(file_tmp_path, file_unzip_path, event, index) {
 
 // 安装插件
 async function installAddon(file_unzip_path, addons_path, file_tmp_path, event, index) {
+
     await exports.addons_install(file_unzip_path, addons_path);
     
     //解压完成后删除临时文件
@@ -203,21 +254,24 @@ exports.down_addons = async function (event, down_data) {
             data: null
         }
     }
-    
+    let addons_install_path = ""
     // 使用path_validator模块查找或创建插件目录
-    const result = findAddonsDirectory(settings.gamePath,down_data.override_mode);
-     
-    if (!result.success) {
-        return {
-            code: result.code,
-            message: result.message,
-            data: result.data
-        };
+    if (down_data.override_mode === 2) {
+        // 获取游戏路径的父文件夹路径
+        addons_install_path = path.dirname(settings.gamePath);
+    }else{
+        const result = findAddonsDirectory(settings.gamePath,down_data.override_mode);
+        if (!result.success) {
+            return {
+                code: result.code,
+                message: result.message,
+                data: result.data
+            };
+        }
+        addons_install_path = result.data.addonsPath
     }
     
-    // 将插件目录路径添加到下载数据中
-    down_data.addonsPath = result.data.addonsPath;
-    console.log("找到或创建的插件目录:", result.data.addonsPath);
+    console.log("找到或创建的插件目录:", addons_install_path);
     debug("收到下载需求：", down_data)
     try {
         // 解析URL
@@ -242,7 +296,7 @@ exports.down_addons = async function (event, down_data) {
             // 4. 解压文件
             await unzipFile(file_tmp_path, file_unzip_path, event, down_data.index);
             
-            let addons_path = down_data.addonsPath;
+            let addons_path = addons_install_path;
             error("插件路径", addons_path);
             
             try {

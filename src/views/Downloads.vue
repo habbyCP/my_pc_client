@@ -169,7 +169,7 @@ export default {
 }
 
 .client-list-container {
-  padding: 20px;
+  padding: 15px;
   background-color: #1a1a1a;
   min-height: calc(100vh - 130px);
 }
