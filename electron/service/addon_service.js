@@ -238,8 +238,7 @@ function mergeAddons(localAddons, dbAddons) {
       let matchFound = false;  
       let MissDir = []
       // 首先尝试在本地插件中找到匹配项
-      for (const dirName of dbAddon.file_list) {
-
+      for (const dirName of dbAddon.file_list) { 
         if (typeof dirName === 'string' && dirName.trim()) {
           const trimmedDirName = dirName.trim();
           
