@@ -6,12 +6,13 @@ const { spawn } = require('child_process');
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
 const { webContents } = require('electron')
 const { ERROR_CODE } = require("./lib/error_code");
-const { down_addons,is_duplicate_directory } = require("./lib/down"); 
+const { is_duplicate_directory } = require("./lib/down");
+const { down_addons } = require("./service/addons_download"); 
 // const { getInstalledPlugins } = require('./lib/db');
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 const { applyClientPatches } = require("./lib/patcher_service");
 const { checkForUpdates, downloadUpdateAndInstall } = require("./lib/custom_updater");
-const { getLocalAddons } = require('./service/addon_service');
+const { getLocalAddons } = require('./service/local_addon_service');
 
 const { runExec } = require("./lib/runExec");
 

@@ -124,6 +124,8 @@ function saveInstalledPlugin({ plugin_id, title = '', version = '', file_list = 
   });
 }
 
+
+
 /**
  * 保存插件目录信息到 plugin_directories 表
  * @param {string} plugin_id - 插件ID

@@ -6,32 +6,7 @@ const { findAddonsDirectory } = require('../lib/path_validator');
 const { getInstalledPlugins } = require('../lib/db');
 const { promisify } = require('util');
 
-/**
- * 获取游戏目录下的插件目录路径
- * @returns {string|null} 插件目录路径，如果未找到则返回null
- */
-function getAddonsPath() {
-  try {
-    // 从设置中获取游戏路径
-    const settings = getSettings();
-    if (!settings || !settings.gamePath) {
-      logger.warn('游戏路径未设置');
-      return null;
-    }
-
-    // 使用path_validator查找AddOns目录
-    const result = findAddonsDirectory(settings.gamePath);
-    if (!result || !result.success || !result.data || !result.data.addonsPath) {
-      logger.warn('未找到AddOns目录');
-      return null;
-    }
-
-    return result.data.addonsPath;
-  } catch (error) {
-    logger.error('获取插件目录路径失败:', error);
-    return null;
-  }
-}
+ 
 
 /**
  * 解析TOC文件内容
@@ -122,11 +97,11 @@ function getDirectoryCreationTime(dirPath) {
 
 /**
  * 扫描游戏目录下的所有插件
- * @returns {Array} 插件信息数组
+ * @returns {Promise<Array>} 插件信息数组
  */
-function scanAddons() {
+async function scanAddons() {
   try {
-    const addonsPath = getAddonsPath();
+    const addonsPath = await getAddonsPath();
     if (!addonsPath) {
       return [];
     }
@@ -353,7 +328,7 @@ function sortAddonsByOverrideMode(addons) {
 async function getLocalAddons() {
   try {
     // 扫描本地插件
-    const localAddons = scanAddons(); 
+    const localAddons = await scanAddons(); 
     // 从数据库中获取插件信息
     const dbAddons = await getDbPlugins(); 
     // 合并本地插件和数据库插件信息

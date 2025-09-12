@@ -3,6 +3,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const compressing = require('compressing');
 const {debug,info,error} = require("./log");
 const {send_msg} = require("./notice");
@@ -15,15 +16,15 @@ const { saveInstalledPlugin, savePluginDirectories } = require('./db');
 let  req_list  = new Map()
 
 exports.is_duplicate_directory = function (event, data) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
         try {
             console.log('is_duplicate_directory', data)
             // 统一解析 AddOns 目录
             const settings = getSettings();
             const gamePath = settings && settings.gamePath ? settings.gamePath : '';
-            const addonsPath = findAddonsDirectory(gamePath,data.override_mode);
+            const addonsPath = await findAddonsDirectory(gamePath,data.override_mode);
             console.log('addonsPath', addonsPath)
-            if (!addonsPath) {
+            if (!addonsPath.success) {
                 // 无法定位 AddOns 目录则认为没有重复
                 return resolve({ code: OK_CODE, message: '', data: [] });
             }
@@ -50,100 +51,19 @@ exports.is_duplicate_directory = function (event, data) {
             resolve({ code: OK_CODE, message: '', data: result });
         } catch (e) {
             error('is_duplicate_directory error', e);
-            resolve({ code: OK_CODE, message: '', data: [] });
+            resolve({ code: ERROR_CODE, message: 'Error occurred while checking for duplicate directories', data: [] });
         }
     })
-} 
-
-//安装插件
-exports.addons_install = function (tmp_dir, addons_dir) {
-    const {debug, error} = require("./log");
-    debug(`开始安装插件: 从 ${tmp_dir} 到 ${addons_dir}`);
-    
-    return new Promise((resolve, reject) => {
-        // 读取源目录中的所有文件和文件夹
-        fs.readdir(tmp_dir, { withFileTypes: true }, (err, entries) => {
-            if (err) {
-                error(`读取源目录失败: ${err.message}`);
-                return reject(err);
-            }
-            
-            // 确保目标目录存在
-            if (!fs.existsSync(addons_dir)) {
-                try {
-                    fs.mkdirSync(addons_dir, { recursive: true });
-                    debug(`创建目标目录: ${addons_dir}`);
-                } catch (mkdirErr) {
-                    error(`创建目标目录失败: ${mkdirErr.message}`);
-                    return reject(mkdirErr);
-                }
-            }
-            
-            // 如果源目录为空，直接返回成功
-            if (entries.length === 0) {
-                debug(`源目录为空，无需复制`);
-                return resolve();
-            }
-            
-            // 跟踪复制操作的完成情况
-            let completed = 0;
-            let hasError = false;
-            
-            // 遍历源目录中的每个条目
-            entries.forEach(entry => {
-                const sourcePath = path.join(tmp_dir, entry.name);
-                const destPath = path.join(addons_dir, entry.name);
-                
-                debug(`复制: ${sourcePath} -> ${destPath}`);
-                
-                // 使用递归复制
-                fs.cp(sourcePath, destPath, { recursive: true }, (cpErr) => {
-                    if (cpErr && !hasError) {
-                        hasError = true;
-                        error(`复制失败: ${cpErr.message}`);
-                        return reject(cpErr);
-                    }
-                    
-                    completed++;
-                    debug(`完成复制 ${entry.name} (${completed}/${entries.length})`);
-                    
-                    // 当所有条目都复制完成时，解析 Promise
-                    if (completed === entries.length && !hasError) {
-                        debug(`所有文件复制完成，共 ${entries.length} 个条目`);
-                        resolve();
-                    }
-                });
-            });
-        });
-    });
-}
-
-function removeDir(dir) {
-    let files = fs.readdirSync(dir)
-    for(var i=0;i<files.length;i++){
-        let newPath = path.join(dir,files[i]);
-        let stat = fs.statSync(newPath)
-        if(stat.isDirectory()){
-            //如果是文件夹就递归下去
-            removeDir(newPath);
-        }else {
-            //删除文件
-            fs.unlinkSync(newPath);
-        }
-    }
-    fs.rmdirSync(dir)//如果文件夹是空的，就将自己删除掉
 }
 
 // 下载文件
-async function downloadFile(url, fileName, index, event) {
+async function downloadFile(url, tmp_file_path, index, event) {
     return new Promise((resolve, reject) => {
-        let file_tmp_path = path.join('downloaded_files', fileName);
-        
         // 清理已下载
-        if (fs.existsSync(file_tmp_path)) {
-            fs.unlinkSync(file_tmp_path);
+        if (fs.existsSync(tmp_file_path)) {
+            fs.unlinkSync(tmp_file_path);
         }
-        debug("下载文件", url, fileName);
+        debug("下载文件", url, tmp_file_path);
         // 处理get回调，支持 http 和 https
         const isHttps = (() => {
             try { return new URL(url).protocol === 'https:' } catch (_) { return /^https:/i.test(url) }
@@ -151,12 +71,12 @@ async function downloadFile(url, fileName, index, event) {
         const client = isHttps ? https : http;
         let req = client.get(url, (response) => {
             //创建文件
-            const fileStream = fs.createWriteStream(file_tmp_path);
+            const fileStream = fs.createWriteStream(tmp_file_path);
             
             fileStream.on('finish', () => {
                 fileStream.close();
-                console.log(`Downloaded file saved to ${file_tmp_path}`);
-                resolve(file_tmp_path);
+                debug(`Downloaded file saved to ${tmp_file_path}`);
+                resolve(tmp_file_path);
             });
             
             fileStream.on('error', (err) => {
@@ -166,8 +86,7 @@ async function downloadFile(url, fileName, index, event) {
             response.pipe(fileStream);
             
             let file_length = parseInt(response.headers['content-length']) // 文件总长度
-            let has_down_length = 0 //已经下载的长度
-            let progress_now = 0 //进度判断，只有没变化 5% 才给界面发消息
+            let has_down_length = 0 //已经下载的长度 
             
             //下载进度
             response.on('data', (chunk) => {
@@ -187,167 +106,47 @@ async function downloadFile(url, fileName, index, event) {
         });
         
         req.on('error', function (err) {
-            console.log(err);
+            error(err);
             reject(err);
-        });
-        
+        }); 
         req_list.set(index, req);
     });
 }
 
 // 更新下载进度
 function updateDownloadProgress(event, progress, index, message) {
-    let progress_return_data = {
-        progress: progress,
-        index: index || 0,
-        msg: message,
-    }
-    
-    event.sender.send('download-progress', {
-        code: 200,
-        data: progress_return_data,
-        message: message
-    });
-    
-    return progress_return_data;
+    return new Promise((resolve) => {
+        let progress_return_data = {
+            progress: progress,
+            index: index || 0,
+            msg: message,
+        }
+        
+        event.sender.send('download-progress', {
+            code: 200,
+            data: progress_return_data,
+            message: message
+        });
+     
+    })
 }
+ 
+exports.updateDownloadProgress = updateDownloadProgress;
+exports.req_list = req_list;
 
 // 解压文件
-async function unzipFile(file_tmp_path, file_unzip_path, event, index) {
-    await compressing.zip.uncompress(file_tmp_path, file_unzip_path);
-    return updateDownloadProgress(event, 90, index, "解压完毕，开始安装");
-}
-
-// 安装插件
-async function installAddon(file_unzip_path, addons_path, file_tmp_path, event, index) {
-
-    await exports.addons_install(file_unzip_path, addons_path);
-    
-    //解压完成后删除临时文件
-    fs.unlinkSync(file_tmp_path);
-    removeDir(file_unzip_path);
-    
-    // 发送安装完成进度更新
-    event.sender.send('download-progress', {
-        code: 200,
-        data: {
-            progress: 100,
-            index: index || 0,
-            msg: "安装完成",
-        },
-        message: "插件安装完成"
+async function unzipFile(file_tmp_path, file_unzip_path) {
+    return new Promise((resolve, reject) => {
+        compressing.zip.uncompress(file_tmp_path, file_unzip_path)
+            .then(() => {
+                resolve();
+            })
+            .catch((err) => {
+                reject(err);
+            });
     });
     
-    send_msg(event, OK_CODE, '下载完成', '成功');
 }
 
-//下载插件
-exports.down_addons = async function (event, down_data) {
-    console.log("收到下载需求：", down_data)
-    // 获取设置信息
-    let settings = getSettings()
-    
-    if (!settings || !settings.gamePath) {
-        return {
-            code: ERROR_CODE.PARAM_ERROR,
-            message: "游戏路径未设置",
-            data: null
-        }
-    }
-    let addons_install_path = ""
-    // 使用path_validator模块查找或创建插件目录
-    if (down_data.override_mode === 2) {
-        // 获取游戏路径的父文件夹路径
-        addons_install_path = path.dirname(settings.gamePath);
-    }else{
-        const result = findAddonsDirectory(settings.gamePath,down_data.override_mode);
-        if (!result.success) {
-            return {
-                code: result.code,
-                message: result.message,
-                data: result.data
-            };
-        }
-        addons_install_path = result.data.addonsPath
-    }
-    
-    console.log("找到或创建的插件目录:", addons_install_path);
-    debug("收到下载需求：", down_data)
-    try {
-        // 解析URL
-        const parsedUrl = new URL(down_data.url);
-        // 获取路径名
-        const pathname = parsedUrl.pathname;
-        // 使用path.basename获取文件名
-        down_data.file_name = path.basename(pathname);
-        
-        // 1. 下载文件
-        const file_tmp_path = await downloadFile(down_data.url, down_data.file_name, down_data.index, event);
-        
-        // 2. 更新进度为开始解压
-        updateDownloadProgress(event, 85, down_data.index, "开始解压");
-        
-        // 3. 准备解压路径
-        let file_name = down_data.file_name.split(".")[0];
-        let file_unzip_path = path.join('downloaded_files', file_name);
-        console.log("解压目录:", file_tmp_path, file_unzip_path);
-        
-        try {
-            // 4. 解压文件
-            await unzipFile(file_tmp_path, file_unzip_path, event, down_data.index);
-            
-            let addons_path = addons_install_path;
-            error("插件路径", addons_path);
-            
-            try {
-                // 5. 安装插件
-                await installAddon(file_unzip_path, addons_path, file_tmp_path, event, down_data.index);
-
-                // 6. 安装成功后，记录到本地 SQLite（若可用）
-                try {
-                    const plugin_id = down_data.id ?? down_data.plugin_id ?? '';
-                    const file_list = Array.isArray(down_data.file_list) ? down_data.file_list : [];
-                    
-                    // 保存插件基本信息
-                    await saveInstalledPlugin({
-                        plugin_id,
-                        title: down_data.title ?? '',
-                        version: down_data.version ?? '',
-                        file_list,
-                        override_mode: down_data.override_mode
-                    });
-                    
-                    // 保存插件目录信息到新表
-                    // await savePluginDirectories(plugin_id, file_list);
-                } catch (dbErr) {
-                    error('保存已安装插件到本地数据库失败:', dbErr);
-                }
-
-                return {
-                    code: OK_CODE,
-                    message: "下载安装成功",
-                    data: null
-                };
-            } catch (err) {
-                error(err);
-                send_msg(event, ERROR_CODE, down_data, err);
-                throw err;
-            }
-        } catch (err) {
-            send_msg(event, ERROR_CODE, err, '解压失败');
-            throw err;
-        }
-    } catch (e) {
-        return {
-            code: ERROR_CODE.PARAM_ERROR,
-            message: "下载失败:" + e.message,
-            data: e.message
-        }; 
-    }
-}
-
-//取消
-exports.down_cancel = function (event,down_data) {
-    req_list.get(down_data.index).abort()
-    req_list.delete(down_data.index)
-}
+exports.unzipFile = unzipFile;
+exports.downloadFile = downloadFile;

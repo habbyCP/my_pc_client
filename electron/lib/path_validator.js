@@ -7,7 +7,7 @@ const { ERROR_CODE } = require('./error_code');
  * @param {string} gamePath 游戏可执行文件路径
  * @returns {Object} 包含查找结果的对象
  */
-function findAddonsDirectory(gamePath, override_mode) {
+async function findAddonsDirectory(gamePath, override_mode) {
     if (!gamePath) {
         return {
             success: false,
@@ -20,16 +20,16 @@ function findAddonsDirectory(gamePath, override_mode) {
     const gameDir = path.dirname(gamePath); // 获取游戏目录（去掉可执行文件名）
     
     // 覆盖模式 2：直接将插件目录视为游戏目录
-    // if (override_mode === 2) {
-    //     return {
-    //         success: true,
-    //         code: 200,
-    //         message: "已使用覆盖模式，插件目录为游戏目录",
-    //         data: {
-    //             addonsPath: gameDir
-    //         }
-    //     };
-    // }
+    if (override_mode === 2) {
+        return {
+            success: true,
+            code: 200,
+            message: "已使用覆盖模式，插件目录为游戏目录",
+            data: {
+                addonsPath: gameDir
+            }
+        };
+    }
     
     try {
         // 读取游戏目录下的所有文件和文件夹
@@ -107,6 +107,77 @@ function findAddonsDirectory(gamePath, override_mode) {
     }
 }
 
+function copy_dir(tmp_dir, addons_dir) {
+    const {debug, error} = require("../lib/log"); 
+    
+    return new Promise((resolve, reject) => {
+        // 读取源目录中的所有文件和文件夹
+        fs.readdir(tmp_dir, { withFileTypes: true }, (err, entries) => {
+            if (err) {
+                error(`读取源目录失败: ${err.message}`);
+                return reject(err);
+            }
+            
+            // 确保目标目录存在
+            if (!fs.existsSync(addons_dir)) {
+                try {
+                    fs.mkdirSync(addons_dir, { recursive: true });
+                    debug(`创建目标目录: ${addons_dir}`);
+                } catch (mkdirErr) {
+                    error(`创建目标目录失败: ${mkdirErr.message}`);
+                    return reject(mkdirErr);
+                }
+            }
+            
+            // 如果源目录为空，直接返回成功
+            if (entries.length === 0) {
+                debug(`源目录为空，无需复制`);
+                return resolve();
+            }
+            
+            // 跟踪复制操作的完成情况
+            let completed = 0;
+            let hasError = false;
+            
+            // 遍历源目录中的每个条目
+            entries.forEach(entry => {
+                const sourcePath = path.join(tmp_dir, entry.name);
+                const destPath = path.join(addons_dir, entry.name);
+                
+                debug(`复制: ${sourcePath} -> ${destPath}`);
+                
+                // 使用递归复制
+                fs.cp(sourcePath, destPath, { recursive: true }, (cpErr) => {
+                    if (cpErr && !hasError) {
+                        hasError = true;
+                        error(`复制失败: ${cpErr.message}`);
+                        return reject(cpErr);
+                    }
+                    
+                    completed++;
+                    debug(`完成复制 ${entry.name} (${completed}/${entries.length})`);
+                    
+                    // 当所有条目都复制完成时，解析 Promise
+                    if (completed === entries.length && !hasError) {
+                        debug(`所有文件复制完成，共 ${entries.length} 个条目`);
+                        resolve();
+                    }
+                });
+            });
+        });
+    });
+}
+
+
+function deletePath(targetPath) {
+    if (fs.existsSync(targetPath)) {
+        fs.rmSync(targetPath, { recursive: true, force: true });
+    }
+}
+
+
 module.exports = {
-    findAddonsDirectory
+    findAddonsDirectory,
+    copy_dir,
+    deletePath
 };
