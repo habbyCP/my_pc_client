@@ -27,8 +27,36 @@
             </div>
           </div>
           <div class="plugin-actions">
-            <el-button v-if="item.miss_dir && item.miss_dir.length > 0"  class="install-button" type="success">重新安装</el-button>
-            <el-button v-else class="install-button" type="primary" plain>更新</el-button>
+            <el-button
+              v-if="hasMissingDirs(item)"
+              class="install-button"
+              type="success"
+              @click="handleReinstall(item)"
+            >重新安装</el-button>
+
+            <el-button
+              v-else-if="item._status === 'update'"
+              class="install-button"
+              type="primary"
+              plain
+              @click="handleUpdate(item)"
+            >更新</el-button>
+
+            <el-button
+              v-else-if="item._status === 'up_to_date'"
+              class="install-button"
+              type="info"
+              plain
+              disabled
+            >已最新</el-button>
+
+            <el-button
+              v-else
+              class="install-button"
+              type="warning"
+              plain
+              disabled
+            >未知插件</el-button>
           </div>
         </div>
         <div v-if="item.miss_dir && item.miss_dir.length > 0" class="missing-dirs-bar">
@@ -46,6 +74,8 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { apiService } from '../apiService.js'
+import { isNewer } from '../utils/version'
 
 export default {
   name: 'LocalPlugins',
@@ -54,6 +84,61 @@ export default {
     const loading = ref(false)
     const keyword = ref('')
     const placeholder = '/favicon.ico'
+
+    // 工具：是否缺失目录
+    const hasMissingDirs = (item) => Array.isArray(item?.miss_dir) && item.miss_dir.length > 0
+
+    // 工具：是否有 plugin_id
+    const hasPluginId = (item) => !!item?.plugin_id
+
+    // 版本比较已抽离至 utils/version.ts
+
+    // 根据接口返回结果标注每个 item 的状态
+    const annotateItems = (items, latestMapById, bySubDirMap) => {
+      items.forEach((it) => {
+        if (hasMissingDirs(it)) {
+          it._status = 'reinstall'
+          return
+        }
+
+        if (hasPluginId(it)) {
+          const info = latestMapById.get(String(it.plugin_id))
+          if (info && isNewer(info.last_version, it.version)) {
+            it._status = 'update'
+            it._latest = info
+          } else if (info) {
+            it._status = 'up_to_date'
+          } else {
+            // 未拿到对应该 ID 的信息，保守认为未知
+            it._status = 'unknown'
+          }
+          return
+        }
+
+        // 无 plugin_id 的情况：使用 db_file_list 做映射
+        const dirs = Array.isArray(it.db_file_list) ? it.db_file_list : []
+        let matched = false
+        for (const d of dirs) {
+          const candidates = bySubDirMap.get(d)
+          if (Array.isArray(candidates) && candidates.length > 0) {
+            matched = true
+            // 任意命中即认为可更新（具体匹配策略可在后续细化）
+            const info = candidates[0]
+            const remoteVersion = info.last_version || info.version // by_sub_dirs 返回 version 字段
+            if (isNewer(remoteVersion, it.version)) {
+              it._status = 'update'
+              it._latest = info
+            } else {
+              it._status = 'up_to_date'
+            }
+            break
+          }
+        }
+        if (!matched) {
+          it._status = 'unknown'
+        }
+      })
+    }
 
     // 从 API 加载数据的函数
     const loadDataFromAPI = async () => {
@@ -65,8 +150,42 @@ export default {
         console.log('API 返回结果:', res)
         if (res.success) {
           list.value = res.data.addons
-          // 将数据缓存到 sessionStorage
-          sessionStorage.setItem('localPluginsData', JSON.stringify(res.data.addons))
+
+          // 批量判断是否可更新
+          try {
+            const withIdNoMissing = list.value.filter(it => hasPluginId(it) && !hasMissingDirs(it))
+            const withoutId = list.value.filter(it => !hasPluginId(it))
+
+            // 1) 根据 plugin_id 批量获取最新版本
+            const idSet = Array.from(new Set(withIdNoMissing.map(it => String(it.plugin_id))))
+            let latestByIds = []
+            if (idSet.length > 0) {
+              latestByIds = await apiService.checkLatestVersionsByIds(idSet)
+            }
+            const latestMapById = new Map()
+            for (const r of (latestByIds || [])) {
+              latestMapById.set(String(r.id), r)
+            }
+
+            // 2) 对于没有 plugin_id 的，汇总 db_file_list 后请求
+            const allDirs = new Set()
+            for (const it of withoutId) {
+              (Array.isArray(it.db_file_list) ? it.db_file_list : []).forEach(d => { if (d) allDirs.add(d) })
+            }
+            let bySubDirObj = {}
+            if (allDirs.size > 0) {
+              bySubDirObj = await apiService.getAddonsBySubDirs(Array.from(allDirs))
+            }
+            const bySubDirMap = new Map(Object.entries(bySubDirObj || {}))
+
+            // 标注每个条目的状态
+            annotateItems(list.value, latestMapById, bySubDirMap)
+          } catch (markErr) {
+            console.error('标注更新状态失败:', markErr)
+          }
+
+          // 将数据缓存到 sessionStorage（包含标注后的按钮状态）
+          sessionStorage.setItem('localPluginsData', JSON.stringify(list.value))
         } else {
           console.error('API 返回失败:', res.message || '未知错误')
           list.value = []
@@ -94,7 +213,7 @@ export default {
       const cachedData = sessionStorage.getItem('localPluginsData')
       
       if (cachedData) {
-        // 如果有缓存数据，直接使用
+        // 如果有缓存数据，直接使用缓存（缓存中已包含按钮状态等派生字段）
         console.log('使用缓存数据')
         list.value = JSON.parse(cachedData)
         return
@@ -196,7 +315,18 @@ export default {
       fetchData()
     })
 
-    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData }
+    // 点击处理（后续接真接口/主进程）
+    const handleReinstall = (item) => {
+      console.log('重新安装', item)
+      // TODO: 触发主进程重新安装流程
+    }
+
+    const handleUpdate = (item) => {
+      console.log('更新', item)
+      // TODO: 触发更新流程：若有 plugin_id，直接按 id 更新；否则根据 _latest 信息选择对应包
+    }
+
+    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData, hasMissingDirs, handleReinstall, handleUpdate }
   }
 }
 </script>
