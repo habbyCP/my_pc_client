@@ -7,6 +7,18 @@
 
     <div class="plugin-list">
       <div v-for="(item, index) in list" :key="item.plugin_id || index" class="plugin-card">
+        <!-- 右上角三角形状态角标 -->
+        <span
+          v-if="hasMissingDirs(item) || item._status === 'up_to_date' || item._status === 'unknown'"
+          class="corner-badge"
+          :class="{
+            'is-red': hasMissingDirs(item),
+            'is-green': !hasMissingDirs(item) && item._status === 'up_to_date',
+            'is-gray': !hasMissingDirs(item) && item._status === 'unknown'
+          }"
+        >
+          <i>{{ hasMissingDirs(item) ? '有缺失' : (item._status === 'up_to_date' ? '已最新' : '未收录') }}</i>
+        </span>
         <div class="plugin-content"> 
           <div class="plugin-info">
             <div class="plugin-header">
@@ -32,33 +44,38 @@
             </div>
           </div>
           <div class="plugin-actions">
-            <el-button
-              v-if="hasMissingDirs(item)"
-              class="install-button"
-              type="success" 
-              @click="handleReinstall(item)"
-            >重新安装</el-button>
+ 
 
             <el-button
-              v-else-if="item._status === 'update'"
+              v-if="item._status === 'update'"
               class="install-button"
               type="primary" 
               @click="handleUpdate(item)"
             >更新</el-button>
 
-            <el-button
-              v-else-if="item._status === 'up_to_date'"
-              class="install-button"
+            <!-- <el-button
+              v-else-if="item._status === 'up_to_date'" 
               type="info"  
               disabled
-            >已最新</el-button>
+            >已最新</el-button> -->
 
-            <el-button
+            <!-- <el-button
               v-else
               class="install-button"
-              type="warning"
+              type="info"
               plain  
-            >未知插件</el-button>
+            >未知插件</el-button> -->
+            <el-tooltip content="更新" placement="top">
+              <el-button type="success"  class="success-icon-btn"  v-if="hasMissingDirs(item) || item._status === 'up_to_date'"  :icon="Download" circle />
+            </el-tooltip>
+            <el-tooltip content="重新安装" placement="top">
+              <el-button type="success"   class="warn-icon-btn" v-if="hasMissingDirs(item) || item._status === 'up_to_date'"  :icon="Refresh" circle />
+            </el-tooltip>
+            <el-tooltip content="卸载" placement="top">
+              <el-button type="success"  class="danger-icon-btn" :icon="Delete" circle />
+            </el-tooltip>
+
+
           </div>
         </div>
         <div v-if="item.miss_dir && item.miss_dir.length > 0" class="missing-dirs-bar">
@@ -78,14 +95,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { apiService } from '../apiService.js'
 import { isNewer } from '../utils/version'
+import { Delete, Refresh, Download } from '@element-plus/icons-vue'
 
 export default {
-  name: 'LocalPlugins',
+  name: 'LocalPlugins', 
   setup() {
     const list = ref([])
     const loading = ref(false)
     const keyword = ref('')
-    const placeholder = '/favicon.ico'
+    const placeholder = '/favicon.ico' 
 
     // 工具：是否缺失目录
     const hasMissingDirs = (item) => Array.isArray(item?.miss_dir) && item.miss_dir.length > 0
@@ -337,7 +355,16 @@ export default {
       return latest.last_version || latest.version || '未知'
     }
 
-    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData, hasMissingDirs, handleReinstall, handleUpdate, getRemoteVersion }
+    // 删除插件（占位实现）
+    const handleDelete = (item) => {
+      // 这里可以替换为 ElementPlus 的 MessageBox 确认框
+      const ok = window.confirm(`确定要删除插件【${item.title || item.plugin_id || '未知'}】吗？`)
+      if (!ok) return
+      console.log('删除插件', item)
+      // TODO: 调用主进程删除逻辑，例如 window.electronAPI.deletePlugin(item)
+    }
+
+    return { list, Delete, Refresh, Download, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData, hasMissingDirs, handleReinstall, handleUpdate, getRemoteVersion, handleDelete }
   }
 }
 </script>
@@ -362,11 +389,9 @@ export default {
   border-radius: 8px; 
   border: 1px solid #332e2a;
   transition: all 0.3s ease;
-}
-.plugin-card:hover {
-  /* border-color: #409eff; */
-  /* box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15); */
-}
+  position: relative; /* 使右上角角标相对于卡片定位 */
+} 
+ 
 .plugin-content {
   display: flex;
   align-items: center;
@@ -459,4 +484,79 @@ export default {
   .missing-dirs-bar { flex-direction: column; align-items: flex-start; }
   .missing-dirs-title { margin-bottom: 6px; }
 }
+
+/* 强制应用到“卸载/删除”等使用该 class 的圆形按钮，避免被全局样式或主题覆盖 */
+.danger-icon-btn {
+  background-color: var(--el-color-danger) !important;
+  border-color: var(--el-color-danger) !important;
+  color: #fff !important; /* 影响图标颜色（currentColor）*/
+}
+.danger-icon-btn:hover,
+.danger-icon-btn:focus {
+  background-color: var(--el-color-danger-dark-2) !important;
+  border-color: var(--el-color-danger-dark-2) !important;
+  color: #fff !important;
+}
+
+/* 成功（更新）图标按钮样式 */
+.success-icon-btn {
+  background-color: var(--el-color-success) !important;
+  border-color: var(--el-color-success) !important;
+  color: #fff !important;
+}
+.success-icon-btn:hover,
+.success-icon-btn:focus {
+  background-color: var(--el-color-success-dark-2) !important;
+  border-color: var(--el-color-success-dark-2) !important;
+  color: #fff !important;
+}
+
+/* 警告（重新安装）图标按钮样式 */
+.warn-icon-btn {
+  background-color: var(--el-color-warning) !important;
+  border-color: var(--el-color-warning) !important;
+  color: #000 !important; /* 警告色更适合深色图标，可按需调为 #fff */
+}
+.warn-icon-btn:hover,
+.warn-icon-btn:focus {
+  background-color: var(--el-color-warning-dark-2) !important;
+  border-color: var(--el-color-warning-dark-2) !important;
+  color: #000 !important;
+}
+
+/* 顶部右上角三角形状态角标样式（伪元素绘制三角，文字旋转） */
+.corner-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45px;   /* 容器具备尺寸，方便安置文字 */
+  height: 45px;
+  pointer-events: none; /* 避免遮挡下方按钮交互 */
+}
+.corner-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 45px solid rgba(0,0,0,0.28); /* 颜色由状态类覆盖 */
+  border-left: 45px solid transparent;
+}
+.corner-badge i {
+  position: absolute;
+  top: 10px;          /* 往下放一点，避免贴边 */
+  right: 1px;        /* 不再用负值，保持在三角内部 */
+  transform: rotate(45deg);
+  transform-origin: center;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: #e0d6cc; /* 将由状态覆盖 */
+  white-space: nowrap;
+}
+.corner-badge.is-green::before { border-top-color: rgba(107,212,46,0.25); }
+.corner-badge.is-green i { color: #6bd42e; }
+.corner-badge.is-gray::before  { border-top-color: rgba(160,160,160,0.25); }
+.corner-badge.is-gray i { color: #a0a0a0; }
+.corner-badge.is-red::before   { border-top-color: rgba(245,108,108,0.3); }
+.corner-badge.is-red i { color: #f56c6c; }
 </style>

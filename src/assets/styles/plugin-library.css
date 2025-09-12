@@ -366,14 +366,9 @@
   justify-content: flex-end;
   width: 160px;
   flex: none;
-  padding: 0 12px 0 16px;
+  padding: 0 20px 0 16px;
   border-left: 1px solid #332e2a;
 }
-
-.install-button {
-  width: 120px;
-}
-
 
 
 /* Infinite scroll */
