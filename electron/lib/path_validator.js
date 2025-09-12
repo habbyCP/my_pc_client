@@ -8,6 +8,7 @@ const { ERROR_CODE } = require('./error_code');
  * @returns {Object} 包含查找结果的对象
  */
 async function findAddonsDirectory(gamePath, override_mode) {
+    
     if (!gamePath) {
         return {
             success: false,

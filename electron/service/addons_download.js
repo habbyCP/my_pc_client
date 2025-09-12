@@ -10,11 +10,6 @@ const {ERROR_CODE,OK_CODE} = require("../lib/error_code");
 const {getSettings} = require("../lib/settings");
 const { findAddonsDirectory, copy_dir, deletePath } = require("../lib/path_validator");
 
- 
- 
-
-
- 
 
 //下载插件
 exports.down_addons = async function (event, down_data) {
