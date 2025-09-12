@@ -17,7 +17,12 @@
               <div class="meta-column">
                 <span class="meta-item">
                   <span class="meta-label">版本:</span>
-                  <span class="meta-value">{{ item.version || '未知' }}</span>
+                  <span class="meta-value">
+                    {{ item.version || '未知' }}
+                    <template v-if="item._latest">
+                      &nbsp;/&nbsp;远程: {{ getRemoteVersion(item) }}
+                    </template>
+                  </span>
                 </span>
                 <span class="meta-item">
                   <span class="meta-label">安装时间:</span>
@@ -30,23 +35,21 @@
             <el-button
               v-if="hasMissingDirs(item)"
               class="install-button"
-              type="success"
+              type="success" 
               @click="handleReinstall(item)"
             >重新安装</el-button>
 
             <el-button
               v-else-if="item._status === 'update'"
               class="install-button"
-              type="primary"
-              plain
+              type="primary" 
               @click="handleUpdate(item)"
             >更新</el-button>
 
             <el-button
               v-else-if="item._status === 'up_to_date'"
               class="install-button"
-              type="info"
-              plain
+              type="info"  
               disabled
             >已最新</el-button>
 
@@ -54,8 +57,7 @@
               v-else
               class="install-button"
               type="warning"
-              plain
-              disabled
+              plain  
             >未知插件</el-button>
           </div>
         </div>
@@ -108,6 +110,7 @@ export default {
             it._latest = info
           } else if (info) {
             it._status = 'up_to_date'
+            it._latest = info
           } else {
             // 未拿到对应该 ID 的信息，保守认为未知
             it._status = 'unknown'
@@ -130,6 +133,7 @@ export default {
               it._latest = info
             } else {
               it._status = 'up_to_date'
+              it._latest = info
             }
             break
           }
@@ -326,7 +330,14 @@ export default {
       // TODO: 触发更新流程：若有 plugin_id，直接按 id 更新；否则根据 _latest 信息选择对应包
     }
 
-    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData, hasMissingDirs, handleReinstall, handleUpdate }
+    // 显示远程版本号（last_version 或 version），无则显示“未知”
+    const getRemoteVersion = (item) => {
+      const latest = item && item._latest
+      if (!latest) return '未知'
+      return latest.last_version || latest.version || '未知'
+    }
+
+    return { list, loading, keyword, placeholder, formatTime, parseWowTitle, refreshData, hasMissingDirs, handleReinstall, handleUpdate, getRemoteVersion }
   }
 }
 </script>
