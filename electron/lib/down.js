@@ -11,50 +11,9 @@ const {ERROR_CODE,OK_CODE} = require("./error_code");
 const {wow_path} = require("../service/wow_service");
 const {send_progress, mainWindowId} = require("../index");
 const {getSettings} = require("./settings");
-const {findAddonsDirectory} = require("./path_validator");
-const { saveInstalledPlugin, savePluginDirectories } = require('./db');
+const {findAddonsDirectory} = require("./path_validator"); 
 let  req_list  = new Map()
 
-exports.is_duplicate_directory = function (event, data) {
-    return new Promise(async (resolve) => {
-        try {
-            console.log('is_duplicate_directory', data)
-            // 统一解析 AddOns 目录
-            const settings = getSettings();
-            const gamePath = settings && settings.gamePath ? settings.gamePath : '';
-            const addonsPath = await findAddonsDirectory(gamePath,data.override_mode);
-            console.log('addonsPath', addonsPath)
-            if (!addonsPath.success) {
-                // 无法定位 AddOns 目录则认为没有重复
-                return resolve({ code: OK_CODE, message: '', data: [] });
-            }
-
-            const names = Array.isArray(data?.dir_list) ? data.dir_list : [];
-            const result = [];
-
-            for (const rawName of names) {
-                if (typeof rawName !== 'string') continue;
-                const name = rawName.trim();
-                if (!name) continue;
-
-                const target = path.join(addonsPath.data.addonsPath, name);
-                try {
-                    const stat = fs.statSync(target);
-                    if (stat.isDirectory()) {
-                        result.push(name);
-                    }
-                } catch (e) {
-                    // 不存在或无法访问则跳过
-                }
-            }
-
-            resolve({ code: OK_CODE, message: '', data: result });
-        } catch (e) {
-            error('is_duplicate_directory error', e);
-            resolve({ code: ERROR_CODE, message: 'Error occurred while checking for duplicate directories', data: [] });
-        }
-    })
-}
 
 // 下载文件
 async function downloadFile(url, tmp_file_path, index, event) {
@@ -127,12 +86,11 @@ function updateDownloadProgress(event, progress, index, message) {
             data: progress_return_data,
             message: message
         });
-     
+        // 立即完成，避免调用方 await 时卡住
+        resolve();
     })
 }
- 
-exports.updateDownloadProgress = updateDownloadProgress;
-exports.req_list = req_list;
+
 
 // 解压文件
 async function unzipFile(file_tmp_path, file_unzip_path) {
@@ -148,5 +106,9 @@ async function unzipFile(file_tmp_path, file_unzip_path) {
     
 }
 
-exports.unzipFile = unzipFile;
-exports.downloadFile = downloadFile;
+module.exports = {
+    downloadFile,
+    updateDownloadProgress,
+    req_list,
+    unzipFile
+}

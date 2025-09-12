@@ -8,27 +8,27 @@ const {debug,info,error} = require("../lib/log");
 const {send_msg} = require("../lib/notice");
 const {ERROR_CODE,OK_CODE} = require("../lib/error_code"); 
 const {getSettings} = require("../lib/settings");
-const { findAddonsDirectory, copy_dir, deletePath } = require("../lib/path_validator");
-
+const {AddonsInstallDirectory, copy_dir, deletePath } = require("../lib/path_validator");
+const { downloadFile, updateDownloadProgress, unzipFile } = require("../lib/down");
+const { saveInstalledPlugin, savePluginDirectories } = require("../lib/db");
 
 //下载插件
 exports.down_addons = async function (event, down_data) {
-    debug("收到下载需求：", down_data)
     // 获取设置信息
     let settings = getSettings()
-    
-    let pathResult = findAddonsDirectory(settings.gamePath, down_data.override_mode);
-    if (!pathResult.success) {
-        return {
-            code: pathResult.code,
-            message: pathResult.message,
-            data: pathResult.data
-        };
-    }
-    let addons_install_path = pathResult.data.addonsPath;
-    
-    debug("找到或创建的插件目录:", addons_install_path);
+
     try {
+        let pathResult = await AddonsInstallDirectory(settings.gamePath, down_data.override_mode);
+        if (!pathResult.success) {
+            return {
+                code: pathResult.code,
+                message: pathResult.message,
+                data: pathResult.data
+            };
+        }
+        let addons_install_path = pathResult.data.addonsPath;
+        
+        debug("找到或创建的插件目录:", addons_install_path);
         // 解析URL
         const parsedUrl = new URL(down_data.url);
         // 获取路径名
@@ -42,7 +42,8 @@ exports.down_addons = async function (event, down_data) {
         
         // 2. 更新进度为开始解压
         await updateDownloadProgress(event, 85, down_data.index, "开始解压");
-        
+        debug("解压文件:", tmp_file_path);
+        debug(os.tmpdir())
         // 解压
         let tmp_unzip_path = path.join(os.tmpdir(), down_data.file_name.split(".")[0]);
 
@@ -75,6 +76,12 @@ exports.down_addons = async function (event, down_data) {
         await savePluginDirectories(plugin_id, file_list);
 
         await updateDownloadProgress(event, 100, down_data.index, "安装完毕");
+
+        //删掉下载文件
+        deletePath(tmp_file_path);
+
+        //删掉解压文件
+        deletePath(tmp_unzip_path);
         return {
             code: OK_CODE,
             message: "下载安装成功",

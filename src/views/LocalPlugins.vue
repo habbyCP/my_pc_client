@@ -100,8 +100,7 @@ export default {
         return
       }
       
-      // 没有缓存数据，需要重新加载
-      alert("getInstalledPlugins")
+      // 没有缓存数据，需要重新加载 
       await loadDataFromAPI()
     }
 

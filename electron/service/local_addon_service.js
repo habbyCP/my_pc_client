@@ -1,12 +1,49 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('electron-log');
-const { getSettings } = require('../lib/settings');
-const { findAddonsDirectory } = require('../lib/path_validator');
-const { getInstalledPlugins } = require('../lib/db');
-const { promisify } = require('util');
+const { getSettings } = require('../lib/settings'); 
+const { getInstalledPlugins } = require('../lib/db'); 
+const { ERROR_CODE, OK_CODE } = require("../lib/error_code");
 
- 
+function IsDuplicateDirectory(event, data) {
+     return new Promise(async (resolve) => {
+         try { 
+             // 统一解析 AddOns 目录
+             const settings = getSettings();
+             const gamePath = settings && settings.gamePath ? settings.gamePath : ''; 
+             const gameDir = path.dirname(gamePath);
+             const addonsPath = path.join(gameDir, 'Interface', 'AddOns');
+             console.log('addonsPath', addonsPath)
+             if (!fs.existsSync(addonsPath)) {
+                 // 无法定位 AddOns 目录则认为没有重复
+                 return resolve({ code: OK_CODE, message: '', data: [] });
+             }
+
+             const NewAddonsDirs = Array.isArray(data?.dir_list) ? data.dir_list : [];
+             const result = [];
+
+             for (const dir of NewAddonsDirs) {
+                 if (typeof dir !== 'string') continue;
+                 const name = dir.trim();
+                 if (!name) continue;
+
+                 const target = path.join(addonsPath, name);
+                 try {
+                     const stat = fs.statSync(target);
+                     if (stat.isDirectory()) {
+                         result.push(name);
+                     }
+                 } catch (e) {
+                     // 不存在或无法访问则跳过
+                 }
+             }
+
+             resolve({ code: OK_CODE, message: '', data: result });
+         } catch (e) { 
+             resolve({ code: ERROR_CODE, message: 'Error occurred while checking for duplicate directories', data: [] });
+         }
+     })
+ }
 
 /**
  * 解析TOC文件内容
@@ -101,7 +138,11 @@ function getDirectoryCreationTime(dirPath) {
  */
 async function scanAddons() {
   try {
-    const addonsPath = await getAddonsPath();
+    let settings = getSettings();
+    if (!settings || !settings.gamePath) {
+      return [];
+    }
+    const addonsPath = path.join(path.dirname(settings.gamePath), 'Interface', 'AddOns');
     if (!addonsPath) {
       return [];
     }
@@ -366,4 +407,5 @@ async function getLocalAddons() {
 
 module.exports = { 
   getLocalAddons, 
+  IsDuplicateDirectory
 };

@@ -1,18 +1,14 @@
 const { app, BrowserWindow, session, ipcMain, screen, shell, dialog, globalShortcut } = require('electron')
 const path = require('path')
 const { mkdirSync, existsSync } = require("fs");
-const fs = require('fs').promises;
-const { spawn } = require('child_process');
+const fs = require('fs').promises; 
 const reactDevToolsPath = path.resolve(__dirname, '../extension/vue-devtools');
-const { webContents } = require('electron')
-const { ERROR_CODE } = require("./lib/error_code");
-const { is_duplicate_directory } = require("./lib/down");
-const { down_addons } = require("./service/addons_download"); 
-// const { getInstalledPlugins } = require('./lib/db');
+const { webContents } = require('electron')  
+const { down_addons } = require("./service/addons_download");  
 const { getSettings, saveSettings, validateGamePath } = require("./lib/settings");
 const { applyClientPatches } = require("./lib/patcher_service");
 const { checkForUpdates, downloadUpdateAndInstall } = require("./lib/custom_updater");
-const { getLocalAddons } = require('./service/local_addon_service');
+const { getLocalAddons, IsDuplicateDirectory } = require('./service/local_addon_service');
 
 const { runExec } = require("./lib/runExec");
 
@@ -181,7 +177,7 @@ ipcMain.on('open-local-path', function (event, data) {
   });
 })
 //检查目录是否重复
-ipcMain.handle('is-duplicate-directory', is_duplicate_directory)
+ipcMain.handle('is-duplicate-directory', IsDuplicateDirectory)
 
 // 设置相关的处理
 // 选择目录
